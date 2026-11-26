@@ -199,4 +199,10 @@ grant insert, update on eventos, contactos, conversaciones, pendientes, reunione
 grant update on perfiles, peticiones_cambio to authenticated;
 grant insert, update, delete on datos_salud, conversacion_miembros to authenticated;
 grant insert on mensajes, adjuntos to authenticated;
+
+-- Funciones: nadie las llama por la API salvo las que las reglas necesitan.
+revoke execute on all functions in schema public from public, anon;
 grant execute on function buscar_eventos(text) to authenticated;
+grant execute on function usuario_activo(), es_admin(), puede_ver_conversacion(uuid), puede_escribir_conversacion(uuid),
+  es_responsable_conversacion(uuid), es_responsable_evento(uuid), puede_ver_evento(uuid) to authenticated;
+revoke execute on function proteger_perfil() from public, anon, authenticated;
