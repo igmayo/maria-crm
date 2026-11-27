@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { listarBandeja, cargarConversacion, type Filtro, type Conversacion } from "@/lib/datos";
 import { perfilActivo } from "@/lib/sesion";
 import { encabezadoDia, etiquetaFecha, fechaLarga, horaMensaje, iniciales } from "@/lib/formato";
-import { enviarMensaje, cerrarConversacion } from "@/app/equipo/(panel)/acciones";
+import { enviarMensaje, cerrarConversacion, reabrirConversacion } from "@/app/equipo/(panel)/acciones";
 import Redactor from "@/components/Redactor";
 import TextoMaria from "@/components/TextoMaria";
 
@@ -90,6 +90,9 @@ function Detalle({ conv, error }: { conv: Conversacion; error?: string }) {
           </div>
           {conv.puedeEscribir && conv.estado !== "cerrada" && (
             <form action={cerrarConversacion}><input type="hidden" name="conversacion" value={conv.id} /><button className="btn-sec" type="submit">Cerrar</button></form>
+          )}
+          {conv.puedeEscribir && conv.estado === "cerrada" && (
+            <form action={reabrirConversacion}><input type="hidden" name="conversacion" value={conv.id} /><button className="btn-sec" type="submit">Reabrir</button></form>
           )}
           {(tel || mail) && (
             <div className="contactar">

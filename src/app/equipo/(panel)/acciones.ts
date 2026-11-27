@@ -29,6 +29,21 @@ export async function cerrarConversacion(formData: FormData) {
   redirect(`/equipo/c/${id}`);
 }
 
+export async function reabrirConversacion(formData: FormData) {
+  const perfil = await perfilActivo();
+  if (!perfil) redirect("/equipo/login");
+  const id = String(formData.get("conversacion") ?? "");
+  if (!id) return;
+  const sb = await clienteServidor();
+  // La lleva alguien: "te_toca". Si no: "sin_asignar". María no se reactiva sola.
+  const { data: conv } = await sb.from("conversaciones").select("responsable_id").eq("id", id).eq("estado", "cerrada").maybeSingle();
+  if (!conv) redirect(`/equipo/c/${id}`);
+  const estado = conv.responsable_id ? "te_toca" : "sin_asignar";
+  await sb.from("conversaciones").update({ estado, ultima_actividad: new Date().toISOString() }).eq("id", id).eq("estado", "cerrada");
+  revalidatePath("/equipo");
+  redirect(`/equipo/c/${id}`);
+}
+
 const TIPOS = ["boda", "empresa", "otro"] as const;
 
 export async function crearContacto(formData: FormData) {
