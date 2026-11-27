@@ -3,6 +3,7 @@ import type { Registro } from "@/lib/agent";
 import { almacenSupabase } from "@/lib/chat/almacen-supabase";
 import { crearAviso } from "@/lib/avisos";
 import type { AlmacenNovios, MensajeVisible } from "./servicio";
+import { ETIQUETA_CAMPO, esCampo, mostrarValor, valorActual } from "@/lib/cambios";
 
 function falla(error: { message: string } | null, que: string) { if (error) throw new Error(`${que}: ${error.message}`); }
 const REFRESCO_USO_MS = 60_000;
@@ -72,7 +73,7 @@ export function almacenNovios(sb: SupabaseClient): AlmacenNovios {
     async estado(ctx) {
       const { data: ca } = await sb.from("peticiones_cambio").select("campo,valor_pedido").eq("evento_id", ctx.eventoId).eq("estado", "pendiente").limit(10);
       const { data: pe } = await sb.from("pendientes").select("descripcion").eq("conversacion_id", ctx.conversacionId).eq("tipo", "pregunta_maria").is("resuelto_en", null).limit(5);
-      return { cambios: (ca ?? []).map((x) => `${x.campo}: ${x.valor_pedido}`), avisos: (pe ?? []).map((x) => x.descripcion as string).filter(Boolean) };
+      return { cambios: (ca ?? []).map((x) => `${esCampo(x.campo) ? ETIQUETA_CAMPO[x.campo] : x.campo}: ${mostrarValor(x.campo, x.valor_pedido)}`), avisos: (pe ?? []).map((x) => x.descripcion as string).filter(Boolean) };
     },
 
     buscarConocimiento: (c) => base.buscarConocimiento(c),
@@ -102,11 +103,15 @@ export function almacenNovios(sb: SupabaseClient): AlmacenNovios {
     async registrarCambio(ctx, c) {
       const { data: igual } = await sb.from("peticiones_cambio").select("id").eq("evento_id", ctx.eventoId).eq("estado", "pendiente").eq("campo", c.campo).eq("valor_pedido", c.valorPedido).limit(1).maybeSingle();
       if (igual) return { id: igual.id as string };
-      const { data, error } = await sb.from("peticiones_cambio").insert({ evento_id: ctx.eventoId, contacto_id: ctx.contactoId, campo: c.campo, valor_pedido: c.valorPedido }).select("id").single();
+      const campo = esCampo(c.campo) ? c.campo : "otro";
+      const { data: ev } = await sb.from("eventos").select("fecha,lugar,tipo_ceremonia,hora_ceremonia,hora_banquete,adultos,ninos,menu").eq("id", ctx.eventoId).maybeSingle();
+      const actual = ev ? valorActual(campo, ev as never) : null;
+      const { data, error } = await sb.from("peticiones_cambio").insert({ evento_id: ctx.eventoId, contacto_id: ctx.contactoId, campo, valor_actual: actual === null ? null : String(actual), valor_pedido: c.valorPedido }).select("id").single();
       falla(error, "registrar cambio");
-      await pendiente(ctx, "cambio", `${ctx.nombre} pide cambiar ${c.campo}: ${c.valorPedido}`);
+      const texto = `${ETIQUETA_CAMPO[campo]}: ${mostrarValor(campo, c.valorPedido)}`;
+      await pendiente(ctx, "cambio", `${ctx.nombre} pide cambiar ${texto}`);
       await sistema(ctx.conversacionId, "María ha registrado una petición de cambio pendiente de validar");
-      await this.avisarEquipo(ctx, `${ctx.nombre} pide un cambio: ${c.campo} → ${c.valorPedido}`);
+      await this.avisarEquipo(ctx, `${ctx.nombre} pide un cambio: ${texto}`);
       return { id: data!.id as string };
     },
 

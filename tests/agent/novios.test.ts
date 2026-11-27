@@ -91,7 +91,9 @@ describe("herramientas del ámbito novios", () => {
     const al = almacen();
     const repo = { buscarConocimiento: al.buscarConocimiento, leerFicha: () => al.leerFicha({} as ContextoNovios), registrarCambio: (c: { campo: string; valorPedido: string }) => al.registrarCambio({} as ContextoNovios, c), crearPendiente: async () => ({ id: "x" }), guardarLead: async () => { throw new Error("no"); }, proponerReunion: async () => ({ id: "x" }), avisarEquipo: async () => {} };
     expect(await ejecutar(amb, repo as never, "guardar_lead", { nombre: "x", tipoEvento: "boda" })).toContain("herramienta_no_permitida");
-    expect(await ejecutar(amb, repo as never, "registrar_cambio", { campo: "Menú", valorPedido: "Sin marisco" })).toContain("p1");
-    expect(al.log).toContain("cambio:Menú=Sin marisco");
+    expect(await ejecutar(amb, repo as never, "registrar_cambio", { campo: "menu", valorPedido: "Sin marisco" })).toContain("p1");
+    expect(al.log).toContain("cambio:menu=Sin marisco");
+    expect(await ejecutar(amb, repo as never, "registrar_cambio", { campo: "hora_banquete", valorPedido: "a las diez" })).toContain("valor_no_valido");
+    expect(await ejecutar(amb, repo as never, "registrar_cambio", { campo: "dato_interes", valorPedido: "x" })).toContain("campo_no_valido");
   });
 });

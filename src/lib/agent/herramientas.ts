@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { Ambito, Herramienta, Repositorio } from "./tipos";
+import { CAMPOS, esCampo, normalizarValor } from "@/lib/cambios";
 
 // Lista de herramientas por ámbito. El permiso se decide AQUÍ, en código, no en el prompt.
 const comunes: Herramienta[] = [
@@ -44,8 +45,8 @@ const soloNovios: Herramienta[] = [
   },
   {
     name: "registrar_cambio",
-    description: "Registra una petición de cambio para que la valide el comercial. Nunca modifica la ficha.",
-    input_schema: { type: "object", properties: { campo: { type: "string" }, valorPedido: { type: "string" } }, required: ["campo", "valorPedido"] },
+    description: "Registra una petición de cambio para que la valide el comercial. Nunca modifica la ficha. El campo es uno de la lista; si lo que piden no encaja en ninguno, usa 'otro' y descríbelo. Formato del valor: fecha AAAA-MM-DD; horas HH:MM (24 h); adultos y niños, un número; tipo_ceremonia, 'religiosa' o 'civil'; espacio y menu, texto; otro, texto libre.",
+    input_schema: { type: "object", properties: { campo: { type: "string", enum: [...CAMPOS] }, valorPedido: { type: "string" } }, required: ["campo", "valorPedido"] },
   },
   {
     name: "crear_pendiente",
@@ -72,7 +73,7 @@ const esquemas = {
     invitados: z.number().int().min(0).max(5000).optional(), notas: z.string().max(1000).optional(),
   }),
   consultar_ficha: z.object({}),
-  registrar_cambio: z.object({ campo: z.string().min(1).max(80), valorPedido: z.string().min(1).max(500) }),
+  registrar_cambio: z.object({ campo: z.string().min(1).max(80), valorPedido: z.string().min(1).max(1000) }),
   crear_pendiente: z.object({ tipo: z.enum(["pregunta_maria", "audio_foto", "nota"]), descripcion: z.string().min(1).max(500) }),
 } as const;
 
@@ -90,7 +91,13 @@ export async function ejecutar(ambito: Ambito, repo: Repositorio, nombre: string
     case "proponer_reunion": return JSON.stringify(await repo.proponerReunion({ preferencia: d.preferencia }));
     case "guardar_lead": return JSON.stringify(await repo.guardarLead(d as never));
     case "consultar_ficha": return JSON.stringify(await repo.leerFicha());
-    case "registrar_cambio": return JSON.stringify(await repo.registrarCambio({ campo: d.campo, valorPedido: d.valorPedido }));
+    case "registrar_cambio": {
+      // El valor se valida aquí, en código: así lo que llega a la comercial se puede aplicar a la ficha sin interpretar texto libre.
+      if (!esCampo(d.campo)) return JSON.stringify({ error: "campo_no_valido", campos: CAMPOS });
+      const v = normalizarValor(d.campo, d.valorPedido);
+      if (!v.ok) return JSON.stringify({ error: "valor_no_valido", ayuda: "Pide el dato de nuevo en el formato indicado en la herramienta, o usa el campo 'otro'." });
+      return JSON.stringify(await repo.registrarCambio({ campo: d.campo, valorPedido: String(v.valor) }));
+    }
     case "crear_pendiente": return JSON.stringify(await repo.crearPendiente({ tipo: d.tipo as never, descripcion: d.descripcion }));
   }
   return JSON.stringify({ error: "desconocida" });

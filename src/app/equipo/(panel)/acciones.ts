@@ -6,6 +6,7 @@ import { perfilActivo } from "@/lib/sesion";
 import { validarFicha } from "@/lib/ficha";
 import { clienteAdmin, hayClaveDeServicio } from "@/lib/supabase/admin";
 import { crearAviso } from "@/lib/avisos";
+import { COLUMNA, esCampo, normalizarValor, TEXTO_APROBADO, TEXTO_RECHAZADO } from "@/lib/cambios";
 
 /** D40: el titular que escribió por última vez recibe un correo (agrupado). Es un aviso en cola: no bloquea ni falla el envío del mensaje. */
 async function avisarNovios(conversacionId: string, mensajeId?: string) {
@@ -137,4 +138,46 @@ export async function editarFicha(formData: FormData) {
   if (e2) { console.error("titulares:", e2.message); redirect(`/equipo/c/${conv}/ficha?error=guardar`); }
   revalidatePath("/equipo");
   redirect(`/equipo/c/${conv}`);
+}
+
+/** D45: la responsable de la boda (o un administrador) aprueba o rechaza un cambio pedido por los novios. Los permisos los impone la base de datos (pet_validar). */
+export async function decidirCambio(formData: FormData) {
+  const perfil = await perfilActivo();
+  if (!perfil) redirect("/equipo/login");
+  const conv = String(formData.get("conversacion") ?? "");
+  const id = String(formData.get("cambio") ?? "");
+  const aprobar = formData.get("decision") === "aprobar";
+  const nota = String(formData.get("nota") ?? "").replace(/\s+/g, " ").trim().slice(0, 500);
+  const volver = (e?: string) => redirect(`/equipo/c/${conv}${e ? `?error=${e}` : ""}`);
+  if (!conv || !id || !["aprobar", "rechazar"].includes(String(formData.get("decision")))) return volver("cambio");
+  const sb = await clienteServidor();
+  const { data: pet } = await sb.from("peticiones_cambio").select("id,evento_id,campo,valor_pedido,estado").eq("id", id).maybeSingle();
+  if (!pet || pet.estado !== "pendiente") return volver("cambio");
+  const campo = esCampo(pet.campo) ? pet.campo : "otro";
+  // Primero se comprueba que el valor se puede aplicar, antes de tocar nada.
+  let aplicar: { columna: string; valor: string | number } | null = null;
+  if (aprobar && campo !== "otro") {
+    const v = normalizarValor(campo, pet.valor_pedido);
+    if (!v.ok) return volver("cambio_valor");
+    aplicar = { columna: COLUMNA[campo], valor: v.valor };
+  }
+  // Se reserva la decisión solo si sigue pendiente: dos personas no deciden lo mismo a la vez.
+  const { data: dec } = await sb.from("peticiones_cambio")
+    .update({ estado: aprobar ? "aprobada" : "rechazada", validado_por: perfil.id, validado_en: new Date().toISOString(), nota: nota || null })
+    .eq("id", id).eq("estado", "pendiente").select("id");
+  if (!dec?.length) return volver("permiso");
+  if (aplicar) {
+    const { data: ev } = await sb.from("eventos").update({ [aplicar.columna]: aplicar.valor }).eq("id", pet.evento_id).select("id");
+    if (!ev?.length) {
+      await sb.from("peticiones_cambio").update({ estado: "pendiente", validado_por: null, validado_en: null, nota: null }).eq("id", id);
+      return volver("cambio_aplicar");
+    }
+  }
+  const texto = nota || (aprobar ? TEXTO_APROBADO : TEXTO_RECHAZADO);
+  const { data: msg } = await sb.from("mensajes").insert({ conversacion_id: conv, autor: "equipo", usuario_id: perfil.id, texto }).select("id").single();
+  await sb.from("conversaciones").update({ ultima_actividad: new Date().toISOString(), estado: "humano" }).eq("id", conv);
+  if (hayClaveDeServicio()) await avisarNovios(conv, msg?.id);
+  revalidatePath(`/equipo/c/${conv}`);
+  revalidatePath("/equipo");
+  volver();
 }

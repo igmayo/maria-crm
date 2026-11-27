@@ -46,6 +46,7 @@ export interface PortalBoda {
   titular: { nombre: string; posicion: number };
   titulares: { nombre: string; posicion: number }[];
   comercial: { nombre: string; frase: string | null; foto: string | null; telefono: string | null } | null;
+  cambios: { campo: string; valorPedido: string; estado: string }[];
   evento: {
     fecha: string | null; lugar: string | null; tipo_ceremonia: string | null; hora_ceremonia: string | null; hora_banquete: string | null;
     adultos: number | null; ninos: number | null; invitados: number | null; menu: string | null;
@@ -69,7 +70,10 @@ export async function cargarPortal(token: string): Promise<PortalBoda | null> {
     const { data: p } = await sb.from("perfiles").select("nombre,frase,foto_url,telefono").eq("id", ev.responsable_id).maybeSingle();
     comercial = p ? { nombre: p.nombre, frase: p.frase, foto: p.foto_url, telefono: p.telefono } : null;
   }
+  // Solo lo necesario para que los novios sigan sus peticiones: nunca la nota interna ni quién decidió.
+  const { data: cam } = await sb.from("peticiones_cambio").select("campo,valor_pedido,estado").eq("evento_id", c.evento_id).order("creado_en", { ascending: false }).limit(10);
+  const cambios = (cam ?? []).map((x) => ({ campo: x.campo as string, valorPedido: x.valor_pedido as string, estado: x.estado as string }));
   await sb.from("accesos").update({ ultimo_uso: new Date().toISOString() }).eq("id", a.id);
   const { responsable_id: _r, ...evento } = ev;
-  return { titular: { nombre: c.nombre, posicion: c.posicion }, titulares: (tit ?? []) as { nombre: string; posicion: number }[], comercial, evento };
+  return { titular: { nombre: c.nombre, posicion: c.posicion }, titulares: (tit ?? []) as { nombre: string; posicion: number }[], comercial, cambios, evento };
 }

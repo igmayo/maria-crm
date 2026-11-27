@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { cargarPortal } from "@/lib/acceso-servidor";
 import { fechaLarga } from "@/lib/formato";
+import { ETIQUETA_CAMPO, ESTADO_NOVIOS, esCampo, mostrarValor } from "@/lib/cambios";
 import PestanasBoda from "@/components/PestanasBoda";
 import { ETIQUETA_CEREMONIA, textoInvitados } from "@/lib/ficha";
 
@@ -45,6 +46,22 @@ export default async function PortalBoda({ params }: { params: Promise<{ token: 
           ))}
         </dl>
       </section>
+      {p.cambios.length > 0 && (
+        <section aria-label="Cambios que habéis pedido" style={{ background: "#fff", border: "1px solid var(--borde)", borderRadius: 16, padding: 20, display: "flex", flexDirection: "column", gap: 12 }}>
+          <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600 }}>Cambios que habéis pedido</h2>
+          {p.cambios.map((c, i) => {
+            const campo = esCampo(c.campo) ? c.campo : "otro";
+            const cls = c.estado === "aprobada" ? "g" : c.estado === "rechazada" ? "gr" : "a";
+            return (
+              <div key={i} style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center", fontSize: 14 }}>
+                <span>{campo === "otro" ? c.valorPedido : `${ETIQUETA_CAMPO[campo]} → ${mostrarValor(campo, c.valorPedido)}`}</span>
+                <span className={`bd ${cls}`}>{ESTADO_NOVIOS[c.estado] ?? c.estado}</span>
+              </div>
+            );
+          })}
+          <div style={{ fontSize: 12, color: "var(--suave)" }}>Vuestra comercial confirma cada cambio. Los datos de arriba se actualizan cuando lo aprueba.</div>
+        </section>
+      )}
       {p.comercial && (
         <section aria-label="Vuestra comercial" style={{ background: "#fff", border: "1px solid var(--borde)", borderRadius: 16, padding: 16, display: "flex", alignItems: "center", gap: 16 }}>
           {p.comercial.foto

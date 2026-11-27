@@ -36,5 +36,6 @@ Hecho también: botón Reabrir y asignar/reasignar (solo administrador, migraci�
 Hecho también: panel de usuarios (`/equipo/usuarios`, invitación por Resend, D36, migración 0006) y página `/equipo/invitacion`.
 Hecho también: ficha editable (`/equipo/c/[id]/ficha`, migración 0007, D38), dar acceso a novios (`/equipo/c/[id]/acceso`, migración 0008, D39) y portal de solo lectura `/boda/[token]`.
 Hecho también: perfil de comercial con foto y frase (`/equipo/perfil`, migración 0009, D42), chat de novios con María (`/boda/[token]`, `src/lib/novios/`, `src/app/api/boda/`, D43) y avisos por correo (`src/lib/avisos*.ts`, `src/app/api/avisos/`, migración 0010, D40/D44). Pendiente de probar con claves reales y de programar la llamada periódica a `/api/avisos`.
-Siguiente: validación de solicitudes de cambio por la comercial, Pedir-enlace/Verificar-código, actualización en vivo, pantalla "Enseñar" para la base de conocimiento.
+Hecho también: validación de cambios pedidos por los novios (D45, migración 0011, `src/lib/cambios.ts`, acción `decidirCambio`, tarjeta "Cambios pedidos" en la conversación y sección en Mi boda). Pendiente: auto-resolver el pendiente tipo cambio al decidir (fase 3).
+Siguiente: Pedir-enlace/Verificar-código, actualización en vivo, pantalla "Enseñar" para la base de conocimiento.
 Vulnerabilidades conocidas y aceptadas por ahora (riesgo bajo): postcss dentro de Next, y zod; revisar antes de producción (Next 16, zod 4).

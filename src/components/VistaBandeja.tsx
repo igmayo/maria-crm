@@ -4,9 +4,10 @@ import { listarBandeja, cargarConversacion, listarComerciales, type Filtro, type
 import { perfilActivo } from "@/lib/sesion";
 import { hayClaveDeServicio } from "@/lib/supabase/admin";
 import { estadoEnlaces, type EstadoEnlace } from "@/lib/acceso-servidor";
+import { ETIQUETA_CAMPO, esCampo, mostrarValor } from "@/lib/cambios";
 import { ETIQUETA_ESTADO, COLOR_ESTADO, ETIQUETA_CEREMONIA, textoInvitados, textoHorarios } from "@/lib/ficha";
 import { encabezadoDia, etiquetaFecha, fechaLarga, horaMensaje, iniciales } from "@/lib/formato";
-import { enviarMensaje, cerrarConversacion, reabrirConversacion, asignarConversacion } from "@/app/equipo/(panel)/acciones";
+import { enviarMensaje, cerrarConversacion, reabrirConversacion, asignarConversacion, decidirCambio } from "@/app/equipo/(panel)/acciones";
 import Redactor from "@/components/Redactor";
 import TextoMaria from "@/components/TextoMaria";
 
@@ -73,7 +74,7 @@ export default async function VistaBandeja({ filtro, q, seleccionada, error, r }
               <div className="item-cuerpo">
                 <div className="item-fila"><strong style={{ fontWeight: 600 }}>{i.titulares}</strong><span>{etiquetaFecha(i.ultimaActividad)}</span></div>
                 <div className="item-texto">{i.ultimoTexto}</div>
-                <div className="item-pie"><span className={`bd ${c}`}>{t}</span>{i.responsable && <span>{i.esMia ? "Tú" : `La lleva ${i.responsable}`}</span>}</div>
+                <div className="item-pie"><span className={`bd ${c}`}>{t}</span>{i.cambios > 0 && <span className="bd bl">{i.cambios === 1 ? "1 cambio" : `${i.cambios} cambios`}</span>}{i.responsable && <span>{i.esMia ? "Tú" : `La lleva ${i.responsable}`}</span>}</div>
               </div>
             </Link>
           );
@@ -130,6 +131,10 @@ function Detalle({ conv, error, comerciales, enlaces }: { conv: Conversacion; er
         </header>
         <div className="hilo">
           {error === "asignar" && <p className="error" role="alert">No se ha podido asignar la conversación. Comprueba que el comercial siga activo.</p>}
+          {error === "cambio" && <p className="error" role="alert">Ese cambio ya no está pendiente o no se ha podido decidir. Actualiza la conversación.</p>}
+          {error === "cambio_valor" && <p className="error" role="alert">El valor pedido no se puede aplicar solo. Recházalo con una nota o edítalo en la ficha y usa “Otro”.</p>}
+          {error === "cambio_aplicar" && <p className="error" role="alert">No se ha podido aplicar el cambio a la ficha, así que sigue pendiente. Inténtalo de nuevo.</p>}
+          {error === "permiso" && <p className="error" role="alert">Solo la responsable de la boda y los administradores pueden decidir cambios.</p>}
           {error === "envio" && <p className="error" role="alert">No se ha podido enviar el mensaje. Inténtalo de nuevo.</p>}
           {conv.mensajes.length === 0 && <div className="dia">Aún no hay mensajes en esta conversación.</div>}
           {conv.mensajes.map((m) => {
@@ -171,6 +176,7 @@ function Detalle({ conv, error, comerciales, enlaces }: { conv: Conversacion; er
             ? <><Link href={`/equipo/c/${conv.id}/ficha`} className="btn-sec" style={{ marginTop: 14 }}>Editar ficha</Link><p style={{ margin: "10px 0 0", fontSize: 12, color: "var(--suave)" }}>Solo la responsable y los administradores pueden editarla. Lo que cambies lo ven los novios en “Mi boda”.</p></>
             : <p style={{ margin: "12px 0 0", fontSize: 12, color: "var(--suave)" }}>Solo la responsable y los administradores pueden editar la ficha.</p>}
         </div>
+        <TarjetaCambios conv={conv} />
         {conv.miembros.length > 0 && (
           <div>
             <h2>Compartida con</h2>
@@ -197,5 +203,61 @@ function Detalle({ conv, error, comerciales, enlaces }: { conv: Conversacion; er
         </div>
       </aside>
     </>
+  );
+}
+
+function TarjetaCambios({ conv }: { conv: Conversacion }) {
+  if (conv.cambios.length === 0) return null;
+  const pendientes = conv.cambios.filter((c) => c.estado === "pendiente");
+  const decididos = conv.cambios.filter((c) => c.estado !== "pendiente").slice(0, 5);
+  const color = ["#0F6B62", "#A14A1F"];
+  return (
+    <div>
+      <h2>Cambios pedidos {pendientes.length > 0 && <span className="bd a" style={{ marginLeft: 8 }}>{pendientes.length === 1 ? "1 pendiente" : `${pendientes.length} pendientes`}</span>}</h2>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {pendientes.map((c) => {
+          const campo = esCampo(c.campo) ? c.campo : "otro";
+          const tarjeta = (
+            <div key={c.id} className="titular" style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span><strong style={{ fontWeight: 600, color: color[(c.posicion ?? 1) - 1] ?? "inherit" }}>{c.titular ?? "Novios"}</strong> <span style={{ fontSize: 12, color: "var(--suave)" }}>· {etiquetaFecha(c.creadoEn)}</span></span>
+                <span className={`bd ${campo === "otro" ? "gr" : "bl"}`}>{campo === "otro" ? "Otro" : "Dato de la ficha"}</span>
+              </div>
+              <div style={{ fontWeight: 600, fontSize: 13 }}>{ETIQUETA_CAMPO[campo]}</div>
+              {campo === "otro"
+                ? <div style={{ fontSize: 13 }}>{c.valorPedido}</div>
+                : <div style={{ fontSize: 13 }}>Ahora: {mostrarValor(campo, c.valorActual)} → <strong style={{ fontWeight: 600 }}>Piden: {mostrarValor(campo, c.valorPedido)}</strong></div>}
+              {conv.puedeEditarFicha ? (
+                <form action={decidirCambio} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <input type="hidden" name="conversacion" value={conv.id} />
+                  <input type="hidden" name="cambio" value={c.id} />
+                  {campo === "otro" && <span style={{ fontSize: 12, color: "var(--suave)" }}>No se aplica sola: resuélvelo tú y aprueba para avisar a los novios.</span>}
+                  <textarea className="fi" name="nota" maxLength={500} placeholder="Nota para los novios (opcional)" aria-label="Nota para los novios" style={{ minHeight: 56 }} />
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    <button className="btn-pri" type="submit" name="decision" value="aprobar" style={{ height: 38, fontSize: 13 }}>{campo === "otro" ? "Aprobar" : "Aprobar y aplicar"}</button>
+                    <button className="btn-sec" type="submit" name="decision" value="rechazar" style={{ height: 38, fontSize: 13 }}>Rechazar</button>
+                  </div>
+                </form>
+              ) : <span style={{ fontSize: 12, color: "var(--suave)" }}>Lo decide la responsable de la boda.</span>}
+            </div>
+          );
+          return tarjeta;
+        })}
+        {decididos.length > 0 && (
+          <div style={{ fontSize: 12, color: "var(--suave)" }}>
+            Decididos
+            <div style={{ marginTop: 6, display: "flex", flexDirection: "column", gap: 4 }}>
+              {decididos.map((c) => {
+                const campo = esCampo(c.campo) ? c.campo : "otro";
+                return <div key={c.id} style={{ display: "flex", gap: 6, alignItems: "center", color: "var(--texto)" }}>
+                  <span className={`bd ${c.estado === "aprobada" ? "g" : "gr"}`}>{c.estado === "aprobada" ? "Aprobado" : "Rechazado"}</span>
+                  <span>{ETIQUETA_CAMPO[campo]}: {mostrarValor(campo, c.valorPedido)}{c.decididoPor ? ` · ${c.decididoPor}` : ""}</span>
+                </div>;
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

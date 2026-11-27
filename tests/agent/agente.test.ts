@@ -69,7 +69,7 @@ describe("ejecución", () => {
   });
   it("un cambio de novios se registra como petición, no se aplica", async () => {
     const repo = repoFalso();
-    await ejecutarAgente({ ambito: novios, repo, llm: guion(uso("registrar_cambio", { campo: "postre", valorPedido: "tarta de tres alturas" }), texto("Lo pasa a validar tu comercial.")), modelo: "m", entrada: entrada("Queremos cambiar el postre") });
+    await ejecutarAgente({ ambito: novios, repo, llm: guion(uso("registrar_cambio", { campo: "otro", valorPedido: "tarta de tres alturas de postre" }), texto("Lo pasa a validar tu comercial.")), modelo: "m", entrada: entrada("Queremos cambiar el postre") });
     expect(repo.llamadas).toEqual(["cambio"]);
   });
   it("si el modelo falla, responde con un mensaje seguro y avisa al equipo", async () => {

@@ -159,6 +159,26 @@ ok(await falla("marta", "insert into avisos (tipo, conversacion_id) select 'equi
   } finally { await c.query("rollback").catch(() => {}); c.release(); }
 }
 
+console.log("Validar cambios de los novios");
+const DEC = "update peticiones_cambio set estado='aprobada', validado_por=$2, validado_en=now(), nota='Perfecto' where evento_id=$1";
+ok(await falla("marta", "insert into peticiones_cambio (evento_id, campo, valor_pedido) values ($1,'menu','x')", [E1]), "Un comercial no crea peticiones con su sesión (solo María, desde el servidor)");
+{
+  const c = await pool.connect();
+  try {
+    await c.query("begin");
+    await c.query("insert into peticiones_cambio (evento_id, campo, valor_pedido) values ($1,'hora_banquete','22:00')", [E1]);
+    const ver = async (usuario, sql, p) => { await c.query("set local role authenticated"); await c.query("select set_config('request.jwt.claim.sub', $1, true)", [U[usuario]]); try { return (await c.query(sql, p)).rowCount; } finally { await c.query("reset role"); } };
+    ok((await ver("marta", DEC, [E1, U.marta])) >= 1, "La responsable aprueba un cambio y deja una nota");
+    await c.query("update peticiones_cambio set estado='pendiente', validado_por=null, validado_en=null, nota=null");
+    ok((await ver("raul", DEC, [E1, U.raul])) === 0, "Otro comercial no valida cambios de una boda ajena");
+    ok((await ver("carla", DEC, [E1, U.carla])) === 0, "Una conversación compartida no da permiso para validar");
+    ok((await ver("admin", DEC, [E1, U.admin])) >= 1, "El administrador valida cualquier cambio");
+    let larga = false;
+    try { await c.query("savepoint s"); await c.query("update peticiones_cambio set nota=repeat('a',501)"); } catch { larga = true; await c.query("rollback to s"); }
+    ok(larga, "La nota no pasa de 500 caracteres");
+  } finally { await c.query("rollback").catch(() => {}); c.release(); }
+}
+
 console.log("Asignar conversaciones (solo el administrador)");
 async function asignacion(usuario, destino, preparar) {
   return como(usuario, async (q) => {
