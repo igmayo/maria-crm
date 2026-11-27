@@ -14,20 +14,22 @@ const roles: Record<string, string> = { administrador: "Administrador", comercia
 const tipos: Record<string, string> = { boda: "Boda", empresa: "Evento de empresa", otro: "Evento" };
 const colorTitular = ["#0F6B62", "#A14A1F"];
 
-function href(filtro: Filtro, q: string, id?: string) {
+function href(filtro: Filtro, q: string, id?: string, r?: string) {
   const p = new URLSearchParams();
+  if (r) p.set("r", r);
   if (filtro !== "todas") p.set("f", filtro);
   if (q) p.set("q", q);
   const s = p.toString();
   return (id ? `/equipo/c/${id}` : "/equipo") + (s ? `?${s}` : "");
 }
 
-export default async function VistaBandeja({ filtro, q, seleccionada, error }: { filtro: Filtro; q: string; seleccionada?: string; error?: string }) {
+export default async function VistaBandeja({ filtro, q, seleccionada, error, r }: { filtro: Filtro; q: string; seleccionada?: string; error?: string; r?: string }) {
   const perfil = await perfilActivo();
   if (!perfil) redirect("/equipo/login");
   const esAdmin = perfil.rol === "administrador";
+  const resp = esAdmin ? r : undefined; // el filtro por comercial es solo del administrador
   const [{ items, fallo }, conv, comerciales] = await Promise.all([
-    listarBandeja(filtro, q, perfil.id),
+    listarBandeja(filtro, q, perfil.id, resp),
     seleccionada ? cargarConversacion(seleccionada) : Promise.resolve(null),
     esAdmin && seleccionada ? listarComerciales() : Promise.resolve([]),
   ]);
@@ -40,14 +42,18 @@ export default async function VistaBandeja({ filtro, q, seleccionada, error }: {
           <h1>Bandeja {puedeCrear && <Link href="/equipo/nuevo" className="btn-pri" style={{ height: 34, fontSize: 12 }}>+ Nuevo contacto</Link>}</h1>
           <form method="get" action="/equipo">
             {filtro !== "todas" && <input type="hidden" name="f" value={filtro} />}
+            {resp && <input type="hidden" name="r" value={resp} />}
             <label className="buscar">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6" /><path d="M20 20l-4-4" /></svg>
               <input name="q" defaultValue={q} aria-label="Buscar pareja" placeholder="Buscar pareja" />
             </label>
           </form>
           <div className="filtros">
-            {filtros.map(([f, t]) => <Link key={f} href={href(f, q)} className={f === filtro ? "filtro on" : "filtro"}>{t}</Link>)}
+            {filtros.map(([f, t]) => <Link key={f} href={href(f, q, undefined, resp)} className={f === filtro ? "filtro on" : "filtro"}>{t}</Link>)}
           </div>
+          {resp && (
+            <p className="filtro-activo">Solo las de {items[0]?.responsable ?? "ese comercial"} · <Link href={href(filtro, q)}>Quitar filtro</Link></p>
+          )}
         </div>
         {fallo ? (
           <div className="vacio"><strong>No se han podido cargar las conversaciones</strong>Recarga la página. Si sigue igual, avisa a Iván.</div>
@@ -57,7 +63,7 @@ export default async function VistaBandeja({ filtro, q, seleccionada, error }: {
         ) : items.map((i) => {
           const [t, c] = estados[i.estado] ?? [i.estado, "gr"];
           return (
-            <Link key={i.id} href={href(filtro, q, i.id)} className={i.id === seleccionada ? "item sel" : "item"}>
+            <Link key={i.id} href={href(filtro, q, i.id, resp)} className={i.id === seleccionada ? "item sel" : "item"}>
               <div className={i.estado === "sin_asignar" ? "av p" : i.estado === "cerrada" ? "av gr" : "av"}>{iniciales(i.titulares)}</div>
               <div className="item-cuerpo">
                 <div className="item-fila"><strong style={{ fontWeight: 600 }}>{i.titulares}</strong><span>{etiquetaFecha(i.ultimaActividad)}</span></div>

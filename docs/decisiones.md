@@ -34,6 +34,7 @@ Estado a 27/11/2026. Diseño con visto bueno de la empresa. Hecho: esquema y per
 - **D33 · Cómo se incrusta en WordPress:** fragmento de código propio, sin plugin.
 - **D34 · Disponibilidad:** María atiende siempre, también fuera de horario, con criterio sobre el negocio; el equipo responde en horario de oficina. Se presenta siempre como asistente de IA.
 - **D35 · Asignar conversaciones:** solo el administrador asigna y reasigna, con un selector en la cabecera de la conversación. Al asignar cambian a la vez el responsable de la boda y de sus conversaciones; la conversación pasa a "Te toca" (si estaba cerrada, sigue cerrada). Solo se puede asignar a comerciales activos. No hay "tomar conversación": un comercial no ve las sin asignar (D22).
+- **D36 · Panel de usuarios:** solo el administrador invita, edita (nombre, rol), activa y desactiva. La invitación se envía por correo con Resend y, si el correo falla, se muestra el enlace de un solo uso para copiarlo. El enlace consume el token al crear la contraseña (mínimo 10 caracteres). Nunca puede quedar el sistema sin un administrador activo (base de datos, migración 0006). Al desactivar a alguien o quitarle el rol de comercial, el panel avisa de sus conversaciones abiertas y enlaza a ellas para reasignarlas una a una. El bloque de copias de seguridad aparece como "Pendiente de configurar" hasta que existan (D23).
 
 ## Pendiente de diseñar
 - Pantalla "Sin asignar" del administrador.

@@ -149,6 +149,15 @@ const trasReasignar = await como("admin", async (q) => {
 ok(trasReasignar.r === U.raul && trasReasignar.re === U.raul, "Reasignar una conversación ya asignada mueve también la boda");
 ok(await como("admin", async (q) => { await q("select asignar_conversacion($1,$2)", [C1, U.raul]); await q("set local role authenticated"); await q("select set_config('request.jwt.claim.sub',$1,true)", [U.marta]); return Number((await q("select count(*)::int n from conversaciones where id=$1", [C1])).rows[0].n); }) === 0, "Tras reasignar, la comercial anterior deja de verla");
 
+console.log("Panel de usuarios: último administrador");
+ok(await falla("admin", "update perfiles set activo=false where id=$1", [U.admin]), "El único administrador no puede desactivarse");
+ok(await falla("admin", "update perfiles set rol='comercial' where id=$1", [U.admin]), "El único administrador no puede quitarse el rol");
+ok(!(await falla("admin", "update perfiles set rol='diseno', activo=false where id=$1", [U.sergio])), "El administrador desactiva y cambia el rol de otro usuario");
+ok(!(await falla("admin", "update perfiles set nombre='Iván G.' where id=$1", [U.admin])), "El administrador sí puede cambiar su propio nombre");
+ok(!(await falla("admin", `update perfiles set rol='administrador' where id='${U.marta}'; update perfiles set activo=false where id='${U.admin}'`)), "Con dos administradores, uno puede desactivarse y queda el otro");
+ok(await falla("marta", "update perfiles set rol='administrador' where id=$1", [U.marta]), "Un comercial no se hace administrador");
+ok((await afecta("marta", "update perfiles set activo=false where id=$1", [U.raul])) === 0, "Un comercial no desactiva a otro");
+
 console.log("Alta de usuarios");
 async function comoSuper(fn) {
   const c = await pool.connect();
@@ -161,7 +170,9 @@ const nuevo = await comoSuper(async (q) => {
 });
 ok(nuevo && nuevo.rol === "comercial" && nuevo.activo === false, "Un usuario nuevo nace como comercial desactivado");
 const primero = await comoSuper(async (q) => {
+  await q("alter table perfiles disable trigger perfiles_ultimo_admin");
   await q("update perfiles set rol='comercial' where rol='administrador'");
+  await q("alter table perfiles enable trigger perfiles_ultimo_admin");
   await q("insert into auth.users (id, email) values ('b0000000-0000-0000-0000-000000000002','IGuerrero@sedee.io')");
   return (await q("select rol, activo from perfiles where id='b0000000-0000-0000-0000-000000000002'")).rows[0];
 });

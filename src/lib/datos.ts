@@ -4,7 +4,7 @@ import { sinAcentos } from "@/lib/formato";
 export type Filtro = "todas" | "te_toca" | "mias" | "sin_asignar";
 
 export interface ItemBandeja {
-  id: string; titulares: string; estado: string; responsable: string | null; esMia: boolean;
+  id: string; titulares: string; estado: string; responsable: string | null; responsableId: string | null; esMia: boolean;
   ultimoTexto: string; ultimaActividad: string;
 }
 
@@ -14,7 +14,7 @@ export function nombreTitulares(c: Contacto[]): string {
   return [...c].sort((a, b) => a.posicion - b.posicion).map((x) => x.nombre).join(" y ") || "Sin nombre";
 }
 
-export async function listarBandeja(filtro: Filtro, q: string, miId: string): Promise<{ items: ItemBandeja[]; fallo: boolean }> {
+export async function listarBandeja(filtro: Filtro, q: string, miId: string, responsable?: string): Promise<{ items: ItemBandeja[]; fallo: boolean }> {
   const sb = await clienteServidor();
   const { data: convs, error } = await sb
     .from("conversaciones")
@@ -36,12 +36,13 @@ export async function listarBandeja(filtro: Filtro, q: string, miId: string): Pr
   }
   let items: ItemBandeja[] = lista.map((c) => ({
     id: c.id, titulares: nombreTitulares(c.evento?.contactos ?? []), estado: c.estado,
-    responsable: c.responsable?.nombre ?? null, esMia: c.responsable_id === miId,
+    responsable: c.responsable?.nombre ?? null, responsableId: c.responsable_id, esMia: c.responsable_id === miId,
     ultimoTexto: ultimo.get(c.id) ?? "Sin mensajes todavía", ultimaActividad: c.ultima_actividad,
   }));
   if (filtro === "te_toca") items = items.filter((i) => i.estado === "te_toca");
   if (filtro === "mias") items = items.filter((i) => i.esMia);
   if (filtro === "sin_asignar") items = items.filter((i) => i.estado === "sin_asignar");
+  if (responsable) items = items.filter((i) => i.responsableId === responsable);
   const t = sinAcentos(q.trim());
   if (t) items = items.filter((i) => sinAcentos(i.titulares).includes(t));
   return { items, fallo: false };
@@ -95,4 +96,34 @@ export async function listarComerciales(): Promise<{ id: string; nombre: string 
   const sb = await clienteServidor();
   const { data } = await sb.from("perfiles").select("id,nombre").eq("rol", "comercial").eq("activo", true).order("nombre");
   return (data ?? []) as { id: string; nombre: string }[];
+}
+
+export interface UsuarioPanel {
+  id: string; nombre: string; email: string; rol: string; activo: boolean;
+  /** undefined = no se pudo consultar; null = nunca ha entrado */
+  ultimoAcceso: string | null | undefined;
+  conversaciones: number;
+}
+
+/** Solo para el administrador: el panel de usuarios. El último acceso viene de Auth (clave de servicio, solo lectura). */
+export async function listarUsuarios(): Promise<UsuarioPanel[]> {
+  const sb = await clienteServidor();
+  const { data: perfiles } = await sb.from("perfiles").select("id,nombre,email,rol,activo").order("activo", { ascending: false }).order("nombre");
+  const { data: convs } = await sb.from("conversaciones").select("responsable_id").neq("estado", "cerrada").not("responsable_id", "is", null).limit(5000);
+  const cuenta = new Map<string, number>();
+  for (const c of (convs ?? []) as { responsable_id: string }[]) cuenta.set(c.responsable_id, (cuenta.get(c.responsable_id) ?? 0) + 1);
+  const acceso = new Map<string, string | null>();
+  let conAcceso = false;
+  try {
+    const { clienteAdmin, hayClaveDeServicio } = await import("@/lib/supabase/admin");
+    if (hayClaveDeServicio()) {
+      const { data } = await clienteAdmin().auth.admin.listUsers({ perPage: 1000 });
+      for (const u of data?.users ?? []) acceso.set(u.id, u.last_sign_in_at ?? null);
+      conAcceso = Boolean(data);
+    }
+  } catch (e) { console.error("usuarios (acceso):", e instanceof Error ? e.message : "fallo"); }
+  return ((perfiles ?? []) as { id: string; nombre: string; email: string; rol: string; activo: boolean }[]).map((p) => ({
+    ...p, conversaciones: cuenta.get(p.id) ?? 0,
+    ultimoAcceso: conAcceso && acceso.has(p.id) ? acceso.get(p.id) : undefined,
+  }));
 }

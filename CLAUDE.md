@@ -22,7 +22,7 @@ Chat web + CRM + portal de novios, con una asistente de IA llamada María. Lee `
 
 ## Estructura
 - `src/lib/agent/`: núcleo del agente, independiente del canal. Pruebas en `tests/agent/`.
-- `src/app/equipo/`: panel del equipo (login, bandeja, conversación, nuevo contacto). Sesión con Supabase Auth; el middleware está en `src/middleware.ts`.
+- `src/app/equipo/`: panel del equipo (login, bandeja, conversación, nuevo contacto, usuarios, invitación). Sesión con Supabase Auth; el middleware está en `src/middleware.ts`.
 - `src/lib/chat/`: lógica del chat público (servicio con límites, almacén de Supabase intercambiable). Usa la clave de servicio, así que solo se importa desde el servidor.
 - `src/lib/datos.ts`: lecturas del panel (siempre con la sesión de la persona, para que actúe RLS).
 - `supabase/migrations/`: esquema y permisos, aplicados en orden.
@@ -31,5 +31,6 @@ Chat web + CRM + portal de novios, con una asistente de IA llamada María. Lee `
 Hecho: esquema, permisos, núcleo del agente, login del equipo, bandeja, conversación, ficha, Nuevo contacto y chat público con María (`/chat`, `src/lib/chat/`, `src/app/api/chat/`).
 Pendiente de probar con claves reales: el chat público contra Supabase y la API de Claude (las pruebas usan un almacén en memoria).
 Hecho también: botón Reabrir y asignar/reasignar (solo administrador, migración 0005, D35).
-Siguiente: panel de usuarios, actualización en vivo, pantalla "Enseñar" para la base de conocimiento.
+Hecho también: panel de usuarios (`/equipo/usuarios`, invitación por Resend, D36, migración 0006) y página `/equipo/invitacion`.
+Siguiente: actualización en vivo, pantalla "Enseñar" para la base de conocimiento.
 Vulnerabilidades conocidas y aceptadas por ahora (riesgo bajo): postcss dentro de Next, y zod; revisar antes de producción (Next 16, zod 4).

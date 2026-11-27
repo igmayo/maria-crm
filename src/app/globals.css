@@ -129,3 +129,30 @@ textarea.fi{height:96px;padding:10px 14px;resize:vertical}
 .cp-pie input:focus{border-color:var(--ambar)}
 .cp-pie button{width:46px;height:46px;border-radius:50%;border:0;background:var(--ambar);color:var(--texto);display:flex;align-items:center;justify-content:center;flex:none}
 .cp-pie button:disabled{opacity:.5}
+
+/* Panel de usuarios */
+.pagina{flex:1;min-width:0;overflow:auto;padding:28px 32px;display:flex;flex-direction:column;gap:20px;background:#FAF8F4}
+.pagina-cab h1{margin:0;font-size:22px;font-weight:600}
+.pagina-cab p{margin:4px 0 0;font-size:13px;color:var(--suave)}
+.aviso-ok{margin:0;padding:12px 14px;border-radius:12px;background:#E4F3E6;color:#1E5B2B;font-size:13px;display:block}
+.tabla{background:#fff;border:1px solid #E8E2D6;border-radius:16px;overflow:hidden}
+.tabla-cab,.tabla-fila{display:grid;grid-template-columns:minmax(200px,2.2fr) 1fr 1.2fr 1.2fr auto;gap:12px;align-items:center;padding:12px 20px}
+.tabla-cab{font-size:12px;font-weight:600;color:var(--suave);background:#FFF9EE;border-bottom:1px solid #E8E2D6}
+.tabla-fila{border-bottom:1px solid #F0EBDF;font-size:14px}
+.tabla-fila:last-child{border-bottom:0}
+.persona{display:flex;align-items:center;gap:12px;min-width:0}
+.persona small{display:block;font-size:12px;color:var(--suave);overflow:hidden;text-overflow:ellipsis}
+.acciones-fila{display:flex;align-items:flex-start;gap:12px;justify-content:flex-end}
+.acciones-fila summary{cursor:pointer;list-style:none;height:34px;font-size:12px}
+.acciones-fila summary::-webkit-details-marker{display:none}
+.editar{display:flex;flex-direction:column;gap:10px;margin-top:10px;padding:14px;border:1px solid #E8E2D6;border-radius:12px;background:#fff;min-width:240px}
+.aviso-fila{grid-column:1/-1;margin:0;padding:10px 14px;border-radius:10px;background:#FFF3D6;color:#6B4200;font-size:13px}
+.aviso-fila a{color:#6B4200;font-weight:600}
+.inv,.roles{background:#fff;border:1px solid #E8E2D6;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px}
+.inv h2,.roles h2{margin:0;font-size:16px;font-weight:600}
+.roles p{margin:0;font-size:13px;color:var(--suave)}
+.nota{margin:0;font-size:12px;color:var(--suave)}
+.inv .btn-pri{align-self:flex-start}
+.filtro-activo{margin:8px 0 0;font-size:12px;color:#6B4200}
+.filtro-activo a{color:#6B4200;font-weight:600}
+@media (max-width:900px){.tabla-cab{display:none}.tabla-fila{grid-template-columns:1fr;gap:6px}.acciones-fila{justify-content:flex-start}}
