@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { cargarPortal } from "@/lib/acceso-servidor";
 import { fechaLarga } from "@/lib/formato";
+import PestanasBoda from "@/components/PestanasBoda";
 import { ETIQUETA_CEREMONIA, textoInvitados } from "@/lib/ficha";
 
 // El enlace es personal: que no se indexe y que no viaje en la cabecera Referer a otras webs.
@@ -34,13 +35,8 @@ export default async function PortalBoda({ params }: { params: Promise<{ token: 
     ["Invitados", textoInvitados(e) === "Sin indicar" ? null : textoInvitados(e)],
     ["Menú", e.menu],
   ];
-  return (
-    <main style={{ maxWidth: 520, margin: "0 auto", padding: "28px 16px 48px", display: "flex", flexDirection: "column", gap: 20 }}>
-      <Image src="/logo-guadalquivir.png" alt="Guadalquivir Catering" width={180} height={60} priority style={{ height: "auto" }} />
-      <header>
-        <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>{nombres}</h1>
-        <p style={{ margin: "4px 0 0", fontSize: 14, color: "var(--suave)" }}>Vuestra boda{e.fecha ? ` · ${fechaLarga(e.fecha).toLowerCase()}` : ""}</p>
-      </header>
+  const miBoda = (
+    <div style={{ padding: "20px 16px 40px", display: "flex", flexDirection: "column", gap: 20 }}>
       <section aria-label="Los datos de vuestra boda" style={{ background: "#fff", border: "1px solid var(--borde)", borderRadius: 16, padding: 20 }}>
         <h2 style={{ margin: "0 0 14px", fontSize: 16, fontWeight: 600 }}>Los datos de vuestra boda</h2>
         <dl style={{ margin: 0, display: "grid", gridTemplateColumns: "110px 1fr", gap: "10px 12px", fontSize: 14 }}>
@@ -64,6 +60,18 @@ export default async function PortalBoda({ params }: { params: Promise<{ token: 
         </section>
       )}
       <p style={{ margin: 0, fontSize: 12, color: "var(--suave)" }}>Los cambios los confirma siempre vuestra comercial. Este enlace es personal: no lo compartáis.</p>
+    </div>
+  );
+  return (
+    <main style={{ maxWidth: 520, margin: "0 auto", height: "100dvh", display: "flex", flexDirection: "column", background: "#FFF9EE" }}>
+      <header style={{ display: "flex", alignItems: "center", gap: 12, padding: "18px 20px 12px", background: "#fff" }}>
+        <Image src="/logo-icono.png" alt="Guadalquivir Catering" width={40} height={40} priority style={{ objectFit: "contain", flex: "none" }} />
+        <div>
+          <h1 style={{ margin: 0, fontSize: 16, fontWeight: 600 }}>{nombres}</h1>
+          <p style={{ margin: 0, fontSize: 12, color: "var(--suave)" }}>Vuestra boda{e.fecha ? ` · ${fechaLarga(e.fecha).toLowerCase()}` : ""}</p>
+        </div>
+      </header>
+      <PestanasBoda token={token} yo={{ nombre: p.titular.nombre, posicion: p.titular.posicion }} titulares={nombres} comercial={p.comercial ? { nombre: p.comercial.nombre, foto: p.comercial.foto } : null} miBoda={miBoda} />
     </main>
   );
 }

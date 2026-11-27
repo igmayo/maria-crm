@@ -23,6 +23,7 @@ function almacenMemoria() {
     async guardarLead(_c, l) { log.push("lead"); leads.push(l); },
     async proponerReunion() { log.push("reunion"); },
     async avisarEquipo(_c, m) { log.push("aviso:" + m); },
+    async esperaPersona() { log.push("espera-persona"); },
     async registrarEjecucion() { log.push("ejecucion"); },
   };
   return a;

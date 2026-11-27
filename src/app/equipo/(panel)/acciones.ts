@@ -4,6 +4,17 @@ import { revalidatePath } from "next/cache";
 import { clienteServidor } from "@/lib/supabase/servidor";
 import { perfilActivo } from "@/lib/sesion";
 import { validarFicha } from "@/lib/ficha";
+import { clienteAdmin, hayClaveDeServicio } from "@/lib/supabase/admin";
+import { crearAviso } from "@/lib/avisos";
+
+/** D40: el titular que escribió por última vez recibe un correo (agrupado). Es un aviso en cola: no bloquea ni falla el envío del mensaje. */
+async function avisarNovios(conversacionId: string, mensajeId?: string) {
+  try {
+    const admin = clienteAdmin();
+    const { data: ult } = await admin.from("mensajes").select("contacto_id").eq("conversacion_id", conversacionId).eq("autor", "titular").order("creado_en", { ascending: false }).limit(1).maybeSingle();
+    if (ult?.contacto_id) await crearAviso(admin, { tipo: "novios_respuesta", conversacionId, contactoId: ult.contacto_id, mensajeId });
+  } catch (e) { console.error("aviso a novios:", e instanceof Error ? e.message : "error"); }
+}
 
 export async function enviarMensaje(formData: FormData) {
   const perfil = await perfilActivo();
@@ -13,8 +24,9 @@ export async function enviarMensaje(formData: FormData) {
   const modo = formData.get("modo") === "nota_interna" ? "nota_interna" : "equipo";
   if (!id || !texto) return;
   const sb = await clienteServidor();
-  const { error } = await sb.from("mensajes").insert({ conversacion_id: id, autor: modo, usuario_id: perfil.id, texto });
+  const { data: nuevo, error } = await sb.from("mensajes").insert({ conversacion_id: id, autor: modo, usuario_id: perfil.id, texto }).select("id").single();
   if (error) redirect(`/equipo/c/${id}?error=envio`);
+  if (modo === "equipo" && hayClaveDeServicio()) await avisarNovios(id, nuevo?.id);
   await sb.from("conversaciones").update({ ultima_actividad: new Date().toISOString(), ...(modo === "equipo" ? { estado: "humano" } : {}) }).eq("id", id);
   revalidatePath(`/equipo/c/${id}`);
   redirect(`/equipo/c/${id}`);

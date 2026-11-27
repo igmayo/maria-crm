@@ -141,6 +141,24 @@ ok((await afecta("admin", "update perfiles set frase=null, foto_url=null where i
 ok(await falla("marta", "update perfiles set frase=repeat('a',141) where id=$1", [U.marta]), "La frase no pasa de 140 caracteres");
 ok(!(await falla("marta", "update perfiles set frase=repeat('a',140) where id=$1", [U.marta])), "Una frase de 140 caracteres sí vale");
 
+console.log("Avisos (solo servidor)");
+ok(await falla("admin", "select count(*) from avisos"), "Ni el administrador lee la cola de avisos con su sesión");
+ok(await falla("marta", "insert into avisos (tipo, conversacion_id) select 'equipo_te_toca', id from conversaciones limit 1"), "Un comercial no escribe avisos");
+{
+  const c = await pool.connect();
+  try {
+    await c.query("begin");
+    const cv = (await c.query("select id from conversaciones limit 1")).rows[0].id;
+    const m = (await c.query("insert into mensajes (conversacion_id, autor, texto) values ($1,'titular','hola') returning id", [cv])).rows[0].id;
+    await c.query("insert into avisos (tipo, conversacion_id, mensaje_id) values ('recordatorio_4h',$1,$2)", [cv, m]);
+    let repetido = false;
+    try { await c.query("savepoint s"); await c.query("insert into avisos (tipo, conversacion_id, mensaje_id) values ('recordatorio_4h',$1,$2)", [cv, m]); } catch { repetido = true; await c.query("rollback to s"); }
+    ok(repetido, "No se duplica el recordatorio de 4 h del mismo mensaje");
+    await c.query("insert into avisos (tipo, conversacion_id, mensaje_id) values ('recordatorio_24h',$1,$2)", [cv, m]);
+    ok(true, "El recordatorio de 24 h del mismo mensaje sí se permite");
+  } finally { await c.query("rollback").catch(() => {}); c.release(); }
+}
+
 console.log("Asignar conversaciones (solo el administrador)");
 async function asignacion(usuario, destino, preparar) {
   return como(usuario, async (q) => {

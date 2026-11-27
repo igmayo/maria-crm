@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Registro } from "@/lib/agent";
 import type { Almacen, Contexto, Lead } from "./servicio";
 import { sinAcentos } from "@/lib/formato";
+import { crearAviso } from "@/lib/avisos";
 
 const DIAS_ENLACE = 30;
 const TEXTO_CONSENTIMIENTO = "chat-publico-v1";
@@ -134,6 +135,16 @@ export function almacenSupabase(sb: SupabaseClient): Almacen {
       await pendiente(ctx, "pregunta_maria", motivo);
       await aSinAsignar(ctx);
       await sistema(ctx.conversacionId, "María ha avisado al equipo");
+    },
+
+    async esperaPersona(ctx) {
+      const { data: cv } = await sb.from("conversaciones").select("responsable_id").eq("id", ctx.conversacionId).maybeSingle();
+      await sb.from("conversaciones").update({ estado: cv?.responsable_id ? "te_toca" : "sin_asignar", ultima_actividad: new Date().toISOString() }).eq("id", ctx.conversacionId);
+      const { data: ult } = await sb.from("mensajes").select("creado_en").eq("conversacion_id", ctx.conversacionId).eq("autor", "equipo").order("creado_en", { ascending: false }).limit(1).maybeSingle();
+      let q = sb.from("avisos").select("id").eq("conversacion_id", ctx.conversacionId).eq("tipo", "equipo_te_toca").is("descartado_en", null);
+      if (ult) q = q.gt("creado_en", ult.creado_en);
+      const { data: previo } = await q.limit(1).maybeSingle();
+      if (!previo) await crearAviso(sb, { tipo: "equipo_te_toca", conversacionId: ctx.conversacionId, motivo: "Han vuelto a escribir en una conversación que lleva el equipo" });
     },
 
     async registrarEjecucion(ctx, r: Registro) {

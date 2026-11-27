@@ -25,6 +25,8 @@ export interface Almacen {
   guardarLead(ctx: Contexto, lead: Lead): Promise<void>;
   proponerReunion(ctx: Contexto, preferencia: string): Promise<void>;
   avisarEquipo(ctx: Contexto, motivo: string): Promise<void>;
+  /** Alguien escribe en una conversación que ya lleva el equipo (o cerrada): vuelve a "Te toca" y se avisa por correo (D40). */
+  esperaPersona(ctx: Contexto): Promise<void>;
   registrarEjecucion(ctx: Contexto, r: Registro): Promise<void>;
 }
 
@@ -72,7 +74,10 @@ export async function procesarMensaje(args: {
   const previo = await almacen.historial(ctx.conversacionId, HISTORIAL);
   await almacen.guardarMensaje({ conversacionId: ctx.conversacionId, autor: "titular", contactoId: ctx.contactoId, texto });
 
-  if (ctx.estado === "humano" || ctx.estado === "cerrada") return { token, respuestas: [{ autor: "sistema", texto: TEXTO_EQUIPO }] };
+  if (ctx.estado === "humano" || ctx.estado === "cerrada") {
+    await almacen.esperaPersona(ctx);
+    return { token, respuestas: [{ autor: "sistema", texto: TEXTO_EQUIPO }] };
+  }
 
   if (!llm) {
     await almacen.avisarEquipo(ctx, "María no estaba disponible cuando escribió esta persona");

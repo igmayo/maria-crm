@@ -26,6 +26,7 @@ Chat web + CRM + portal de novios, con una asistente de IA llamada María. Lee `
 - `src/lib/chat/`: lógica del chat público (servicio con límites, almacén de Supabase intercambiable). Usa la clave de servicio, así que solo se importa desde el servidor.
 - `src/lib/datos.ts`: lecturas del panel (siempre con la sesión de la persona, para que actúe RLS).
 - `src/lib/correo.ts`, `plantilla-correo.ts`, `empresa.ts`: envío con Resend y plantilla común de correos (D37). Todo correo nuevo usa la plantilla.
+- `src/lib/novios/`: chat de novios (servicio y almacén de Supabase). `src/lib/avisos.ts`: cola y envío de avisos (D40).
 - `supabase/migrations/`: esquema y permisos, aplicados en orden.
 
 ## Estado
@@ -34,5 +35,6 @@ Pendiente de probar con claves reales: el chat público contra Supabase y la API
 Hecho también: botón Reabrir y asignar/reasignar (solo administrador, migración 0005, D35).
 Hecho también: panel de usuarios (`/equipo/usuarios`, invitación por Resend, D36, migración 0006) y página `/equipo/invitacion`.
 Hecho también: ficha editable (`/equipo/c/[id]/ficha`, migración 0007, D38), dar acceso a novios (`/equipo/c/[id]/acceso`, migración 0008, D39) y portal de solo lectura `/boda/[token]`.
-Siguiente: chat de novios con María, solicitudes de cambio, Pedir-enlace/Verificar-código, actualización en vivo, pantalla "Enseñar" para la base de conocimiento.
+Hecho también: perfil de comercial con foto y frase (`/equipo/perfil`, migración 0009, D42), chat de novios con María (`/boda/[token]`, `src/lib/novios/`, `src/app/api/boda/`, D43) y avisos por correo (`src/lib/avisos*.ts`, `src/app/api/avisos/`, migración 0010, D40/D44). Pendiente de probar con claves reales y de programar la llamada periódica a `/api/avisos`.
+Siguiente: validación de solicitudes de cambio por la comercial, Pedir-enlace/Verificar-código, actualización en vivo, pantalla "Enseñar" para la base de conocimiento.
 Vulnerabilidades conocidas y aceptadas por ahora (riesgo bajo): postcss dentro de Next, y zod; revisar antes de producción (Next 16, zod 4).
