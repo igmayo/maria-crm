@@ -11,7 +11,10 @@ export interface Contexto { conversacionId: string; contactoId: string; eventoId
 export interface Lead { nombre: string; email?: string; telefono?: string; tipoEvento: "boda" | "empresa" | "otro"; fecha?: string; invitados?: number; notas?: string }
 
 /** Todo lo que el chat público necesita de la base de datos. */
+export interface EstadoConv { lead: string | null; reunion: string | null; avisos: string[] }
+
 export interface Almacen {
+  estado(ctx: Contexto): Promise<EstadoConv>;
   contarCreadasUltimaHora(): Promise<number>;
   crear(tokenHash: string): Promise<Contexto>;
   porToken(tokenHash: string): Promise<Contexto | null>;
@@ -42,6 +45,14 @@ function repositorio(almacen: Almacen, ctx: Contexto): Repositorio {
   };
 }
 
+export function textoEstado(e: EstadoConv): string {
+  return [
+    e.lead ? `- Datos de contacto ya guardados: ${e.lead}` : "- Datos de contacto: todavía no guardados.",
+    e.reunion ? `- Reunión ya registrada, pendiente de confirmar el comercial: ${e.reunion}` : "- Reunión: todavía no registrada.",
+    e.avisos.length ? `- Avisos ya enviados al equipo: ${e.avisos.join("; ")}` : "- Avisos al equipo: ninguno.",
+  ].join("\n");
+}
+
 export async function procesarMensaje(args: {
   almacen: Almacen; llm: ClienteLLM | null; modelo: string; token?: string; texto: string;
 }): Promise<Resultado> {
@@ -69,7 +80,7 @@ export async function procesarMensaje(args: {
   }
 
   const r = await ejecutarAgente({
-    ambito: { tipo: "publico" }, repo: repositorio(almacen, ctx), llm, modelo,
+    ambito: { tipo: "publico" }, repo: repositorio(almacen, ctx), llm, modelo, estado: textoEstado(await almacen.estado(ctx)),
     entrada: { texto, historial: previo.map((m) => ({ rol: m.autor === "titular" ? "usuario" : "asistente", texto: m.texto })) },
   });
   await almacen.guardarMensaje({ conversacionId: ctx.conversacionId, autor: "maria", texto: r.respuesta });

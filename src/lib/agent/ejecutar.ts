@@ -9,9 +9,9 @@ const RESPUESTA_FALLO = "Ahora mismo no puedo ayudarte con eso. He avisado al eq
 export interface Resultado { respuesta: string; registro: Registro }
 
 export async function ejecutarAgente(args: {
-  ambito: Ambito; repo: Repositorio; llm: ClienteLLM; modelo: string; entrada: MensajeEntrada;
+  ambito: Ambito; repo: Repositorio; llm: ClienteLLM; modelo: string; entrada: MensajeEntrada; estado?: string;
 }): Promise<Resultado> {
-  const { ambito, repo, llm, modelo, entrada } = args;
+  const { ambito, repo, llm, modelo, entrada, estado } = args;
   const inicio = Date.now();
   const usadas: string[] = [];
   let tin = 0, tout = 0;
@@ -21,7 +21,7 @@ export async function ejecutarAgente(args: {
     { role: "user", content: entrada.texto.slice(0, MAX_TEXTO) },
   ];
   const herramientas = herramientasPara(ambito);
-  const sistema = promptSistema(ambito);
+  const sistema = promptSistema(ambito) + (estado ? `\n\nEstado de la conversación (datos reales del sistema):\n${estado}` : "");
   let respuesta = "";
 
   try {

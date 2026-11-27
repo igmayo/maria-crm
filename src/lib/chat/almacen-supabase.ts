@@ -23,6 +23,19 @@ export function almacenSupabase(sb: SupabaseClient): Almacen {
   }
 
   return {
+    async estado(ctx) {
+      const { data: ct } = await sb.from("contactos").select("nombre,email,telefono").eq("id", ctx.contactoId).maybeSingle();
+      const { data: ev } = await sb.from("eventos").select("tipo,invitados,ficha").eq("id", ctx.eventoId).maybeSingle();
+      const { data: re } = await sb.from("reuniones").select("preferencia").eq("evento_id", ctx.eventoId).order("creado_en", { ascending: false }).limit(1).maybeSingle();
+      const { data: pe } = await sb.from("pendientes").select("descripcion").eq("conversacion_id", ctx.conversacionId).eq("tipo", "pregunta_maria").is("resuelto_en", null).limit(5);
+      const guardado = ct && ct.nombre !== "Visitante";
+      const ficha = (ev?.ficha as Record<string, string> | null) ?? {};
+      const lead = guardado
+        ? [ct!.nombre, ct!.email, ct!.telefono, ev?.tipo, ev?.invitados ? `${ev.invitados} invitados` : null, ficha.fecha_texto].filter(Boolean).join(", ")
+        : null;
+      return { lead, reunion: re?.preferencia ?? null, avisos: (pe ?? []).map((x) => x.descripcion as string).filter(Boolean) };
+    },
+
     async contarCreadasUltimaHora() {
       const desde = new Date(Date.now() - 3600_000).toISOString();
       const { count, error } = await sb.from("conversaciones").select("id", { count: "exact", head: true }).eq("canal", "web").gte("creado_en", desde);
@@ -86,6 +99,8 @@ export function almacenSupabase(sb: SupabaseClient): Almacen {
     },
 
     async guardarLead(ctx, lead: Lead) {
+      const { data: antes } = await sb.from("contactos").select("nombre").eq("id", ctx.contactoId).maybeSingle();
+      const primera = !antes || antes.nombre === "Visitante";
       await sb.from("contactos").update({ nombre: lead.nombre, email: lead.email ?? null, telefono: lead.telefono ?? null }).eq("id", ctx.contactoId);
       const { data: ev } = await sb.from("eventos").select("ficha").eq("id", ctx.eventoId).maybeSingle();
       const ficha = { ...((ev?.ficha as Record<string, unknown>) ?? {}), ...(lead.fecha ? { fecha_texto: lead.fecha } : {}), ...(lead.notas ? { notas: lead.notas } : {}) };
@@ -93,10 +108,20 @@ export function almacenSupabase(sb: SupabaseClient): Almacen {
       const { error } = await sb.from("eventos").update({ tipo: lead.tipoEvento, fecha: iso, invitados: lead.invitados ?? null, ficha }).eq("id", ctx.eventoId);
       falla(error, "guardar lead");
       await aSinAsignar(ctx);
-      await sistema(ctx.conversacionId, "María ha guardado los datos de contacto");
+      await sistema(ctx.conversacionId, primera ? "María ha guardado los datos de contacto" : "María ha actualizado los datos de contacto");
     },
 
     async proponerReunion(ctx, preferencia) {
+      // Una sola reunión abierta por evento: si ya hay una, se actualiza su preferencia en vez de duplicarla.
+      const { data: previa } = await sb.from("reuniones").select("id,preferencia").eq("evento_id", ctx.eventoId).is("confirmada_en", null).order("creado_en", { ascending: false }).limit(1).maybeSingle();
+      if (previa) {
+        if (previa.preferencia === preferencia) return;
+        const { error } = await sb.from("reuniones").update({ preferencia }).eq("id", previa.id);
+        falla(error, "actualizar reunión");
+        await sb.from("pendientes").update({ descripcion: `Reunión pedida: ${preferencia}` }).eq("conversacion_id", ctx.conversacionId).eq("tipo", "reunion").is("resuelto_en", null);
+        await sistema(ctx.conversacionId, "María ha actualizado la preferencia de reunión");
+        return;
+      }
       const { error } = await sb.from("reuniones").insert({ evento_id: ctx.eventoId, preferencia });
       falla(error, "guardar reunión");
       await pendiente(ctx, "reunion", `Reunión pedida: ${preferencia}`);
@@ -104,6 +129,8 @@ export function almacenSupabase(sb: SupabaseClient): Almacen {
     },
 
     async avisarEquipo(ctx, motivo) {
+      const { data: igual } = await sb.from("pendientes").select("id").eq("conversacion_id", ctx.conversacionId).eq("tipo", "pregunta_maria").eq("descripcion", motivo).is("resuelto_en", null).limit(1).maybeSingle();
+      if (igual) return;
       await pendiente(ctx, "pregunta_maria", motivo);
       await aSinAsignar(ctx);
       await sistema(ctx.conversacionId, "María ha avisado al equipo");

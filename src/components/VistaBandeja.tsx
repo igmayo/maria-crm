@@ -5,6 +5,7 @@ import { perfilActivo } from "@/lib/sesion";
 import { encabezadoDia, etiquetaFecha, fechaLarga, horaMensaje, iniciales } from "@/lib/formato";
 import { enviarMensaje, cerrarConversacion } from "@/app/equipo/(panel)/acciones";
 import Redactor from "@/components/Redactor";
+import TextoMaria from "@/components/TextoMaria";
 
 const estados: Record<string, [string, string]> = {
   maria: ["María atiende", "g"], te_toca: ["Te toca", "a"], humano: ["En curso", "bl"], cerrada: ["Cerrada", "gr"], sin_asignar: ["Sin asignar", "p"],
@@ -25,7 +26,7 @@ export default async function VistaBandeja({ filtro, q, seleccionada, error }: {
   const perfil = await perfilActivo();
   if (!perfil) redirect("/equipo/login");
   const esAdmin = perfil.rol === "administrador";
-  const [items, conv] = await Promise.all([listarBandeja(filtro, q, perfil.id), seleccionada ? cargarConversacion(seleccionada) : Promise.resolve(null)]);
+  const [{ items, fallo }, conv] = await Promise.all([listarBandeja(filtro, q, perfil.id), seleccionada ? cargarConversacion(seleccionada) : Promise.resolve(null)]);
   const filtros: [Filtro, string][] = [["todas", "Todas"], ["te_toca", "Te toca"], ["mias", "Mis parejas"], ...(esAdmin ? ([["sin_asignar", "Sin asignar"]] as [Filtro, string][]) : [])];
   const puedeCrear = esAdmin || perfil.rol === "comercial";
   return (
@@ -44,7 +45,9 @@ export default async function VistaBandeja({ filtro, q, seleccionada, error }: {
             {filtros.map(([f, t]) => <Link key={f} href={href(f, q)} className={f === filtro ? "filtro on" : "filtro"}>{t}</Link>)}
           </div>
         </div>
-        {items.length === 0 ? (
+        {fallo ? (
+          <div className="vacio"><strong>No se han podido cargar las conversaciones</strong>Recarga la página. Si sigue igual, avisa a Iván.</div>
+        ) : items.length === 0 ? (
           <div className="vacio"><strong>{q || filtro !== "todas" ? "Nada con ese filtro" : "Todavía no hay conversaciones"}</strong>
             {q || filtro !== "todas" ? "Prueba con otra búsqueda o quita el filtro." : puedeCrear ? "Crea un contacto nuevo para empezar." : "Aquí verás las conversaciones que te compartan."}</div>
         ) : items.map((i) => {
@@ -108,7 +111,7 @@ function Detalle({ conv, error }: { conv: Conversacion; error?: string }) {
               const t = titulares.find((x) => x.id === m.contacto_id);
               cuerpo = <div className="burbuja b-titular">{t && <div className="quien" style={{ color: colorTitular[(m.posicion ?? 1) - 1] }}>{t.nombre}</div>}{m.texto}<small>{horaMensaje(m.creado_en)}</small></div>;
             } else if (m.autor === "maria") {
-              cuerpo = <div className="burbuja b-maria"><div className="quien" style={{ color: "#6B4200" }}>María</div>{m.texto}<small>{horaMensaje(m.creado_en)}</small></div>;
+              cuerpo = <div className="burbuja b-maria"><div className="quien" style={{ color: "#6B4200" }}>María</div><TextoMaria texto={m.texto ?? ""} /><small>{horaMensaje(m.creado_en)}</small></div>;
             } else if (m.autor === "nota_interna") {
               cuerpo = <div className="burbuja b-nota"><div className="quien">Nota interna · solo el equipo</div><strong style={{ fontWeight: 600 }}>{m.nombreEquipo}</strong>: {m.texto}<small>{horaMensaje(m.creado_en)}</small></div>;
             } else if (m.autor === "equipo") {

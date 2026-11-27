@@ -14,18 +14,19 @@ export function nombreTitulares(c: Contacto[]): string {
   return [...c].sort((a, b) => a.posicion - b.posicion).map((x) => x.nombre).join(" y ") || "Sin nombre";
 }
 
-export async function listarBandeja(filtro: Filtro, q: string, miId: string): Promise<ItemBandeja[]> {
+export async function listarBandeja(filtro: Filtro, q: string, miId: string): Promise<{ items: ItemBandeja[]; fallo: boolean }> {
   const sb = await clienteServidor();
-  const { data: convs } = await sb
+  const { data: convs, error } = await sb
     .from("conversaciones")
-    .select("id,estado,responsable_id,ultima_actividad,evento:eventos(tipo,contactos(nombre,posicion)),responsable:perfiles(nombre)")
+    .select("id,estado,responsable_id,ultima_actividad,evento:eventos(tipo,contactos(nombre,posicion)),responsable:perfiles!conversaciones_responsable_id_fkey(nombre)")
     .order("ultima_actividad", { ascending: false })
     .limit(100);
+  if (error) { console.error("bandeja:", error.message); return { items: [], fallo: true }; }
   const lista = (convs ?? []) as unknown as {
     id: string; estado: string; responsable_id: string | null; ultima_actividad: string;
     evento: { contactos: Contacto[] } | null; responsable: { nombre: string } | null;
   }[];
-  if (lista.length === 0) return [];
+  if (lista.length === 0) return { items: [], fallo: false };
   const { data: msgs } = await sb
     .from("mensajes").select("conversacion_id,autor,texto,creado_en")
     .in("conversacion_id", lista.map((c) => c.id)).order("creado_en", { ascending: false }).limit(400);
@@ -43,7 +44,7 @@ export async function listarBandeja(filtro: Filtro, q: string, miId: string): Pr
   if (filtro === "sin_asignar") items = items.filter((i) => i.estado === "sin_asignar");
   const t = sinAcentos(q.trim());
   if (t) items = items.filter((i) => sinAcentos(i.titulares).includes(t));
-  return items;
+  return { items, fallo: false };
 }
 
 export interface Mensaje {
@@ -63,10 +64,11 @@ export interface Conversacion {
 
 export async function cargarConversacion(id: string): Promise<Conversacion | null> {
   const sb = await clienteServidor();
-  const { data: c } = await sb
+  const { data: c, error } = await sb
     .from("conversaciones")
-    .select("id,estado,responsable_id,responsable:perfiles(nombre),evento:eventos(id,tipo,estado,fecha,lugar,invitados,origen,contactos(id,nombre,posicion,email,telefono)),miembros:conversacion_miembros(permiso,usuario:perfiles(nombre,rol))")
+    .select("id,estado,responsable_id,responsable:perfiles!conversaciones_responsable_id_fkey(nombre),evento:eventos(id,tipo,estado,fecha,lugar,invitados,origen,contactos(id,nombre,posicion,email,telefono)),miembros:conversacion_miembros(permiso,usuario:perfiles!conversacion_miembros_usuario_id_fkey(nombre,rol))")
     .eq("id", id).maybeSingle();
+  if (error) console.error("conversación:", error.message);
   if (!c) return null;
   const r = c as unknown as {
     id: string; estado: string; responsable_id: string | null; responsable: { nombre: string } | null;

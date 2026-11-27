@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { procesarMensaje, cargarHistorial, LIMITE_CONVERSACIONES_POR_HORA, LIMITE_MENSAJES_POR_CONVERSACION, MAX_TEXTO } from "@/lib/chat/servicio";
+import { procesarMensaje, cargarHistorial, textoEstado, LIMITE_CONVERSACIONES_POR_HORA, LIMITE_MENSAJES_POR_CONVERSACION, MAX_TEXTO } from "@/lib/chat/servicio";
 import type { Almacen, Contexto, Lead } from "@/lib/chat/servicio";
 import { generarToken, huella } from "@/lib/chat/token";
 import type { ClienteLLM, RespuestaLLM } from "@/lib/agent";
@@ -9,8 +9,10 @@ function almacenMemoria() {
   const log: string[] = [];
   const leads: Lead[] = [];
   let n = 0;
-  const a: Almacen & { convs: typeof convs; log: string[]; leads: Lead[]; creadasHora: number } = {
-    convs, log, leads, creadasHora: 0,
+  const estadoMem = { lead: null as string | null, reunion: null as string | null, avisos: [] as string[] };
+  const a: Almacen & { estadoMem: typeof estadoMem; convs: typeof convs; log: string[]; leads: Lead[]; creadasHora: number } = {
+    convs, log, leads, creadasHora: 0, estadoMem,
+    async estado() { return { ...estadoMem }; },
     async contarCreadasUltimaHora() { return a.creadasHora + convs.size; },
     async crear(hash) { n++; const c = { conversacionId: `c${n}`, contactoId: `k${n}`, eventoId: `e${n}`, estado: "maria", hash, mensajes: [] }; convs.set(c.conversacionId, c); return c; },
     async porToken(hash) { return [...convs.values()].find((c) => c.hash === hash) ?? null; },
@@ -31,6 +33,28 @@ const guion = (...r: RespuestaLLM[]): ClienteLLM & { vistos: unknown[] } => {
   let i = 0; const vistos: unknown[] = [];
   return { vistos, crear: async (p) => { vistos.push(structuredClone(p)); return r[Math.min(i++, r.length - 1)]; } };
 };
+
+describe("estado real para María", () => {
+  it("el texto de estado distingue lo hecho de lo pendiente", () => {
+    expect(textoEstado({ lead: null, reunion: null, avisos: [] })).toMatch(/todavía no guardados[\s\S]*todavía no registrada[\s\S]*ninguno/);
+    const t = textoEstado({ lead: "Lucía, lucia@ejemplo.test", reunion: "martes a las 17:00", avisos: ["menús"] });
+    expect(t).toContain("ya guardados: Lucía");
+    expect(t).toContain("ya registrada");
+    expect(t).toContain("ya enviados al equipo: menús");
+  });
+  it("el modelo recibe el estado real en cada turno", async () => {
+    const al = almacenMemoria();
+    al.estadoMem.lead = "Lucía y Andrés"; al.estadoMem.reunion = "martes 17:00";
+    const llm = guion(texto("ok"));
+    await procesarMensaje({ almacen: al, llm, modelo: "m", texto: "hola" });
+    const sistema = (llm.vistos[0] as { sistema: string }).sistema;
+    expect(sistema).toContain("Estado de la conversación");
+    expect(sistema).toContain("Lucía y Andrés");
+    expect(sistema).toContain("martes 17:00");
+    expect(sistema).toMatch(/sin Markdown/);
+    expect(sistema).toMatch(/no vuelvas a guardar/);
+  });
+});
 
 describe("token", () => {
   it("genera claves largas y distintas, y la huella no revela la clave", () => {

@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import TextoMaria from "@/components/TextoMaria";
 
 interface Msg { autor: "titular" | "maria" | "sistema" | "equipo"; texto: string }
 
@@ -65,7 +66,7 @@ export default function ChatPublico() {
         {mensajes.map((m, i) =>
           m.autor === "titular" ? <div key={i} className="cp-us">{m.texto}</div>
           : m.autor === "sistema" ? <div key={i} className="cp-sis">{m.texto}</div>
-          : <div key={i} className="cp-mr"><b>{m.autor === "equipo" ? "Equipo" : "María"}</b>{m.texto}</div>)}
+          : <div key={i} className="cp-mr"><b>{m.autor === "equipo" ? "Equipo" : "María"}</b><TextoMaria texto={m.texto} /></div>)}
         {enviando && <div className="cp-escribe" aria-label="María está escribiendo"><i /><i /><i /></div>}
         {error && <p className="error" role="alert">{error}</p>}
         <div ref={fin} />
