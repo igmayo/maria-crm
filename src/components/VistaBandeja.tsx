@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { listarBandeja, cargarConversacion, type Filtro, type Conversacion } from "@/lib/datos";
 import { perfilActivo } from "@/lib/sesion";
 import { encabezadoDia, etiquetaFecha, fechaLarga, horaMensaje, iniciales } from "@/lib/formato";
@@ -21,7 +22,8 @@ function href(filtro: Filtro, q: string, id?: string) {
 }
 
 export default async function VistaBandeja({ filtro, q, seleccionada, error }: { filtro: Filtro; q: string; seleccionada?: string; error?: string }) {
-  const perfil = (await perfilActivo())!;
+  const perfil = await perfilActivo();
+  if (!perfil) redirect("/equipo/login");
   const esAdmin = perfil.rol === "administrador";
   const [items, conv] = await Promise.all([listarBandeja(filtro, q, perfil.id), seleccionada ? cargarConversacion(seleccionada) : Promise.resolve(null)]);
   const filtros: [Filtro, string][] = [["todas", "Todas"], ["te_toca", "Te toca"], ["mias", "Mis parejas"], ...(esAdmin ? ([["sin_asignar", "Sin asignar"]] as [Filtro, string][]) : [])];
