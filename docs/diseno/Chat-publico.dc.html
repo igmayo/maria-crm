@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Chat público, clientes nuevos</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Montserrat',sans-serif}
+button,input{font-family:inherit}
+button{cursor:pointer}
+.ic{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none}
+.ch{height:44px;padding:0 16px;border:1px solid #E3D3AE;border-radius:22px;background:#fff;color:#282828;font-size:13px;font-weight:500;white-space:nowrap}
+.mr{align-self:flex-start;max-width:84%;background:#fff;border:1px solid #EFE3C6;border-radius:18px 18px 18px 4px;padding:12px 14px}
+.us{align-self:flex-end;max-width:84%;background:#F3AF42;border-radius:18px 18px 4px 18px;padding:12px 14px}
+</style>
+</helmet>
+<div style="width:390px;height:844px;box-sizing:border-box;display:flex;flex-direction:column;background:#FFF9EE;color:#282828;font-size:14px;line-height:1.5;overflow:hidden">
+
+<div style="background:#282828;color:#FFF9EE;font-size:12px;font-weight:600;text-align:center;padding:6px 12px">Versión de prueba · no es la web definitiva</div>
+<header style="display:flex;align-items:center;gap:12px;padding:14px 20px 12px;background:#fff;border-bottom:1px solid #EFE3C6">
+<img src="assets/logo-icono.png" alt="Guadalquivir Catering" style="width:44px;height:44px;object-fit:contain;flex:none">
+<div style="flex:1">
+<div style="font-size:16px;font-weight:600">María</div>
+<div style="font-size:12px;color:#5E5A52">Asistente de IA · siempre disponible</div>
+</div>
+</header>
+
+<main style="flex:1;overflow:hidden;padding:16px 16px 8px;display:flex;flex-direction:column;gap:12px">
+
+<div class="mr">
+<div style="font-size:11px;font-weight:600;color:#6B4200;margin-bottom:2px">María</div>
+Hola, soy María, la asistente de IA de Guadalquivir Catering. Resuelvo dudas sobre nuestros servicios y te ayudo a pedir una reunión con el equipo. ¿Qué celebras?
+</div>
+
+<div class="us">Una boda</div>
+
+<div class="mr">
+<div style="font-size:11px;font-weight:600;color:#6B4200;margin-bottom:2px">María</div>
+¡Enhorabuena! ¿Cuántos invitados sois, más o menos, y para qué fecha?
+</div>
+
+<div class="us">Unos 120, en septiembre</div>
+
+<div class="mr">
+<div style="font-size:11px;font-weight:600;color:#6B4200;margin-bottom:2px">María</div>
+Genial. Para que un comercial os contacte, ¿me dejáis vuestros nombres y un correo o teléfono? Y decidme qué día y franja os viene mejor para una reunión.
+</div>
+</main>
+
+<div style="display:flex;gap:8px;padding:8px 16px;overflow:hidden">
+<button class="ch">Una boda</button>
+<button class="ch">Evento de empresa</button>
+<button class="ch">Otra consulta</button>
+</div>
+
+<div style="padding:0 16px 6px;font-size:11px;color:#5E5A52;text-align:center">Al escribir aceptas que guardemos esta conversación para atenderte. <u>Más información</u></div>
+
+
+<div style="display:flex;align-items:center;gap:8px;padding:8px 16px 16px;background:#fff;border-top:1px solid #EFE3C6">
+<button aria-label="Adjuntar foto" class="ic" style="border:1px solid #E3D3AE;background:#fff;color:#282828"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M21 11l-9 9a5 5 0 01-7-7l9-9a3.5 3.5 0 015 5l-9 9a2 2 0 01-3-3l8-8"/></svg></button>
+<input aria-label="Escribe un mensaje" placeholder="Escribe un mensaje" style="flex:1;min-width:0;height:46px;border:1px solid #E3D3AE;border-radius:23px;padding:0 16px;font-size:14px;outline:0;background:#fff">
+<button aria-label="Grabar nota de voz" class="ic" style="border:0;background:#F3AF42;color:#282828"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></button>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Usuarios</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Montserrat',sans-serif}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+.bd{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+.g{background:#E4F3E6;color:#1E5B2B}.a{background:#FDEBC8;color:#6B4200}.bl{background:#E3EEFB;color:#174A85}.gr{background:#ECECEC;color:#444}.p{background:#EEE8FA;color:#4B2D8A}
+.nv{width:60px;padding:8px 0;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:500;color:#5E5A52}
+.on{background:#FDEBC8;color:#6B4200}
+.cd{background:#fff;border:1px solid #E8E2D6;border-radius:16px;padding:18px}
+.av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex:none}
+.sm{height:38px;padding:0 16px;border-radius:19px;font-size:13px;font-weight:500;border:1px solid #D9D2C3;background:#fff;color:#282828}
+.pr{height:44px;padding:0 22px;border-radius:22px;font-size:14px;font-weight:600;border:0;background:#F3AF42;color:#282828}
+.tg{height:34px;padding:0 14px;border-radius:17px;font-size:13px;font-weight:500;border:1px solid #D9D2C3;background:#fff;color:#282828}
+.fi{height:42px;border:1px solid #D9D2C3;border-radius:12px;padding:0 14px;font-size:14px;background:#fff;color:#282828;width:100%;box-sizing:border-box}
+.lb{font-size:12px;font-weight:600;color:#5E5A52;margin-bottom:4px;display:block}
+</style>
+</helmet>
+<div style="display:flex;min-height:900px;background:#FAF8F4;color:#282828;font-size:14px;line-height:1.45">
+<nav aria-label="Principal" style="flex:0 0 76px;background:#fff;border-right:1px solid #E8E2D6;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 0">
+<img src="assets/logo-icono.png" alt="Guadalquivir Catering" style="width:40px;height:40px;object-fit:contain;flex:none;margin-bottom:12px;">
+<a href="#" class="nv"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg>Hoy</a>
+<a href="Main.dc.html" class="nv"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l2-8h14l2 8v6H3z"/><path d="M3 13h5l1 2h6l1-2h5"/></svg>Bandeja</a>
+<a href="#" class="nv"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>Pendientes</a>
+<a href="#" class="nv"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 21V5"/></svg>Enseñar</a>
+<a href="Admin-usuarios.dc.html" class="nv on" aria-current="page"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0113 0M16 5a3.5 3.5 0 010 7M18 14.5a6 6 0 013.5 5.5"/></svg>Usuarios</a>
+</nav>
+<main style="flex:1;min-width:0;padding:28px 32px;display:flex;flex-direction:column;gap:18px">
+<header style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap"><div><h1 style="margin:0;font-size:24px;font-weight:600">Usuarios</h1>
+<p style="margin:4px 0 0;font-size:14px;color:#5E5A52">Solo los administradores dan de alta, desactivan y cambian roles.</p></div>
+<button class="pr">Invitar usuario</button></header>
+<div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+<section class="cd" style="flex:2 1 600px;min-width:0;padding:0">
+<div style="display:flex;gap:14px;padding:12px 18px;font-size:12px;font-weight:600;color:#5E5A52"><span style="flex:1">Persona</span><span style="width:120px;text-align:center">Rol</span><span style="width:90px">Ve</span><span style="width:140px;text-align:center">Estado</span><span style="width:62px"></span></div>
+<div style="display:flex;align-items:center;gap:14px;padding:12px 18px;border-top:1px solid #F0EBDF">
+<div class="av" style="background:#FDEBC8;color:#6B4200">I</div>
+<div style="flex:1;min-width:0"><strong style="font-weight:600">Iván</strong><div style="font-size:12px;color:#5E5A52">ivan@guadalquivir.example</div></div>
+<span class="bd a" style="width:120px;justify-content:center">Administrador</span>
+<div style="width:90px;font-size:13px;color:#5E5A52">Todas</div>
+<span class="bd g" style="width:140px;justify-content:center">Activo</span>
+<button class="sm">Editar</button>
+</div><div style="display:flex;align-items:center;gap:14px;padding:12px 18px;border-top:1px solid #F0EBDF">
+<div class="av" style="background:#E3EEFB;color:#174A85">M</div>
+<div style="flex:1;min-width:0"><strong style="font-weight:600">Marta</strong><div style="font-size:12px;color:#5E5A52">marta@guadalquivir.example</div></div>
+<span class="bd bl" style="width:120px;justify-content:center">Comercial</span>
+<div style="width:90px;font-size:13px;color:#5E5A52">12 conversaciones</div>
+<span class="bd g" style="width:140px;justify-content:center">Activo</span>
+<button class="sm">Editar</button>
+</div><div style="display:flex;align-items:center;gap:14px;padding:12px 18px;border-top:1px solid #F0EBDF">
+<div class="av" style="background:#E3EEFB;color:#174A85">R</div>
+<div style="flex:1;min-width:0"><strong style="font-weight:600">Raúl</strong><div style="font-size:12px;color:#5E5A52">raul@guadalquivir.example</div></div>
+<span class="bd bl" style="width:120px;justify-content:center">Comercial</span>
+<div style="width:90px;font-size:13px;color:#5E5A52">9 conversaciones</div>
+<span class="bd g" style="width:140px;justify-content:center">Activo</span>
+<button class="sm">Editar</button>
+</div><div style="display:flex;align-items:center;gap:14px;padding:12px 18px;border-top:1px solid #F0EBDF">
+<div class="av" style="background:#EEE8FA;color:#4B2D8A">C</div>
+<div style="flex:1;min-width:0"><strong style="font-weight:600">Carla</strong><div style="font-size:12px;color:#5E5A52">carla@guadalquivir.example</div></div>
+<span class="bd p" style="width:120px;justify-content:center">Diseño</span>
+<div style="width:90px;font-size:13px;color:#5E5A52">Solo compartidas</div>
+<span class="bd g" style="width:140px;justify-content:center">Activo</span>
+<button class="sm">Editar</button>
+</div><div style="display:flex;align-items:center;gap:14px;padding:12px 18px;border-top:1px solid #F0EBDF">
+<div class="av" style="background:#ECECEC;color:#444">P</div>
+<div style="flex:1;min-width:0"><strong style="font-weight:600">Pablo</strong><div style="font-size:12px;color:#5E5A52">pablo@guadalquivir.example</div></div>
+<span class="bd gr" style="width:120px;justify-content:center">Almacén</span>
+<div style="width:90px;font-size:13px;color:#5E5A52">Solo compartidas</div>
+<span class="bd g" style="width:140px;justify-content:center">Activo</span>
+<button class="sm">Editar</button>
+</div><div style="display:flex;align-items:center;gap:14px;padding:12px 18px;border-top:1px solid #F0EBDF">
+<div class="av" style="background:#ECECEC;color:#444">L</div>
+<div style="flex:1;min-width:0"><strong style="font-weight:600">Lola</strong><div style="font-size:12px;color:#5E5A52">lola@guadalquivir.example</div></div>
+<span class="bd gr" style="width:120px;justify-content:center">Administración</span>
+<div style="width:90px;font-size:13px;color:#5E5A52">Solo compartidas</div>
+<span class="bd a" style="width:140px;justify-content:center">Invitación enviada</span>
+<button class="sm">Editar</button>
+</div><div style="display:flex;align-items:center;gap:14px;padding:12px 18px;border-top:1px solid #F0EBDF">
+<div class="av" style="background:#ECECEC;color:#444">S</div>
+<div style="flex:1;min-width:0"><strong style="font-weight:600">Sergio</strong><div style="font-size:12px;color:#5E5A52">sergio@guadalquivir.example</div></div>
+<span class="bd bl" style="width:120px;justify-content:center">Comercial</span>
+<div style="width:90px;font-size:13px;color:#5E5A52">0 conversaciones</div>
+<span class="bd gr" style="width:140px;justify-content:center">Desactivado</span>
+<button class="sm">Editar</button>
+</div>
+</section>
+<div style="flex:1 1 320px;display:flex;flex-direction:column;gap:16px;min-width:0">
+<section class="cd"><h2 style="margin:0 0 12px;font-size:15px;font-weight:600">Invitar usuario</h2>
+<div style="display:flex;flex-direction:column;gap:12px"><label><span class="lb">Nombre</span><input class="fi" value="Nombre y apellido"></label><label><span class="lb">Correo</span><input class="fi" value="correo@guadalquivir.example"></label><label><span class="lb">Rol</span><select class="fi"><option>Comercial</option><option>Diseño</option><option>Almacén</option><option>Administración</option><option>Administrador</option></select></label>
+<p style="margin:0;font-size:12px;color:#5E5A52">Recibirá un correo para crear su contraseña.</p>
+<button class="pr">Enviar invitación</button></div></section>
+<section class="cd" style="font-size:13px"><h2 style="margin:0 0 10px;font-size:15px;font-weight:600">Qué ve cada rol</h2>
+<div style="display:flex;flex-direction:column;gap:8px;color:#5E5A52"><div><strong style="color:#282828;font-weight:600">Administrador:</strong> todo, usuarios y copias.</div><div><strong style="color:#282828;font-weight:600">Comercial:</strong> sus conversaciones, y las que le compartan.</div><div><strong style="color:#282828;font-weight:600">Diseño, Almacén, Administración:</strong> solo lo que les comparta un responsable o un administrador.</div></div></section>
+<section class="cd" style="font-size:13px"><h2 style="margin:0 0 10px;font-size:15px;font-weight:600">Copias de seguridad</h2>
+<div style="display:flex;flex-direction:column;gap:6px;color:#5E5A52"><div>Última copia automática: hoy, 03:00 <span class="bd g">Correcta</span></div><div>Copia semanal externa: domingo, en la carpeta de Drive de la empresa</div><div>Lo eliminado se puede recuperar.</div></div></section>
+</div></div>
+</main></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

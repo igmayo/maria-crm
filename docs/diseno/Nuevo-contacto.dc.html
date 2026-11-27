@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Nuevo contacto</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Montserrat',sans-serif}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+.bd{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+.g{background:#E4F3E6;color:#1E5B2B}.a{background:#FDEBC8;color:#6B4200}.bl{background:#E3EEFB;color:#174A85}.gr{background:#ECECEC;color:#444}.p{background:#EEE8FA;color:#4B2D8A}
+.nv{width:60px;padding:8px 0;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:500;color:#5E5A52}
+.on{background:#FDEBC8;color:#6B4200}
+.cd{background:#fff;border:1px solid #E8E2D6;border-radius:16px;padding:18px}
+.av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex:none}
+.sm{height:38px;padding:0 16px;border-radius:19px;font-size:13px;font-weight:500;border:1px solid #D9D2C3;background:#fff;color:#282828}
+.pr{height:44px;padding:0 22px;border-radius:22px;font-size:14px;font-weight:600;border:0;background:#F3AF42;color:#282828}
+.tg{height:34px;padding:0 14px;border-radius:17px;font-size:13px;font-weight:500;border:1px solid #D9D2C3;background:#fff;color:#282828}
+.fi{height:42px;border:1px solid #D9D2C3;border-radius:12px;padding:0 14px;font-size:14px;background:#fff;color:#282828;width:100%;box-sizing:border-box}
+.lb{font-size:12px;font-weight:600;color:#5E5A52;margin-bottom:4px;display:block}
+</style>
+</helmet>
+<div style="width:640px;height:900px;box-sizing:border-box;padding:24px;background:#FAF8F4;color:#282828;font-size:14px;line-height:1.45">
+<div style="height:100%;box-sizing:border-box;background:#fff;border:1px solid #E8E2D6;border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:14px">
+<div><h1 style="margin:0 0 4px;font-size:20px;font-weight:600">Nuevo contacto</h1><p style="margin:0;font-size:13px;color:#5E5A52">Para un lead que llega por correo, teléfono, feria u otro canal.</p></div>
+<div style="font-size:13px;font-weight:600">Titular 1</div>
+<div style="display:flex;gap:10px"><label style="flex:1;min-width:0"><span class="lb">Nombre</span><input class="fi" value="Sofía"></label><label style="flex:1;min-width:0"><span class="lb">Teléfono</span><input class="fi" value="600 000 003"></label></div><label style="flex:1;min-width:0"><span class="lb">Correo</span><input class="fi" value="sofia@ejemplo.com"></label>
+<div style="font-size:13px;font-weight:600">Titular 2 <span style="font-weight:400;color:#5E5A52">(opcional)</span></div>
+<div style="display:flex;gap:10px"><label style="flex:1;min-width:0"><span class="lb">Nombre</span><input class="fi" value="Javier"></label><label style="flex:1;min-width:0"><span class="lb">Correo</span><input class="fi" value="javier@ejemplo.com"></label></div>
+<div style="display:flex;gap:10px"><label style="flex:1"><span class="lb">Tipo de evento</span><select class="fi"><option>Boda</option><option>Evento de empresa</option><option>Otro</option></select></label><label style="flex:1;min-width:0"><span class="lb">Fecha</span><input class="fi" value="12 de septiembre"></label><label style="flex:1;min-width:0"><span class="lb">Invitados</span><input class="fi" value="120"></label></div>
+<div style="display:flex;gap:10px"><label style="flex:2;min-width:0"><span class="lb">Lugar</span><input class="fi" value="Finca en Jerez"></label><label style="flex:1"><span class="lb">Origen</span><select class="fi"><option>Correo</option><option>Teléfono</option><option>Feria</option><option>Otro</option></select></label></div>
+<label><span class="lb">Correo original (opcional, pégalo aquí)</span><textarea class="fi" style="height:96px;padding:10px 14px;resize:none">Hola, queremos información para nuestra boda…</textarea></label>
+<label><span class="lb">Asignar a</span><select class="fi"><option>Marta</option><option>Raúl</option><option>Sin asignar (lo reparte el administrador)</option></select></label>
+<div style="margin-top:auto;display:flex;justify-content:flex-end;gap:10px"><button class="sm" style="height:48px;padding:0 22px;font-size:14px">Cancelar</button><button class="pr" style="height:48px;padding:0 26px">Crear contacto</button></div>
+</div></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":640,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

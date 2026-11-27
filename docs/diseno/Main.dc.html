@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Bandeja del equipo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Montserrat',sans-serif}
+button,input{font-family:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+.bd{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+.g{background:#E4F3E6;color:#1E5B2B}.a{background:#FDEBC8;color:#6B4200}.bl{background:#E3EEFB;color:#174A85}.gr{background:#ECECEC;color:#444}.p{background:#EEE8FA;color:#4B2D8A}
+.nv{width:60px;padding:8px 0;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:500;color:#5E5A52;position:relative}
+.on{background:#FDEBC8;color:#6B4200}
+.it{display:flex;gap:12px;padding:14px 20px}
+.av{width:40px;height:40px;border-radius:50%;background:#FDEBC8;color:#6B4200;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex:none}
+.ic{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none}
+.ct{height:40px;padding:0 16px;border:1px solid #D9D2C3;border-radius:20px;background:#fff;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500}
+.ch{align-self:center;background:#F1EEE6;border-radius:999px;padding:4px 14px;font-size:12px;color:#5E5A52}
+</style>
+</helmet>
+<div style="display:flex;flex-wrap:wrap;min-height:1120px;background:#FAF8F4;color:#282828;font-size:14px;line-height:1.45">
+
+<nav aria-label="Principal" style="flex:0 0 76px;background:#fff;border-right:1px solid #E8E2D6;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 0">
+<img src="assets/logo-icono.png" alt="Guadalquivir Catering" style="width:40px;height:40px;object-fit:contain;flex:none;margin-bottom:12px;">
+<a href="#" class="nv"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg>Hoy</a>
+<a href="#" class="nv on" aria-current="page"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l2-8h14l2 8v6H3z"/><path d="M3 13h5l1 2h6l1-2h5"/></svg>Bandeja</a>
+<a href="#" class="nv"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>Pendientes<span style="position:absolute;top:2px;right:6px;background:#282828;color:#fff;font-size:11px;font-weight:600;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center">3</span></a>
+<a href="Ensenar-maria.dc.html" class="nv"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 21V5"/></svg>Enseñar</a>
+</nav>
+
+<section aria-label="Conversaciones" style="flex:1 1 320px;max-width:360px;background:#fff;border-right:1px solid #E8E2D6;display:flex;flex-direction:column">
+<div style="padding:20px 20px 12px">
+<h1 style="margin:0 0 12px;font-size:20px;font-weight:600">Bandeja</h1>
+<label style="display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border:1px solid #D9D2C3;border-radius:20px;color:#5E5A52">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4-4"/></svg>
+<input aria-label="Buscar pareja" placeholder="Buscar pareja" style="border:0;outline:0;flex:1;font-size:13px;background:transparent;min-width:0">
+</label>
+<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px">
+<button style="border:0;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600;background:#282828;color:#fff">Todas</button>
+<button style="border:1px solid #D9D2C3;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:500;background:#fff;color:#282828">Te toca</button>
+<button style="border:1px solid #D9D2C3;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:500;background:#fff;color:#282828">Mis parejas</button>
+<button style="border:1px solid #D9D2C3;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:500;background:#fff;color:#282828">Sin asignar</button>
+</div>
+</div>
+
+<a href="#" class="it" style="background:#FFF6E3">
+<div class="av">LA</div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;justify-content:space-between;gap:8px"><strong style="font-weight:600">Lucía y Andrés</strong><span style="font-size:12px;color:#5E5A52">10:44</span></div>
+<div style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5E5A52;margin:2px 0 8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>Nota de voz · 0:42</div>
+<div style="display:flex;gap:6px;align-items:center"><span class="bd a">Te toca</span><span style="font-size:12px;color:#5E5A52">Marta</span></div>
+</div>
+</a>
+
+<a href="#" class="it" style="border-top:1px solid #F0EBDF">
+<div class="av">CP</div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;justify-content:space-between;gap:8px"><strong style="font-weight:600">Carmen y Pablo</strong><span style="font-size:12px;color:#5E5A52">10:12</span></div>
+<div style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5E5A52;margin:2px 0 8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3.5"/></svg>Foto · mantelería</div>
+<div style="display:flex;gap:6px;align-items:center"><span class="bd a">Te toca</span><span style="font-size:12px;color:#5E5A52">Marta</span></div>
+</div>
+</a>
+
+<a href="#" class="it" style="border-top:1px solid #F0EBDF">
+<div class="av" style="background:#EEE8FA;color:#4B2D8A">ER</div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;justify-content:space-between;gap:8px"><strong style="font-weight:600">Elena R. (nuevo)</strong><span style="font-size:12px;color:#5E5A52">09:55</span></div>
+<div style="font-size:13px;color:#5E5A52;margin:2px 0 8px">¿Hacéis bodas en Jerez en septiembre?</div>
+<div style="display:flex;gap:6px;align-items:center"><span class="bd p">Sin asignar</span></div>
+</div>
+</a>
+
+<a href="#" class="it" style="border-top:1px solid #F0EBDF">
+<div class="av" style="background:#ECECEC;color:#444">SR</div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;justify-content:space-between;gap:8px"><strong style="font-weight:600">Sofía y Rubén</strong><span style="font-size:12px;color:#5E5A52">Ayer</span></div>
+<div style="font-size:13px;color:#5E5A52;margin:2px 0 8px">Quedamos el jueves entonces.</div>
+<div style="display:flex;gap:6px;align-items:center"><span class="bd bl">La lleva Raúl</span><span style="font-size:12px;color:#5E5A52">Solo lectura</span></div>
+</div>
+</a>
+
+<a href="#" class="it" style="border-top:1px solid #F0EBDF">
+<div class="av" style="background:#ECECEC;color:#444">ID</div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;justify-content:space-between;gap:8px"><strong style="font-weight:600">Irene y Daniel</strong><span style="font-size:12px;color:#5E5A52">Ayer</span></div>
+<div style="font-size:13px;color:#5E5A52;margin:2px 0 8px">Gracias, queda todo claro.</div>
+<div style="display:flex;gap:6px;align-items:center"><span class="bd gr">Cerrada</span><span style="font-size:12px;color:#5E5A52">Marta</span></div>
+</div>
+</a>
+</section>
+
+<section aria-label="Conversación con Lucía y Andrés" style="flex:999 1 420px;min-width:0;display:flex;flex-direction:column">
+<header style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:16px 24px;background:#fff;border-bottom:1px solid #E8E2D6">
+<div>
+<div style="display:flex;align-items:center;gap:10px"><h2 style="margin:0;font-size:18px;font-weight:600">Lucía y Andrés</h2><span class="bd a">Te toca</span><span style="display:flex;margin-left:4px" aria-label="La llevan Marta y Carla"><span class="av" style="width:28px;height:28px;font-size:11px;border:2px solid #fff">M</span><span class="av" style="width:28px;height:28px;font-size:11px;border:2px solid #fff;margin-left:-8px;background:#E3EEFB;color:#174A85">C</span></span></div>
+<div style="font-size:12px;color:#5E5A52;margin-top:2px">Boda sábado 12 de junio · Finca Los Olivos · La llevan Marta y Carla</div>
+</div>
+<div style="display:flex;gap:8px">
+<button style="height:40px;padding:0 18px;border:0;border-radius:20px;background:#F3AF42;color:#282828;font-size:13px;font-weight:600">Tomar conversación</button>
+<button style="height:40px;padding:0 16px;border:1px solid #D9D2C3;border-radius:20px;background:#fff;color:#282828;font-size:13px;font-weight:500">Cerrar</button>
+</div>
+<div style="flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+<span style="font-size:12px;color:#5E5A52;margin-right:4px">Contactar por otra vía</span>
+<a href="#" class="ct" style="background:#E4F3E6;border-color:#BFDEC4;color:#1E5B2B"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.5-4.5A8 8 0 1112 20a8 8 0 01-3.5-.8z"/></svg>WhatsApp</a>
+<a href="#" class="ct"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg>Llamar</a>
+<a href="#" class="ct"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Correo</a>
+</div>
+</header>
+
+<div style="flex:1;padding:24px;display:flex;flex-direction:column;gap:12px">
+<div style="align-self:center;font-size:12px;color:#5E5A52">Hoy</div>
+
+<div style="align-self:flex-start;max-width:70%;background:#fff;border:1px solid #E8E2D6;border-radius:16px 16px 16px 4px;padding:10px 14px">
+<div style="font-size:11px;font-weight:600;color:#0F6B62;margin-bottom:2px">Lucía</div>Hola María, queremos cambiar el postre del menú. Os mandamos una foto de lo que nos gustaría.
+<div style="font-size:11px;color:#5E5A52;margin-top:4px">10:41</div>
+</div>
+
+<div style="align-self:flex-start;background:#fff;border:1px solid #E8E2D6;border-radius:16px 16px 16px 4px;padding:8px">
+<div style="width:240px;height:130px;border-radius:10px;background:#EFE7D6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#5E5A52;font-size:12px">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3.5"/></svg>Foto · tarta de tres alturas</div>
+<div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#5E5A52;margin:6px 6px 0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>Solo la ve el equipo · 10:41</div>
+</div>
+
+<div style="align-self:flex-end;max-width:70%;background:#FFF1D4;border-radius:16px 16px 4px 16px;padding:10px 14px">
+<div style="font-size:11px;font-weight:600;color:#6B4200;margin-bottom:2px">María</div>
+Gracias. El postre no lo puedo cambiar yo: se lo paso a Marta para que os confirme las opciones.
+<div style="font-size:11px;color:#5E5A52;margin-top:4px">10:41</div>
+</div>
+<div class="ch">María ha creado un pendiente para Marta</div>
+
+<div style="align-self:flex-start;max-width:70%;background:#fff;border:1px solid #E8E2D6;border-radius:16px 16px 16px 4px;padding:10px 14px">
+<div style="font-size:11px;font-weight:600;color:#A14A1F;margin-bottom:2px">Andrés</div>Y otra cosa: al final seremos unos diez invitados más.
+<div style="font-size:11px;color:#5E5A52;margin-top:4px">10:43</div>
+</div>
+<div style="align-self:flex-end;max-width:70%;background:#FFF1D4;border-radius:16px 16px 4px 16px;padding:10px 14px">
+<div style="font-size:11px;font-weight:600;color:#6B4200;margin-bottom:2px">María</div>
+Anotado. Marta revisará la solicitud y os confirmará.
+<div style="font-size:11px;color:#5E5A52;margin-top:4px">10:43</div>
+</div>
+<div class="ch">Solicitud de cambio pendiente de validar</div>
+
+<div style="align-self:flex-start;max-width:70%;background:#fff;border:1px solid #E8E2D6;border-radius:16px 16px 16px 4px;padding:12px 14px">
+<div style="font-size:11px;font-weight:600;color:#0F6B62;margin-bottom:2px">Lucía</div><div style="display:flex;align-items:center;gap:10px">
+<button aria-label="Reproducir nota de voz" style="width:36px;height:36px;border-radius:50%;border:0;background:#F3AF42;color:#282828;display:flex;align-items:center;justify-content:center;flex:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7z"/></svg></button>
+<div style="display:flex;align-items:center;gap:2px;height:24px">
+<sc-for list="{{wave}}" as="bar" hint-placeholder-count="20"><span style="width:3px;height:{{bar.h}}px;background:#B0791A;border-radius:2px"></span></sc-for>
+</div>
+<span style="font-size:12px;color:#5E5A52">0:42</span>
+</div>
+<div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#5E5A52;margin-top:6px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>Solo la escucha el equipo · 10:44</div>
+</div>
+<div style="align-self:flex-end;max-width:70%;background:#FFF1D4;border-radius:16px 16px 4px 16px;padding:10px 14px">
+<div style="font-size:11px;font-weight:600;color:#6B4200;margin-bottom:2px">María</div>
+He recibido vuestra nota de voz. Solo la puede escuchar vuestra comercial, Marta, así que se la paso.
+<div style="font-size:11px;color:#5E5A52;margin-top:4px">10:44</div>
+</div>
+<div class="ch">Nota de voz pendiente de escuchar</div>
+
+<div style="align-self:flex-end;max-width:70%;background:#F6F0FF;border:1px dashed #B9A5E8;border-radius:16px;padding:10px 14px">
+<div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#4B2D8A;margin-bottom:2px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>Nota interna · solo el equipo</div>
+<strong style="font-weight:600">Marta</strong> a Carla: ¿Puedes mirar la foto de la tarta y decirme si es viable?
+<div style="font-size:11px;color:#5E5A52;margin-top:4px">10:52</div>
+</div>
+<div style="align-self:flex-start;display:flex;align-items:center;gap:8px;font-size:12px;color:#A14A1F;font-weight:600"><span style="display:flex;gap:3px" aria-hidden="true"><span style="width:6px;height:6px;border-radius:50%;background:#A14A1F"></span><span style="width:6px;height:6px;border-radius:50%;background:#A14A1F;opacity:.6"></span><span style="width:6px;height:6px;border-radius:50%;background:#A14A1F;opacity:.3"></span></span>Andrés está escribiendo…</div>
+</div>
+
+<div style="display:flex;gap:6px;padding:12px 24px 0;background:#fff;border-top:1px solid #E8E2D6">
+<button aria-pressed="true" style="height:36px;padding:0 16px;border:0;border-radius:18px;background:#282828;color:#fff;font-size:13px;font-weight:600">Responder a los novios</button>
+<button aria-pressed="false" style="height:36px;padding:0 16px;border:1px solid #B9A5E8;border-radius:18px;background:#F6F0FF;color:#4B2D8A;font-size:13px;font-weight:500">Nota interna</button>
+</div>
+<div style="display:flex;align-items:center;gap:10px;padding:10px 24px 14px;background:#fff">
+<button aria-label="Adjuntar foto o archivo" class="ic" style="border:1px solid #D9D2C3;background:#fff;color:#282828"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M21 11l-9 9a5 5 0 01-7-7l9-9a3.5 3.5 0 015 5l-9 9a2 2 0 01-3-3l8-8"/></svg></button>
+<input aria-label="Escribe un mensaje" placeholder="Escribe un mensaje a Lucía y Andrés" style="flex:1;min-width:0;height:44px;border:1px solid #D9D2C3;border-radius:22px;padding:0 18px;font-size:14px;outline:0">
+<button aria-label="Grabar nota de voz" class="ic" style="border:1px solid #D9D2C3;background:#fff;color:#282828"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></button>
+<button aria-label="Enviar" class="ic" style="border:0;background:#F3AF42;color:#282828"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 12l16-8-6 16-3-7z"/></svg></button>
+</div>
+</section>
+
+<aside aria-label="Ficha de la boda" style="flex:1 1 300px;max-width:340px;background:#fff;border-left:1px solid #E8E2D6;padding:20px;display:flex;flex-direction:column;gap:20px">
+<div>
+<h2 style="margin:0 0 12px;font-size:15px;font-weight:600">Ficha de la boda</h2>
+<dl style="margin:0;display:grid;grid-template-columns:96px 1fr;gap:8px 12px;font-size:13px">
+<dt style="color:#5E5A52">Fecha</dt><dd style="margin:0">Sábado 12 de junio</dd>
+<dt style="color:#5E5A52">Espacio</dt><dd style="margin:0">Finca Los Olivos</dd>
+<dt style="color:#5E5A52">Invitados</dt><dd style="margin:0">120 adultos · 8 niños</dd>
+<dt style="color:#5E5A52">Menú</dt><dd style="margin:0">Cóctel · entrantes · arroz · tarta</dd>
+<dt style="color:#5E5A52">Horarios</dt><dd style="margin:0">Ceremonia 18:00 · banquete 21:00</dd>
+<dt style="color:#5E5A52">Comercial</dt><dd style="margin:0">Marta</dd>
+<dt style="color:#5E5A52">Estado</dt><dd style="margin:0">Reservada</dd>
+</dl>
+<button style="margin-top:12px;height:36px;padding:0 16px;border:1px solid #D9D2C3;border-radius:18px;background:#fff;font-size:13px;font-weight:500">Editar ficha</button>
+</div>
+
+<div>
+<h2 style="margin:0 0 12px;font-size:15px;font-weight:600">Equipo de esta boda</h2>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:10px"><span class="av" style="width:36px;height:36px;font-size:12px">M</span><div style="flex:1;min-width:0"><strong style="font-weight:600;font-size:13px">Marta</strong><div style="font-size:12px;color:#5E5A52">Puede escribir</div></div><span class="bd a">Responsable</span></div>
+<div style="display:flex;align-items:center;gap:10px"><span class="av" style="width:36px;height:36px;font-size:12px;background:#E3EEFB;color:#174A85">C</span><div style="flex:1;min-width:0"><strong style="font-weight:600;font-size:13px">Carla</strong><div style="font-size:12px;color:#5E5A52">Puede escribir</div></div><span class="bd bl">Diseño</span></div>
+</div>
+<button style="margin-top:12px;height:36px;padding:0 16px;border:1px solid #D9D2C3;border-radius:18px;background:#fff;font-size:13px;font-weight:500">Compartir conversación</button>
+</div>
+<div>
+<h2 style="margin:0 0 12px;font-size:15px;font-weight:600">Titulares</h2>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="border:1px solid #E8E2D6;border-radius:12px;padding:10px 12px;font-size:13px"><div style="display:flex;justify-content:space-between;align-items:center"><strong style="font-weight:600;color:#0F6B62">Lucía</strong><span style="font-size:11px;color:#5E5A52">Titular 1 · enlace activo</span></div><div style="color:#5E5A52;margin-top:4px">600 000 001 · lucia@ejemplo.com</div></div>
+<div style="border:1px solid #E8E2D6;border-radius:12px;padding:10px 12px;font-size:13px"><div style="display:flex;justify-content:space-between;align-items:center"><strong style="font-weight:600;color:#A14A1F">Andrés</strong><span style="font-size:11px;color:#5E5A52">Titular 2 · enlace activo</span></div><div style="color:#5E5A52;margin-top:4px">600 000 002 · andres@ejemplo.com</div></div>
+</div>
+<p style="margin:10px 0 8px;font-size:12px;color:#5E5A52">Si hablas por WhatsApp o por teléfono, deja una nota para que quede en la ficha.</p>
+<button style="height:36px;padding:0 16px;border:1px solid #D9D2C3;border-radius:18px;background:#fff;font-size:13px;font-weight:500">Añadir nota de contacto</button>
+</div>
+
+<div>
+<h2 style="margin:0 0 12px;font-size:15px;font-weight:600">Pendientes (3)</h2>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="background:#FAF8F4;border-radius:12px;padding:12px">
+<div style="font-size:11px;font-weight:600;color:#6B4200;margin-bottom:2px">Pregunta sin respuesta</div>
+<div style="font-size:13px;margin-bottom:10px">¿Se puede cambiar el postre del menú?</div>
+<button style="height:34px;padding:0 16px;border:0;border-radius:17px;background:#F3AF42;color:#282828;font-size:13px;font-weight:600">Responder</button>
+</div>
+<div style="background:#FAF8F4;border-radius:12px;padding:12px">
+<div style="font-size:11px;font-weight:600;color:#6B4200;margin-bottom:2px">Solicitud de cambio</div>
+<div style="font-size:13px;margin-bottom:10px">Invitados: 10 más (de 120 a 130 adultos)</div>
+<div style="display:flex;gap:8px">
+<button style="height:34px;padding:0 16px;border:0;border-radius:17px;background:#282828;color:#fff;font-size:13px;font-weight:600">Validar</button>
+<button style="height:34px;padding:0 16px;border:1px solid #D9D2C3;border-radius:17px;background:#fff;color:#282828;font-size:13px;font-weight:500">Rechazar</button>
+</div>
+</div>
+<div style="background:#FAF8F4;border-radius:12px;padding:12px">
+<div style="font-size:11px;font-weight:600;color:#6B4200;margin-bottom:2px">Audio sin escuchar</div>
+<div style="font-size:13px;margin-bottom:10px">Nota de voz · 0:42</div>
+<button style="height:34px;padding:0 16px;border:1px solid #D9D2C3;border-radius:17px;background:#fff;color:#282828;font-size:13px;font-weight:500">Marcar como escuchada</button>
+</div>
+</div>
+</div>
+</aside>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":1120}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const hs = [8,14,10,18,12,20,9,15,22,11,16,8,19,13,10,17,9,14,12,8];
+    return { wave: hs.map((h) => ({ h })) };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Pendientes</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Montserrat',sans-serif}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+.bd{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+.g{background:#E4F3E6;color:#1E5B2B}.a{background:#FDEBC8;color:#6B4200}.bl{background:#E3EEFB;color:#174A85}.gr{background:#ECECEC;color:#444}.p{background:#EEE8FA;color:#4B2D8A}
+.nv{width:60px;padding:8px 0;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:500;color:#5E5A52}
+.on{background:#FDEBC8;color:#6B4200}
+.cd{background:#fff;border:1px solid #E8E2D6;border-radius:16px;padding:18px}
+.av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex:none}
+.sm{height:38px;padding:0 16px;border-radius:19px;font-size:13px;font-weight:500;border:1px solid #D9D2C3;background:#fff;color:#282828}
+.pr{height:44px;padding:0 22px;border-radius:22px;font-size:14px;font-weight:600;border:0;background:#F3AF42;color:#282828}
+.tg{height:34px;padding:0 14px;border-radius:17px;font-size:13px;font-weight:500;border:1px solid #D9D2C3;background:#fff;color:#282828}
+.fi{height:42px;border:1px solid #D9D2C3;border-radius:12px;padding:0 14px;font-size:14px;background:#fff;color:#282828;width:100%;box-sizing:border-box}
+.lb{font-size:12px;font-weight:600;color:#5E5A52;margin-bottom:4px;display:block}
+</style>
+</helmet>
+<div style="display:flex;min-height:900px;background:#FAF8F4;color:#282828;font-size:14px;line-height:1.45">
+<nav aria-label="Principal" style="flex:0 0 76px;background:#fff;border-right:1px solid #E8E2D6;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 0">
+<img src="assets/logo-icono.png" alt="Guadalquivir Catering" style="width:40px;height:40px;object-fit:contain;flex:none;margin-bottom:12px;">
+<a href="#" class="nv"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg>Hoy</a>
+<a href="Main.dc.html" class="nv"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l2-8h14l2 8v6H3z"/><path d="M3 13h5l1 2h6l1-2h5"/></svg>Bandeja</a>
+<a href="#" class="nv on" aria-current="page"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>Pendientes</a>
+<a href="#" class="nv"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 21V5"/></svg>Enseñar</a>
+<a href="Admin-usuarios.dc.html" class="nv"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0113 0M16 5a3.5 3.5 0 010 7M18 14.5a6 6 0 013.5 5.5"/></svg>Usuarios</a>
+</nav>
+<main style="flex:1;min-width:0;padding:28px 32px;display:flex;flex-direction:column;gap:18px">
+<header><h1 style="margin:0;font-size:24px;font-weight:600">Pendientes</h1>
+<p style="margin:4px 0 0;font-size:14px;color:#5E5A52">Tareas mías, no conversaciones. Si un pendiente no se atiende, avisa al administrador a las 24 h (48 h si cruza un fin de semana).</p></header>
+<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="tg" style="background:#282828;color:#fff;border-color:#282828;font-weight:600">Todos · 6</button><button class="tg">Cambios por validar · 2</button><button class="tg">Audios y fotos · 1</button><button class="tg">Preguntas de María · 1</button><button class="tg">Reuniones · 1</button><button class="tg">Notas · 1</button></div>
+<div style="display:flex;flex-direction:column;gap:10px"><div class="cd" style="display:flex;align-items:center;gap:16px;padding:16px 20px">
+<span class="bd a" style="width:150px;justify-content:center;flex:none">Cambio por validar</span>
+<div style="flex:1;min-width:0"><strong style="font-weight:600">Lucía y Andrés</strong><div style="font-size:13px;color:#5E5A52">Cambiar el postre del menú (pedido por Lucía)</div></div>
+<div style="font-size:12px;color:#5E5A52;width:90px;flex:none">hace 1 h</div>
+<span class="bd g" style="flex:none;width:190px;justify-content:center">En plazo</span>
+<button class="sm" style="flex:none">Abrir conversación</button>
+</div><div class="cd" style="display:flex;align-items:center;gap:16px;padding:16px 20px">
+<span class="bd a" style="width:150px;justify-content:center;flex:none">Cambio por validar</span>
+<div style="flex:1;min-width:0"><strong style="font-weight:600">Lucía y Andrés</strong><div style="font-size:13px;color:#5E5A52">Diez invitados más (pedido por Andrés)</div></div>
+<div style="font-size:12px;color:#5E5A52;width:90px;flex:none">hace 1 h</div>
+<span class="bd g" style="flex:none;width:190px;justify-content:center">En plazo</span>
+<button class="sm" style="flex:none">Abrir conversación</button>
+</div><div class="cd" style="display:flex;align-items:center;gap:16px;padding:16px 20px">
+<span class="bd bl" style="width:150px;justify-content:center;flex:none">Audio sin escuchar</span>
+<div style="flex:1;min-width:0"><strong style="font-weight:600">Lucía y Andrés</strong><div style="font-size:13px;color:#5E5A52">Nota de voz de Lucía · 0:42</div></div>
+<div style="font-size:12px;color:#5E5A52;width:90px;flex:none">hace 1 h</div>
+<span class="bd g" style="flex:none;width:190px;justify-content:center">En plazo</span>
+<button class="sm" style="flex:none">Abrir conversación</button>
+</div><div class="cd" style="display:flex;align-items:center;gap:16px;padding:16px 20px">
+<span class="bd gr" style="width:150px;justify-content:center;flex:none">Pregunta de María</span>
+<div style="flex:1;min-width:0"><strong style="font-weight:600">Carmen y Pablo</strong><div style="font-size:13px;color:#5E5A52">Preguntan si hay menú infantil con alergias</div></div>
+<div style="font-size:12px;color:#5E5A52;width:90px;flex:none">hace 20 h</div>
+<span class="bd a" style="flex:none;width:190px;justify-content:center">Vence en 4 h</span>
+<button class="sm" style="flex:none">Abrir conversación</button>
+</div><div class="cd" style="display:flex;align-items:center;gap:16px;padding:16px 20px">
+<span class="bd p" style="width:150px;justify-content:center;flex:none">Reunión por confirmar</span>
+<div style="flex:1;min-width:0"><strong style="font-weight:600">Nuevo contacto · Sofía</strong><div style="font-size:13px;color:#5E5A52">Prefiere el jueves por la tarde</div></div>
+<div style="font-size:12px;color:#5E5A52;width:90px;flex:none">hace 5 h</div>
+<span class="bd g" style="flex:none;width:190px;justify-content:center">En plazo</span>
+<button class="sm" style="flex:none">Abrir conversación</button>
+</div><div class="cd" style="display:flex;align-items:center;gap:16px;padding:16px 20px">
+<span class="bd gr" style="width:150px;justify-content:center;flex:none">Nota con seguimiento</span>
+<div style="flex:1;min-width:0"><strong style="font-weight:600">Sara y Dani</strong><div style="font-size:13px;color:#5E5A52">Llamar para cerrar el número de invitados</div></div>
+<div style="font-size:12px;color:#5E5A52;width:90px;flex:none">ayer</div>
+<span class="bd p" style="flex:none;width:190px;justify-content:center">Escalado al administrador</span>
+<button class="sm" style="flex:none">Abrir conversación</button>
+</div></div>
+<div style="font-size:12px;color:#5E5A52">Solo ves los pendientes de tus conversaciones y de las que te han compartido.</div>
+</main></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

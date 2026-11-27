@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Conversación en el móvil</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Montserrat',sans-serif}
+button,input{font-family:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+.bd{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+.a{background:#FDEBC8;color:#6B4200}
+.ct{flex:1;height:48px;border:1px solid #D9D2C3;border-radius:24px;background:#fff;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:500}
+.ic{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none}
+.ch{align-self:center;background:#F1EEE6;border-radius:999px;padding:4px 14px;font-size:12px;color:#5E5A52}
+</style>
+</helmet>
+<div style="width:390px;height:844px;box-sizing:border-box;display:flex;flex-direction:column;background:#FAF8F4;color:#282828;font-size:14px;line-height:1.45;overflow:hidden">
+
+<header style="display:flex;align-items:center;gap:10px;padding:14px 16px 10px;background:#fff">
+<a href="Hoy-movil.dc.html" aria-label="Volver" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>
+<div style="width:40px;height:40px;border-radius:50%;background:#FDEBC8;color:#6B4200;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex:none">LA</div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;align-items:center;gap:8px"><strong style="font-weight:600;font-size:16px">Lucía y Andrés</strong><span class="bd a">Te toca</span></div>
+<div style="font-size:12px;color:#5E5A52">12 de junio · Finca Los Olivos</div>
+</div>
+</header>
+
+<div style="display:flex;gap:8px;padding:0 16px 12px;background:#fff;border-bottom:1px solid #E8E2D6">
+<a href="#" class="ct" style="background:#E4F3E6;border-color:#BFDEC4;color:#1E5B2B"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.5-4.5A8 8 0 1112 20a8 8 0 01-3.5-.8z"/></svg>WhatsApp</a>
+<a href="#" class="ct"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg>Llamar</a>
+<a href="#" class="ct"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Correo</a>
+</div>
+
+<main style="flex:1;overflow:hidden;padding:16px;display:flex;flex-direction:column;gap:10px">
+<div style="align-self:center;font-size:12px;color:#5E5A52">Hoy</div>
+
+<div style="align-self:flex-start;max-width:84%;background:#fff;border:1px solid #E8E2D6;border-radius:16px 16px 16px 4px;padding:12px 14px">
+<div style="display:flex;align-items:center;gap:10px">
+<button aria-label="Reproducir nota de voz" style="width:40px;height:40px;border-radius:50%;border:0;background:#F3AF42;color:#282828;display:flex;align-items:center;justify-content:center;flex:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7z"/></svg></button>
+<div style="display:flex;align-items:center;gap:2px;height:24px">
+<sc-for list="{{wave}}" as="bar" hint-placeholder-count="16"><span style="width:3px;height:{{bar.h}}px;background:#B0791A;border-radius:2px"></span></sc-for>
+</div>
+<span style="font-size:12px;color:#5E5A52">0:42</span>
+</div>
+<div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#5E5A52;margin-top:6px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>Solo lo ve el equipo · 10:44</div>
+</div>
+<div class="ch">Nota de voz pendiente de escuchar</div>
+
+<div style="align-self:flex-start;background:#fff;border:1px solid #E8E2D6;border-radius:16px 16px 16px 4px;padding:8px">
+<div style="width:220px;height:120px;border-radius:10px;background:#EFE7D6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#5E5A52;font-size:12px">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3.5"/></svg>Foto · tarta de tres alturas</div>
+<div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#5E5A52;margin:6px 6px 0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>Solo la ve el equipo · 10:41</div>
+</div>
+
+<div style="align-self:flex-end;max-width:84%;background:#FFF1D4;border-radius:16px 16px 4px 16px;padding:10px 14px">
+<div style="font-size:11px;font-weight:600;color:#6B4200;margin-bottom:2px">María</div>
+Gracias. El postre no lo puedo cambiar yo: se lo paso a Marta para que os confirme las opciones.
+<div style="font-size:11px;color:#5E5A52;margin-top:4px">10:41</div>
+</div>
+<div class="ch">María ha creado un pendiente para Marta</div>
+</main>
+
+<div style="padding:10px 16px;background:#fff;border-top:1px solid #E8E2D6">
+<button style="width:100%;height:48px;border:0;border-radius:24px;background:#F3AF42;color:#282828;font-size:14px;font-weight:600">Tomar conversación</button>
+</div>
+
+<div style="display:flex;align-items:center;gap:8px;padding:0 16px 16px;background:#fff">
+<button aria-label="Adjuntar foto" class="ic" style="border:1px solid #D9D2C3;background:#fff;color:#282828"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M21 11l-9 9a5 5 0 01-7-7l9-9a3.5 3.5 0 015 5l-9 9a2 2 0 01-3-3l8-8"/></svg></button>
+<input aria-label="Escribe un mensaje" placeholder="Escribe un mensaje" style="flex:1;min-width:0;height:46px;border:1px solid #D9D2C3;border-radius:23px;padding:0 16px;font-size:14px;outline:0;background:#fff">
+<button aria-label="Grabar nota de voz" class="ic" style="border:1px solid #D9D2C3;background:#fff;color:#282828"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></button>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const hs = [8,14,10,18,12,20,9,15,22,11,16,8,19,13,10,17];
+    return { wave: hs.map((h) => ({ h })) };
+  }
+}
+</script>
+</body>
+</html>

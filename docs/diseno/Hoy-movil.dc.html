@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Hoy en el móvil</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Montserrat',sans-serif}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+.bd{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+.a{background:#FDEBC8;color:#6B4200}.g{background:#E4F3E6;color:#1E5B2B}
+.tb{flex:1;min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:500;color:#5E5A52;position:relative}
+.tb.on{color:#6B4200;font-weight:600}
+</style>
+</helmet>
+<div style="width:390px;height:844px;box-sizing:border-box;display:flex;flex-direction:column;background:#FAF8F4;color:#282828;font-size:14px;line-height:1.45;overflow:hidden">
+
+<header style="display:flex;align-items:center;justify-content:space-between;padding:20px 20px 12px">
+<div>
+<h1 style="margin:0;font-size:24px;font-weight:600">Hoy</h1>
+<div style="font-size:13px;color:#5E5A52">Jueves 26 de noviembre</div>
+</div>
+<a href="Perfil.dc.html" aria-label="Mi perfil" style="width:44px;height:44px;border-radius:50%;background:#F3AF42;color:#282828;display:flex;align-items:center;justify-content:center;font-weight:600">M</a>
+</header>
+
+<main style="flex:1;overflow:hidden;padding:4px 20px;display:flex;flex-direction:column;gap:20px">
+
+<section>
+<h2 style="margin:0 0 10px;font-size:15px;font-weight:600">Te toca</h2>
+<div style="display:flex;flex-direction:column;gap:10px">
+
+<a href="#" style="display:block;background:#fff;border:1px solid #E8E2D6;border-radius:16px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><strong style="font-weight:600">Lucía y Andrés</strong><span class="bd a">Te toca</span></div>
+<div style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5E5A52;margin-bottom:12px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>Nota de voz · 0:42 · 1 pregunta sin respuesta</div>
+<div style="height:44px;border-radius:22px;background:#F3AF42;color:#282828;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center">Abrir conversación</div>
+</a>
+
+<a href="#" style="display:block;background:#fff;border:1px solid #E8E2D6;border-radius:16px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><strong style="font-weight:600">Marina y Hugo</strong><span class="bd a">Te toca</span></div>
+<div style="font-size:13px;color:#5E5A52;margin-bottom:12px">¿Podemos llevar nuestro propio vino?</div>
+<div style="height:44px;border-radius:22px;background:#F3AF42;color:#282828;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center">Abrir conversación</div>
+</a>
+</div>
+</section>
+
+<section>
+<h2 style="margin:0 0 10px;font-size:15px;font-weight:600">Para validar</h2>
+<div style="background:#fff;border:1px solid #E8E2D6;border-radius:16px;padding:14px">
+<div style="font-size:11px;font-weight:600;color:#6B4200;margin-bottom:2px">Solicitud de cambio · Lucía y Andrés</div>
+<div style="font-size:14px;margin-bottom:12px">Invitados: 10 más (de 120 a 130 adultos)</div>
+<div style="display:flex;gap:8px">
+<button style="flex:1;height:44px;border:0;border-radius:22px;background:#282828;color:#fff;font-size:14px;font-weight:600">Validar</button>
+<button style="flex:1;height:44px;border:1px solid #D9D2C3;border-radius:22px;background:#fff;color:#282828;font-size:14px;font-weight:500">Rechazar</button>
+</div>
+</div>
+</section>
+
+<section>
+<h2 style="margin:0 0 10px;font-size:15px;font-weight:600">Las atiende María</h2>
+<a href="#" style="display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #E8E2D6;border-radius:16px;padding:12px 14px">
+<div style="width:40px;height:40px;border-radius:50%;background:#FDEBC8;color:#6B4200;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex:none">CP</div>
+<div style="flex:1;min-width:0"><strong style="font-weight:600">Carmen y Pablo</strong><div style="font-size:13px;color:#5E5A52">Foto · mantelería</div></div>
+<span class="bd g">Atiende María</span>
+</a>
+</section>
+</main>
+
+<nav aria-label="Principal" style="display:flex;background:#fff;border-top:1px solid #E8E2D6;padding:4px 8px 12px">
+<a href="#" class="tb on" aria-current="page"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg>Hoy</a>
+<a href="#" class="tb"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l2-8h14l2 8v6H3z"/><path d="M3 13h5l1 2h6l1-2h5"/></svg>Bandeja</a>
+<a href="#" class="tb"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>Pendientes<span style="position:absolute;top:2px;left:calc(50% + 6px);background:#282828;color:#fff;font-size:11px;font-weight:600;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center">3</span></a>
+<a href="#" class="tb"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 21V5"/></svg>Enseñar</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
