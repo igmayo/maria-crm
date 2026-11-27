@@ -107,6 +107,21 @@ ok(!(await falla("marta", "insert into eventos (tipo, responsable_id) values ('b
 ok(await falla("marta", "insert into eventos (tipo, responsable_id) values ('boda',$1)", [U.raul]), "Un comercial no crea eventos a nombre de otro");
 ok(await falla("carla", "insert into eventos (tipo, responsable_id) values ('boda',$1)", [U.carla]), "Diseño no crea eventos");
 
+console.log("Flujo de Nuevo contacto");
+async function flujo(usuario, responsable) {
+  return como(usuario, async (q) => {
+    const ev = (await q("insert into eventos (tipo, estado, responsable_id, creado_por) values ('boda','lead',$1,$2) returning id", [responsable, U[usuario]])).rows[0];
+    await q("insert into contactos (evento_id, posicion, nombre) values ($1,1,'Nueva'),($1,2,'Pareja')", [ev.id]);
+    const cv = (await q("insert into conversaciones (evento_id, canal, estado, responsable_id) values ($1,'manual',$2,$3) returning id", [ev.id, responsable ? "te_toca" : "sin_asignar", responsable])).rows[0];
+    await q("insert into mensajes (conversacion_id, autor, usuario_id, texto) values ($1,'nota_interna',$2,'Correo original')", [cv.id, U[usuario]]);
+    return Number((await q("select count(*)::int n from conversaciones where id=$1", [cv.id])).rows[0].n);
+  });
+}
+ok((await flujo("marta", U.marta)) === 1, "Un comercial crea contacto, conversación y nota a su nombre");
+ok((await flujo("admin", null)) === 1, "El administrador crea un contacto sin asignar");
+ok((await flujo("admin", U.raul)) === 1, "El administrador crea un contacto asignado a otro comercial");
+ok(await flujo("marta", null).then(() => false, () => true), "Un comercial no puede crear contactos sin asignar");
+
 console.log("Alta de usuarios");
 async function comoSuper(fn) {
   const c = await pool.connect();
