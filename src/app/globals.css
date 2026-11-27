@@ -1,0 +1,23 @@
+:root{--ambar:#F3AF42;--texto:#282828;--suave:#5E5A52;--borde:#D9D2C3;--fondo:#FAF8F4;--calido:#FFF9EE;--enlace:#6B4200}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Montserrat',system-ui,sans-serif;background:var(--fondo);color:var(--texto);font-size:14px;line-height:1.45}
+button,input{font-family:inherit}
+button{cursor:pointer}
+a{color:var(--enlace)}
+.centro{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px 24px}
+.tarjeta{width:100%;max-width:390px;display:flex;flex-direction:column;gap:28px}
+.cabecera{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.cabecera h1{margin:0;font-size:24px;font-weight:600}
+.cabecera p{margin:4px 0 0;font-size:14px;color:var(--suave)}
+.formulario{display:flex;flex-direction:column;gap:16px}
+.lb{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:500;color:var(--suave)}
+.in{height:52px;border:1px solid var(--borde);border-radius:14px;padding:0 16px;font-size:15px;color:var(--texto);background:#fff;outline:0;width:100%}
+.in:focus{border-color:var(--ambar);box-shadow:0 0 0 3px #F3AF4240}
+.boton{height:52px;border:0;border-radius:26px;background:var(--ambar);color:var(--texto);font-size:15px;font-weight:600;margin-top:4px}
+.boton:disabled{opacity:.6}
+.error{margin:0;padding:12px 14px;border-radius:12px;background:#FDE8E4;color:#8A2A18;font-size:13px}
+.pie{margin:0;text-align:center;font-size:12px;color:var(--suave)}
+.panel-barra{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 24px;background:#fff;border-bottom:1px solid var(--borde)}
+.panel-usuario{display:flex;align-items:center;gap:14px;font-size:13px;color:var(--suave)}
+.enlace-boton{border:0;background:transparent;font-size:13px;font-weight:600;color:var(--enlace);min-height:44px;padding:0 8px}
+.panel-contenido{max-width:960px;margin:0 auto;padding:40px 24px}

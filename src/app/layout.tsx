@@ -1,16 +1,21 @@
-import type { ReactNode } from "react";
+import type { Metadata } from "next";
+import "./globals.css";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "María · Guadalquivir Catering",
-  description: "Asistente de IA y CRM de conversaciones (versión de prueba)",
+  description: "Versión de prueba",
+  robots: { index: false, follow: false },
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body style={{ margin: 0, fontFamily: "Montserrat, system-ui, sans-serif", background: "#FFF9EE", color: "#282828" }}>
-        {children}
-      </body>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet" />
+      </head>
+      <body>{children}</body>
     </html>
   );
 }

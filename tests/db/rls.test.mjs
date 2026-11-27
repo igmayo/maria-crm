@@ -107,6 +107,29 @@ ok(!(await falla("marta", "insert into eventos (tipo, responsable_id) values ('b
 ok(await falla("marta", "insert into eventos (tipo, responsable_id) values ('boda',$1)", [U.raul]), "Un comercial no crea eventos a nombre de otro");
 ok(await falla("carla", "insert into eventos (tipo, responsable_id) values ('boda',$1)", [U.carla]), "Diseño no crea eventos");
 
+console.log("Alta de usuarios");
+async function comoSuper(fn) {
+  const c = await pool.connect();
+  try { await c.query("begin"); return await fn((sql, p) => c.query(sql, p)); }
+  finally { await c.query("rollback").catch(() => {}); c.release(); }
+}
+const nuevo = await comoSuper(async (q) => {
+  await q("insert into auth.users (id, email) values ('b0000000-0000-0000-0000-000000000001','nueva@ejemplo.test')");
+  return (await q("select rol, activo, nombre from perfiles where id='b0000000-0000-0000-0000-000000000001'")).rows[0];
+});
+ok(nuevo && nuevo.rol === "comercial" && nuevo.activo === false, "Un usuario nuevo nace como comercial desactivado");
+const primero = await comoSuper(async (q) => {
+  await q("update perfiles set rol='comercial' where rol='administrador'");
+  await q("insert into auth.users (id, email) values ('b0000000-0000-0000-0000-000000000002','IGuerrero@sedee.io')");
+  return (await q("select rol, activo from perfiles where id='b0000000-0000-0000-0000-000000000002'")).rows[0];
+});
+ok(primero && primero.rol === "administrador" && primero.activo === true, "El primer administrador se activa solo si aún no hay ninguno");
+const segundo = await comoSuper(async (q) => {
+  await q("insert into auth.users (id, email) values ('b0000000-0000-0000-0000-000000000003','iguerrero@sedee.io')");
+  return (await q("select rol, activo from perfiles where id='b0000000-0000-0000-0000-000000000003'")).rows[0];
+});
+ok(segundo && segundo.rol === "comercial" && segundo.activo === false, "Si ya hay administrador, ese correo no se activa solo");
+
 await pool.end();
 console.log(`\n${total - fallos}/${total} correctas`);
 process.exit(fallos ? 1 : 0);

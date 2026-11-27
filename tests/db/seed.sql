@@ -12,7 +12,8 @@ insert into perfiles (id, nombre, email, rol, activo) values
  ('a0000000-0000-0000-0000-000000000003','Raúl','raul@ejemplo.test','comercial',true),
  ('a0000000-0000-0000-0000-000000000004','Carla','carla@ejemplo.test','diseno',true),
  ('a0000000-0000-0000-0000-000000000005','Pablo','pablo@ejemplo.test','almacen',true),
- ('a0000000-0000-0000-0000-000000000006','Sergio','sergio@ejemplo.test','comercial',false);
+ ('a0000000-0000-0000-0000-000000000006','Sergio','sergio@ejemplo.test','comercial',false)
+ on conflict (id) do update set nombre = excluded.nombre, rol = excluded.rol, activo = excluded.activo;
 
 insert into eventos (id, tipo, estado, fecha, responsable_id, ficha) values
  ('e0000000-0000-0000-0000-000000000001','boda','cliente','2027-06-12','a0000000-0000-0000-0000-000000000002','{"cocktail":"19:30"}'),
