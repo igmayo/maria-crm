@@ -60,23 +60,25 @@ export async function procesarMensajeNovios(args: { almacen: AlmacenNovios; llm:
   if (!texto) return { respuestas: [], error: "vacio" };
   const ctx = await almacen.porToken(huella(args.token));
   if (!ctx) return { respuestas: [], error: "enlace" };
-  if ((await almacen.contarMensajesTitularUltimaHora(ctx.conversacionId)) >= LIMITE_MENSAJES_POR_HORA) return { respuestas: [], error: "limite" };
-
-  const previo = await almacen.historial(ctx.conversacionId, HISTORIAL);
-  await almacen.guardarMensaje({ conversacionId: ctx.conversacionId, autor: "titular", contactoId: ctx.contactoId, texto });
+  const [enviados, previo] = await Promise.all([almacen.contarMensajesTitularUltimaHora(ctx.conversacionId), almacen.historial(ctx.conversacionId, HISTORIAL)]);
+  if (enviados >= LIMITE_MENSAJES_POR_HORA) return { respuestas: [], error: "limite" };
+  const guardado = almacen.guardarMensaje({ conversacionId: ctx.conversacionId, autor: "titular", contactoId: ctx.contactoId, texto });
 
   // Si el equipo ya lleva la conversación (o está cerrada), María no contesta: le toca a una persona.
   if (ctx.estado === "humano" || ctx.estado === "cerrada") {
+    await guardado;
     await almacen.avisarEquipo(ctx, "Han escrito en una conversación que lleva el equipo");
     return { respuestas: [{ autor: "sistema", texto: TEXTO_EQUIPO }] };
   }
   if (!llm) {
+    await guardado;
     await almacen.avisarEquipo(ctx, "María no estaba disponible cuando escribieron los novios");
     return { respuestas: [{ autor: "sistema", texto: TEXTO_NO_DISPONIBLE }] };
   }
+  const [, estadoConv] = await Promise.all([guardado, almacen.estado(ctx)]);
   const r = await ejecutarAgente({
     ambito: { tipo: "novios", eventoId: ctx.eventoId, conversacionId: ctx.conversacionId, contactoId: ctx.contactoId, nombre: ctx.nombre },
-    repo: repositorio(almacen, ctx), llm, modelo, estado: textoEstadoNovios(await almacen.estado(ctx)),
+    repo: repositorio(almacen, ctx), llm, modelo, estado: textoEstadoNovios(estadoConv),
     entrada: { texto, historial: previo.map((m) => ({ rol: m.autor === "titular" ? "usuario" : "asistente", texto: conNombre(m) })) },
   });
   await almacen.guardarMensaje({ conversacionId: ctx.conversacionId, autor: "maria", texto: r.respuesta });

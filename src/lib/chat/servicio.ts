@@ -69,23 +69,25 @@ export async function procesarMensaje(args: {
     token = generarToken();
     ctx = await almacen.crear(huella(token));
   }
-  if ((await almacen.contarMensajesTitular(ctx.conversacionId)) >= LIMITE_MENSAJES_POR_CONVERSACION) return { token, respuestas: [], error: "limite" };
-
-  const previo = await almacen.historial(ctx.conversacionId, HISTORIAL);
-  await almacen.guardarMensaje({ conversacionId: ctx.conversacionId, autor: "titular", contactoId: ctx.contactoId, texto });
+  const [enviados, previo] = await Promise.all([almacen.contarMensajesTitular(ctx.conversacionId), almacen.historial(ctx.conversacionId, HISTORIAL)]);
+  if (enviados >= LIMITE_MENSAJES_POR_CONVERSACION) return { token, respuestas: [], error: "limite" };
+  const guardado = almacen.guardarMensaje({ conversacionId: ctx.conversacionId, autor: "titular", contactoId: ctx.contactoId, texto });
 
   if (ctx.estado === "humano" || ctx.estado === "cerrada") {
+    await guardado;
     await almacen.esperaPersona(ctx);
     return { token, respuestas: [{ autor: "sistema", texto: TEXTO_EQUIPO }] };
   }
 
   if (!llm) {
+    await guardado;
     await almacen.avisarEquipo(ctx, "María no estaba disponible cuando escribió esta persona");
     return { token, respuestas: [{ autor: "sistema", texto: TEXTO_NO_DISPONIBLE }] };
   }
 
+  const [, estadoConv] = await Promise.all([guardado, almacen.estado(ctx)]);
   const r = await ejecutarAgente({
-    ambito: { tipo: "publico" }, repo: repositorio(almacen, ctx), llm, modelo, estado: textoEstado(await almacen.estado(ctx)),
+    ambito: { tipo: "publico" }, repo: repositorio(almacen, ctx), llm, modelo, estado: textoEstado(estadoConv),
     entrada: { texto, historial: previo.map((m) => ({ rol: m.autor === "titular" ? "usuario" : "asistente", texto: m.texto })) },
   });
   await almacen.guardarMensaje({ conversacionId: ctx.conversacionId, autor: "maria", texto: r.respuesta });

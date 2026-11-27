@@ -27,14 +27,15 @@ export async function listarBandeja(filtro: Filtro, q: string, miId: string, res
     evento: { contactos: Contacto[] } | null; responsable: { nombre: string } | null;
   }[];
   if (lista.length === 0) return { items: [], fallo: false };
-  const { data: msgs } = await sb
-    .from("mensajes").select("conversacion_id,autor,texto,creado_en")
-    .in("conversacion_id", lista.map((c) => c.id)).order("creado_en", { ascending: false }).limit(400);
+  const [{ data: msgs }, { data: pend }] = await Promise.all([
+    sb.from("mensajes").select("conversacion_id,autor,texto,creado_en")
+      .in("conversacion_id", lista.map((c) => c.id)).order("creado_en", { ascending: false }).limit(400),
+    sb.from("peticiones_cambio").select("evento_id").eq("estado", "pendiente").in("evento_id", [...new Set(lista.map((c) => c.evento_id))]),
+  ]);
   const ultimo = new Map<string, string>();
   for (const m of (msgs ?? []) as { conversacion_id: string; autor: string; texto: string | null }[]) {
     if (!ultimo.has(m.conversacion_id) && m.autor !== "nota_interna") ultimo.set(m.conversacion_id, m.texto ?? "");
   }
-  const { data: pend } = await sb.from("peticiones_cambio").select("evento_id").eq("estado", "pendiente").in("evento_id", [...new Set(lista.map((c) => c.evento_id))]);
   const cambiosPorEvento = new Map<string, number>();
   for (const x of (pend ?? []) as { evento_id: string }[]) cambiosPorEvento.set(x.evento_id, (cambiosPorEvento.get(x.evento_id) ?? 0) + 1);
   let items: ItemBandeja[] = lista.map((c) => ({
@@ -88,18 +89,20 @@ export async function cargarConversacion(id: string): Promise<Conversacion | nul
     id: string; estado: string; responsable_id: string | null; responsable: { nombre: string } | null;
     evento: Conversacion["evento"]; miembros: { permiso: string; usuario: { nombre: string; rol: string } }[];
   };
-  const { data: m } = await sb.from("mensajes")
-    .select("id,autor,texto,creado_en,contacto_id,usuario_id,usuario:perfiles(nombre)")
-    .eq("conversacion_id", id).order("creado_en", { ascending: true }).limit(500);
+  const [{ data: m }, { data: puede }, { data: puedeFicha }, { data: pc }] = await Promise.all([
+    sb.from("mensajes")
+      .select("id,autor,texto,creado_en,contacto_id,usuario_id,usuario:perfiles(nombre)")
+      .eq("conversacion_id", id).order("creado_en", { ascending: true }).limit(500),
+    sb.rpc("puede_escribir_conversacion", { conv: id }),
+    sb.rpc("es_responsable_evento", { ev: r.evento.id }),
+    sb.from("peticiones_cambio").select("id,campo,valor_actual,valor_pedido,estado,nota,creado_en,validado_en,validado_por,contacto_id")
+      .eq("evento_id", r.evento.id).order("creado_en", { ascending: false }).limit(30),
+  ]);
   const pos = new Map(r.evento.contactos.map((x) => [x.id, x.posicion]));
   const mensajes = ((m ?? []) as unknown as (Omit<Mensaje, "nombreEquipo" | "posicion"> & { usuario: { nombre: string } | null })[]).map((x) => ({
     id: x.id, autor: x.autor, texto: x.texto, creado_en: x.creado_en, contacto_id: x.contacto_id, usuario_id: x.usuario_id,
     nombreEquipo: x.usuario?.nombre ?? null, posicion: x.contacto_id ? pos.get(x.contacto_id) ?? null : null,
   }));
-  const { data: puede } = await sb.rpc("puede_escribir_conversacion", { conv: id });
-  const { data: puedeFicha } = await sb.rpc("es_responsable_evento", { ev: r.evento.id });
-  const { data: pc } = await sb.from("peticiones_cambio").select("id,campo,valor_actual,valor_pedido,estado,nota,creado_en,validado_en,validado_por,contacto_id")
-    .eq("evento_id", r.evento.id).order("creado_en", { ascending: false }).limit(30);
   const filas = (pc ?? []) as { id: string; campo: string; valor_actual: string | null; valor_pedido: string; estado: CambioPedido["estado"]; nota: string | null; creado_en: string; validado_en: string | null; validado_por: string | null; contacto_id: string | null }[];
   const ids = [...new Set(filas.map((f) => f.validado_por).filter(Boolean))] as string[];
   const { data: vs } = ids.length ? await sb.from("perfiles").select("id,nombre").in("id", ids) : { data: [] };
