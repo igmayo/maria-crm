@@ -45,7 +45,7 @@ export async function anularEnlaces(contactoId: string): Promise<boolean> {
 export interface PortalBoda {
   titular: { nombre: string; posicion: number };
   titulares: { nombre: string; posicion: number }[];
-  comercial: string | null;
+  comercial: { nombre: string; frase: string | null; foto: string | null; telefono: string | null } | null;
   evento: {
     fecha: string | null; lugar: string | null; tipo_ceremonia: string | null; hora_ceremonia: string | null; hora_banquete: string | null;
     adultos: number | null; ninos: number | null; invitados: number | null; menu: string | null;
@@ -64,10 +64,10 @@ export async function cargarPortal(token: string): Promise<PortalBoda | null> {
     .select("fecha,lugar,tipo_ceremonia,hora_ceremonia,hora_banquete,adultos,ninos,invitados,menu,responsable_id").eq("id", c.evento_id).maybeSingle();
   if (!ev) return null;
   const { data: tit } = await sb.from("contactos").select("nombre,posicion").eq("evento_id", c.evento_id).order("posicion");
-  let comercial: string | null = null;
+  let comercial: PortalBoda["comercial"] = null;
   if (ev.responsable_id) {
-    const { data: p } = await sb.from("perfiles").select("nombre").eq("id", ev.responsable_id).maybeSingle();
-    comercial = p?.nombre ?? null;
+    const { data: p } = await sb.from("perfiles").select("nombre,frase,foto_url,telefono").eq("id", ev.responsable_id).maybeSingle();
+    comercial = p ? { nombre: p.nombre, frase: p.frase, foto: p.foto_url, telefono: p.telefono } : null;
   }
   await sb.from("accesos").update({ ultimo_uso: new Date().toISOString() }).eq("id", a.id);
   const { responsable_id: _r, ...evento } = ev;

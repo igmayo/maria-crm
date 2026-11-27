@@ -50,9 +50,17 @@ export default async function PortalBoda({ params }: { params: Promise<{ token: 
         </dl>
       </section>
       {p.comercial && (
-        <section aria-label="Vuestra comercial" style={{ background: "#fff", border: "1px solid var(--borde)", borderRadius: 16, padding: 16, display: "flex", alignItems: "center", gap: 12 }}>
-          <span className="av">{p.comercial.slice(0, 1).toUpperCase()}</span>
-          <div><div style={{ fontSize: 12, color: "var(--suave)" }}>Vuestra comercial</div><strong style={{ fontWeight: 600 }}>{p.comercial}</strong></div>
+        <section aria-label="Vuestra comercial" style={{ background: "#fff", border: "1px solid var(--borde)", borderRadius: 16, padding: 16, display: "flex", alignItems: "center", gap: 16 }}>
+          {p.comercial.foto
+            // eslint-disable-next-line @next/next/no-img-element
+            ? <img src={p.comercial.foto} alt={p.comercial.nombre} width={64} height={64} style={{ width: 64, height: 64, borderRadius: "50%", objectFit: "cover", flex: "none" }} />
+            : <span className="av" style={{ width: 64, height: 64, fontSize: 24, background: "#F3AF42", color: "#282828" }}>{p.comercial.nombre.slice(0, 1).toUpperCase()}</span>}
+          <div>
+            <div style={{ fontSize: 12, color: "var(--suave)" }}>Vuestra comercial</div>
+            <strong style={{ fontWeight: 600, fontSize: 16 }}>{p.comercial.nombre}</strong>
+            {p.comercial.frase && <div style={{ fontSize: 13, marginTop: 2 }}>{p.comercial.frase}</div>}
+            {p.comercial.telefono && <div style={{ fontSize: 13, marginTop: 6 }}><a href={`tel:${p.comercial.telefono.replace(/[^0-9+]/g, "")}`} style={{ color: "#6B4200", fontWeight: 600 }}>{p.comercial.telefono}</a></div>}
+          </div>
         </section>
       )}
       <p style={{ margin: 0, fontSize: 12, color: "var(--suave)" }}>Los cambios los confirma siempre vuestra comercial. Este enlace es personal: no lo compartáis.</p>

@@ -134,6 +134,13 @@ ok(await falla("marta", "update eventos set ninos=-3 where id=$1", [E1]), "Los n
 ok(!(await falla("marta", "update contactos set telefono='600', email='nuevo@ejemplo.test' where evento_id=$1 and posicion=1", [E1])), "La responsable edita los datos de los titulares");
 ok((await afecta("raul", "update contactos set telefono='1' where evento_id=$1", [E1])) === 0, "Otro comercial no edita titulares ajenos");
 
+console.log("Perfil de comercial");
+ok((await afecta("marta", "update perfiles set frase='Llevo vuestra boda de principio a fin.', foto_url='https://x.test/f.jpg', telefono='600' where id=$1", [U.marta])) === 1, "Cada comercial edita su frase, foto y teléfono");
+ok((await afecta("marta", "update perfiles set frase='hola' where id=$1", [U.raul])) === 0, "Un comercial no edita el perfil de otro");
+ok((await afecta("admin", "update perfiles set frase=null, foto_url=null where id=$1", [U.marta])) === 1, "El administrador puede quitar la foto y la frase");
+ok(await falla("marta", "update perfiles set frase=repeat('a',141) where id=$1", [U.marta]), "La frase no pasa de 140 caracteres");
+ok(!(await falla("marta", "update perfiles set frase=repeat('a',140) where id=$1", [U.marta])), "Una frase de 140 caracteres sí vale");
+
 console.log("Asignar conversaciones (solo el administrador)");
 async function asignacion(usuario, destino, preparar) {
   return como(usuario, async (q) => {

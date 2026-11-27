@@ -26,7 +26,6 @@ export function contenidoEnlaceNovios(nombre: string, comercial: string | null, 
       ],
       boton: { texto: "Entrar a mi boda", url: enlace },
       notas: ["El acceso se cierra solo un tiempo después de la boda. Si perdéis este correo, podéis pedir el enlace de nuevo a vuestra comercial."],
-      motivo: "Recibes este correo porque Guadalquivir Catering ha creado tu acceso personal. Si no lo esperabas, ignóralo.",
     },
   };
 }

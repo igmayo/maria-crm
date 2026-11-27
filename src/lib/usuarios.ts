@@ -50,7 +50,6 @@ export function contenidoInvitacion(nombre: string, quien: string, enlace: strin
       ],
       boton: { texto: "Crear mi contraseña", url: enlace },
       notas: ["El enlace es de un solo uso. Si ha caducado, pide que te envíen otro."],
-      motivo: "Recibes este correo porque un administrador te ha dado de alta en el panel del equipo. Si no lo esperabas, ignóralo.",
     },
   };
 }

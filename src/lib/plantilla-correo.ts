@@ -10,7 +10,6 @@ export interface ContenidoCorreo {
   /** Texto pequeño bajo el botón. */
   notas?: string[];
   /** Por qué recibe el correo. Va en el pie. */
-  motivo: string;
 }
 
 const AMBAR = "#F3AF42", TEXTO = "#282828", SUAVE = "#5E5A52", BORDE = "#E8E2D6", FONDO = "#FAF8F4", ENLACE = "#6B4200";
@@ -44,9 +43,7 @@ export function correoHtml(c: ContenidoCorreo, base: string): string {
 <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:100%;max-width:560px;background:#ffffff;border:1px solid ${BORDE};border-radius:12px;overflow:hidden">
 ${cabecera(base)}
 <tr><td style="padding:28px 32px 12px;font-family:${FUENTE}"><h1 style="margin:0 0 16px;font-size:20px;line-height:1.3;font-weight:600;color:${TEXTO}">${esc(c.titulo)}</h1>${parrafos}${boton}${notas}${alterno}</td></tr>
-<tr><td style="padding:16px 32px 22px;background:${FONDO};border-top:1px solid ${BORDE};font-family:${FUENTE};font-size:12px;line-height:1.6;color:${SUAVE}">
-<strong style="color:${TEXTO}">${esc(EMPRESA.razonSocial)}</strong><br>${esc(EMPRESA.direccion)}<br>${EMPRESA.telefonos.map(esc).join(" · ")} · <a href="${esc(EMPRESA.web)}" style="color:${ENLACE}">${esc(EMPRESA.web.replace("https://", ""))}</a>
-<p style="margin:8px 0 0">${esc(c.motivo)}</p></td></tr>
+<tr><td align="center" style="padding:16px 32px 20px;background:${FONDO};border-top:1px solid ${BORDE};font-family:${FUENTE};font-size:12px;line-height:1.6;color:${SUAVE}"><a href="${esc(EMPRESA.avisoLegal)}" style="color:${ENLACE}">Aviso legal</a> · <a href="${esc(EMPRESA.privacidad)}" style="color:${ENLACE}">Política de privacidad</a></td></tr>
 </table></td></tr></table></body></html>`;
 }
 
@@ -55,6 +52,6 @@ export function correoTexto(c: ContenidoCorreo): string {
     c.titulo, "", ...c.parrafos.flatMap((p) => [p, ""]),
     ...(c.boton ? [`${c.boton.texto}:`, c.boton.url, ""] : []),
     ...(c.notas ?? []).flatMap((n) => [n]),
-    "", "--", EMPRESA.razonSocial, EMPRESA.direccion, `${EMPRESA.telefonos.join(" · ")} · ${EMPRESA.web}`, "", c.motivo,
+    "", "--", `Aviso legal: ${EMPRESA.avisoLegal}`, `Política de privacidad: ${EMPRESA.privacidad}`,
   ].join("\n");
 }

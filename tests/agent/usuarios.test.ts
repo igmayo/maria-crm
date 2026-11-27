@@ -49,12 +49,15 @@ describe("plantilla de correo", () => {
     expect(html).not.toContain("Marta <b>");
     expect(html).toContain("Marta &lt;b&gt;");
   });
-  it("lleva botón, enlace de respaldo, resumen oculto y datos de la empresa", () => {
+  it("lleva botón, enlace de respaldo, resumen oculto y solo los enlaces legales en el pie", () => {
     const html = correoHtml(c, "http://localhost:3000");
     expect(html).toContain("Crear mi contraseña");
     expect(html.match(/https:\/\/x\.test\/e\?a=1&amp;b=2/g)?.length).toBe(2);
     expect(html).toContain("display:none");
-    expect(html).toContain("Alcalá de Guadaíra");
+    expect(html).toContain("https://guadalquivircatering.com/aviso-legal/");
+    expect(html).toContain("https://guadalquivircatering.com/privacidad/");
+    expect(html).not.toContain("Alcalá de Guadaíra");
+    expect(html).not.toContain("Recibes este correo");
   });
   it("el logo solo sale con una dirección pública https", () => {
     expect(correoHtml(c, "http://localhost:3000")).not.toContain("<img");
