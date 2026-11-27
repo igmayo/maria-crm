@@ -44,6 +44,21 @@ export async function reabrirConversacion(formData: FormData) {
   redirect(`/equipo/c/${id}`);
 }
 
+export async function asignarConversacion(formData: FormData) {
+  const perfil = await perfilActivo();
+  if (!perfil) redirect("/equipo/login");
+  const id = String(formData.get("conversacion") ?? "");
+  const comercial = String(formData.get("comercial") ?? "");
+  if (!id) return;
+  // Solo el administrador asigna. Lo vuelve a comprobar la base de datos.
+  if (perfil.rol !== "administrador" || !comercial) redirect(`/equipo/c/${id}?error=asignar`);
+  const sb = await clienteServidor();
+  const { error } = await sb.rpc("asignar_conversacion", { conv: id, comercial });
+  if (error) { console.error("asignar:", error.message); redirect(`/equipo/c/${id}?error=asignar`); }
+  revalidatePath("/equipo");
+  redirect(`/equipo/c/${id}`);
+}
+
 const TIPOS = ["boda", "empresa", "otro"] as const;
 
 export async function crearContacto(formData: FormData) {

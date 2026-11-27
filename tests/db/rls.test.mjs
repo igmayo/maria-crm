@@ -122,6 +122,33 @@ ok((await flujo("admin", null)) === 1, "El administrador crea un contacto sin as
 ok((await flujo("admin", U.raul)) === 1, "El administrador crea un contacto asignado a otro comercial");
 ok(await flujo("marta", null).then(() => false, () => true), "Un comercial no puede crear contactos sin asignar");
 
+console.log("Asignar conversaciones (solo el administrador)");
+async function asignacion(usuario, destino, preparar) {
+  return como(usuario, async (q) => {
+    const ev = (await q("insert into eventos (tipo, estado, responsable_id, creado_por) values ('boda','lead',null,$1) returning id", [U.admin])).rows;
+    // El alta anterior solo la puede hacer el administrador; si llama otro, falla antes y cuenta como rechazo.
+    const cv = (await q("insert into conversaciones (evento_id, canal, estado) values ($1,'manual','sin_asignar') returning id", [ev[0].id])).rows[0];
+    if (preparar) await q(preparar, [cv.id]);
+    await q("select asignar_conversacion($1,$2)", [cv.id, destino]);
+    return (await q("select c.estado, c.responsable_id r, e.responsable_id re from conversaciones c join eventos e on e.id=c.evento_id where c.id=$1", [cv.id])).rows[0];
+  });
+}
+const asignada = await asignacion("admin", U.raul);
+ok(asignada.estado === "te_toca" && asignada.r === U.raul && asignada.re === U.raul, "El administrador asigna: conversación y boda pasan a Raúl y 'te_toca'");
+const cerrada = await asignacion("admin", U.marta, "update conversaciones set estado='cerrada' where id=$1");
+ok(cerrada.estado === "cerrada" && cerrada.r === U.marta && cerrada.re === U.marta, "Reasignar una cerrada cambia el responsable pero sigue cerrada");
+ok(await asignacion("admin", U.carla).then(() => false, () => true), "No se puede asignar a diseño (solo comerciales)");
+ok(await asignacion("admin", U.sergio).then(() => false, () => true), "No se puede asignar a un usuario desactivado");
+ok(await falla("marta", "select asignar_conversacion($1,$2)", [C1, U.marta]), "Un comercial no puede asignar (ni a sí mismo)");
+ok(await falla("raul", "select asignar_conversacion($1,$2)", [C1, U.raul]), "Un comercial no puede quitarle la conversación a otro");
+ok(await falla("carla", "select asignar_conversacion($1,$2)", [C1, U.carla]), "Diseño no puede asignar");
+const trasReasignar = await como("admin", async (q) => {
+  await q("select asignar_conversacion($1,$2)", [C1, U.raul]);
+  return (await q("select c.responsable_id r, e.responsable_id re from conversaciones c join eventos e on e.id=c.evento_id where c.id=$1", [C1])).rows[0];
+});
+ok(trasReasignar.r === U.raul && trasReasignar.re === U.raul, "Reasignar una conversación ya asignada mueve también la boda");
+ok(await como("admin", async (q) => { await q("select asignar_conversacion($1,$2)", [C1, U.raul]); await q("set local role authenticated"); await q("select set_config('request.jwt.claim.sub',$1,true)", [U.marta]); return Number((await q("select count(*)::int n from conversaciones where id=$1", [C1])).rows[0].n); }) === 0, "Tras reasignar, la comercial anterior deja de verla");
+
 console.log("Alta de usuarios");
 async function comoSuper(fn) {
   const c = await pool.connect();

@@ -33,6 +33,7 @@ Estado a 27/11/2026. Diseño con visto bueno de la empresa. Hecho: esquema y per
 - **D32 · Dónde vive:** subdominios propios; para validar, la URL de Vercel.
 - **D33 · Cómo se incrusta en WordPress:** fragmento de código propio, sin plugin.
 - **D34 · Disponibilidad:** María atiende siempre, también fuera de horario, con criterio sobre el negocio; el equipo responde en horario de oficina. Se presenta siempre como asistente de IA.
+- **D35 · Asignar conversaciones:** solo el administrador asigna y reasigna, con un selector en la cabecera de la conversación. Al asignar cambian a la vez el responsable de la boda y de sus conversaciones; la conversación pasa a "Te toca" (si estaba cerrada, sigue cerrada). Solo se puede asignar a comerciales activos. No hay "tomar conversación": un comercial no ve las sin asignar (D22).
 
 ## Pendiente de diseñar
 - Pantalla "Sin asignar" del administrador.

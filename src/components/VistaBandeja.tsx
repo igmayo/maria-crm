@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { listarBandeja, cargarConversacion, type Filtro, type Conversacion } from "@/lib/datos";
+import { listarBandeja, cargarConversacion, listarComerciales, type Filtro, type Conversacion } from "@/lib/datos";
 import { perfilActivo } from "@/lib/sesion";
 import { encabezadoDia, etiquetaFecha, fechaLarga, horaMensaje, iniciales } from "@/lib/formato";
-import { enviarMensaje, cerrarConversacion, reabrirConversacion } from "@/app/equipo/(panel)/acciones";
+import { enviarMensaje, cerrarConversacion, reabrirConversacion, asignarConversacion } from "@/app/equipo/(panel)/acciones";
 import Redactor from "@/components/Redactor";
 import TextoMaria from "@/components/TextoMaria";
 
@@ -26,7 +26,11 @@ export default async function VistaBandeja({ filtro, q, seleccionada, error }: {
   const perfil = await perfilActivo();
   if (!perfil) redirect("/equipo/login");
   const esAdmin = perfil.rol === "administrador";
-  const [{ items, fallo }, conv] = await Promise.all([listarBandeja(filtro, q, perfil.id), seleccionada ? cargarConversacion(seleccionada) : Promise.resolve(null)]);
+  const [{ items, fallo }, conv, comerciales] = await Promise.all([
+    listarBandeja(filtro, q, perfil.id),
+    seleccionada ? cargarConversacion(seleccionada) : Promise.resolve(null),
+    esAdmin && seleccionada ? listarComerciales() : Promise.resolve([]),
+  ]);
   const filtros: [Filtro, string][] = [["todas", "Todas"], ["te_toca", "Te toca"], ["mias", "Mis parejas"], ...(esAdmin ? ([["sin_asignar", "Sin asignar"]] as [Filtro, string][]) : [])];
   const puedeCrear = esAdmin || perfil.rol === "comercial";
   return (
@@ -64,14 +68,14 @@ export default async function VistaBandeja({ filtro, q, seleccionada, error }: {
           );
         })}
       </section>
-      {conv ? <Detalle conv={conv} error={error} /> : (
+      {conv ? <Detalle conv={conv} error={error} comerciales={esAdmin ? comerciales : null} /> : (
         <div className="centro-vacio">{seleccionada ? "No encuentro esa conversación o no tienes acceso." : "Elige una conversación de la lista."}</div>
       )}
     </>
   );
 }
 
-function Detalle({ conv, error }: { conv: Conversacion; error?: string }) {
+function Detalle({ conv, error, comerciales }: { conv: Conversacion; error?: string; comerciales: { id: string; nombre: string }[] | null }) {
   const ev = conv.evento;
   const titulares = [...ev.contactos].sort((a, b) => a.posicion - b.posicion);
   const nombre = titulares.map((t) => t.nombre).join(" y ") || "Sin nombre";
@@ -88,6 +92,16 @@ function Detalle({ conv, error }: { conv: Conversacion; error?: string }) {
             <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}><h2>{nombre}</h2><span className={`bd ${ec}`}>{et}</span></div>
             <div className="sub">{sub}</div>
           </div>
+          {comerciales && (
+            <form action={asignarConversacion} style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <input type="hidden" name="conversacion" value={conv.id} />
+              <select className="fi" name="comercial" aria-label="Comercial responsable" defaultValue={conv.responsable_id ?? ""} style={{ height: 40, width: "auto" }}>
+                {!conv.responsable_id && <option value="" disabled>Elegir comercial…</option>}
+                {comerciales.map((c) => <option key={c.id} value={c.id}>{c.nombre}</option>)}
+              </select>
+              <button className="btn-sec" type="submit">{conv.responsable_id ? "Reasignar" : "Asignar"}</button>
+            </form>
+          )}
           {conv.puedeEscribir && conv.estado !== "cerrada" && (
             <form action={cerrarConversacion}><input type="hidden" name="conversacion" value={conv.id} /><button className="btn-sec" type="submit">Cerrar</button></form>
           )}
@@ -104,6 +118,7 @@ function Detalle({ conv, error }: { conv: Conversacion; error?: string }) {
           )}
         </header>
         <div className="hilo">
+          {error === "asignar" && <p className="error" role="alert">No se ha podido asignar la conversación. Comprueba que el comercial siga activo.</p>}
           {error === "envio" && <p className="error" role="alert">No se ha podido enviar el mensaje. Inténtalo de nuevo.</p>}
           {conv.mensajes.length === 0 && <div className="dia">Aún no hay mensajes en esta conversación.</div>}
           {conv.mensajes.map((m) => {

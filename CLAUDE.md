@@ -30,5 +30,6 @@ Chat web + CRM + portal de novios, con una asistente de IA llamada María. Lee `
 ## Estado
 Hecho: esquema, permisos, núcleo del agente, login del equipo, bandeja, conversación, ficha, Nuevo contacto y chat público con María (`/chat`, `src/lib/chat/`, `src/app/api/chat/`).
 Pendiente de probar con claves reales: el chat público contra Supabase y la API de Claude (las pruebas usan un almacén en memoria).
-Siguiente: panel de usuarios, asignar conversaciones, actualización en vivo, pantalla "Enseñar" para la base de conocimiento.
+Hecho también: botón Reabrir y asignar/reasignar (solo administrador, migración 0005, D35).
+Siguiente: panel de usuarios, actualización en vivo, pantalla "Enseñar" para la base de conocimiento.
 Vulnerabilidades conocidas y aceptadas por ahora (riesgo bajo): postcss dentro de Next, y zod; revisar antes de producción (Next 16, zod 4).
