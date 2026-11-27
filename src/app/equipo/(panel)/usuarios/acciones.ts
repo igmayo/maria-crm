@@ -5,17 +5,20 @@ import { clienteServidor } from "@/lib/supabase/servidor";
 import { clienteAdmin, hayClaveDeServicio } from "@/lib/supabase/admin";
 import { perfilActivo } from "@/lib/sesion";
 import { enviarCorreo } from "@/lib/correo";
-import { ROLES, validarInvitacion, enlaceInvitacion, textoInvitacion, urlBase } from "@/lib/usuarios";
+import { correoHtml, correoTexto } from "@/lib/plantilla-correo";
+import { ROLES, validarInvitacion, enlaceInvitacion, contenidoInvitacion, urlBase } from "@/lib/usuarios";
 
 export interface EstadoInvitar { ok?: boolean; error?: string; mensaje?: string; enlace?: string }
 
 const MENSAJES_ERROR = { nombre: "Escribe el nombre (al menos 2 letras).", correo: "El correo no parece válido.", rol: "Elige un rol." } as const;
 
 /** Prepara el enlace, lo envía por correo y, solo si el correo falla, lo devuelve para copiarlo. */
-async function entregar(nombre: string, correo: string, tokenHash: string, tipo: "invite" | "recovery", quien: string, reenvio: boolean): Promise<EstadoInvitar> {
-  const enlace = enlaceInvitacion(urlBase(), tokenHash, tipo);
-  const { asunto, texto } = textoInvitacion(nombre, quien, enlace, reenvio);
-  const enviado = await enviarCorreo({ para: correo, asunto, texto });
+async function entregar(nombre: string, correo: string, tokenHash: string, tipo: "invite" | "recovery", quien: { nombre: string; email: string }, reenvio: boolean): Promise<EstadoInvitar> {
+  const base = urlBase();
+  const enlace = enlaceInvitacion(base, tokenHash, tipo);
+  const { asunto, contenido } = contenidoInvitacion(nombre, quien.nombre, enlace, reenvio);
+  // Si alguien responde, la respuesta llega a quien envía la invitación.
+  const enviado = await enviarCorreo({ para: correo, asunto, texto: correoTexto(contenido), html: correoHtml(contenido, base), responderA: quien.email });
   if (enviado) return { ok: true, mensaje: `Invitación enviada a ${correo}.` };
   return { ok: true, mensaje: `No se pudo enviar el correo a ${correo}. Pásale este enlace tú (es de un solo uso):`, enlace };
 }
@@ -42,7 +45,7 @@ export async function invitarUsuario(_prev: EstadoInvitar, formData: FormData): 
     return { error: "La cuenta se creó pero no se pudo activar. Edítala en la lista." };
   }
   revalidatePath("/equipo/usuarios");
-  return entregar(v.nombre, v.correo, data.properties.hashed_token, "invite", perfil.nombre, false);
+  return entregar(v.nombre, v.correo, data.properties.hashed_token, "invite", perfil, false);
 }
 
 export async function reenviarInvitacion(_prev: EstadoInvitar, formData: FormData): Promise<EstadoInvitar> {
@@ -59,7 +62,7 @@ export async function reenviarInvitacion(_prev: EstadoInvitar, formData: FormDat
     console.error("reenviar:", error?.message ?? "sin datos");
     return { error: "No se ha podido crear el nuevo enlace." };
   }
-  return entregar(u.nombre, u.email, data.properties.hashed_token, "recovery", perfil.nombre, true);
+  return entregar(u.nombre, u.email, data.properties.hashed_token, "recovery", perfil, true);
 }
 
 export async function editarUsuario(formData: FormData) {

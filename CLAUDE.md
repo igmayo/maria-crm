@@ -25,6 +25,7 @@ Chat web + CRM + portal de novios, con una asistente de IA llamada María. Lee `
 - `src/app/equipo/`: panel del equipo (login, bandeja, conversación, nuevo contacto, usuarios, invitación). Sesión con Supabase Auth; el middleware está en `src/middleware.ts`.
 - `src/lib/chat/`: lógica del chat público (servicio con límites, almacén de Supabase intercambiable). Usa la clave de servicio, así que solo se importa desde el servidor.
 - `src/lib/datos.ts`: lecturas del panel (siempre con la sesión de la persona, para que actúe RLS).
+- `src/lib/correo.ts`, `plantilla-correo.ts`, `empresa.ts`: envío con Resend y plantilla común de correos (D37). Todo correo nuevo usa la plantilla.
 - `supabase/migrations/`: esquema y permisos, aplicados en orden.
 
 ## Estado

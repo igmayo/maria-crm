@@ -1,3 +1,5 @@
+import type { ContenidoCorreo } from "@/lib/plantilla-correo";
+
 /** Reglas del panel de usuarios que no dependen de la base de datos (se prueban aparte). */
 export const ROLES = ["comercial", "diseno", "almacen", "administracion", "administrador"] as const;
 export type Rol = (typeof ROLES)[number];
@@ -33,21 +35,23 @@ export function enlaceInvitacion(base: string, tokenHash: string, tipo: "invite"
   return `${base}/equipo/invitacion?token_hash=${encodeURIComponent(tokenHash)}&type=${tipo}`;
 }
 
-export function textoInvitacion(nombre: string, quien: string, enlace: string, reenvio = false): { asunto: string; texto: string } {
+/** Contenido del correo de invitación (o de reenvío). La maqueta está en plantilla-correo.ts. */
+export function contenidoInvitacion(nombre: string, quien: string, enlace: string, reenvio = false): { asunto: string; contenido: ContenidoCorreo } {
   return {
     asunto: reenvio ? "Nuevo enlace para entrar en María" : "Te han invitado a María, el panel de Guadalquivir Catering",
-    texto: [
-      `Hola ${nombre},`,
-      "",
-      reenvio
-        ? `${quien} te envía un nuevo enlace para crear tu contraseña y entrar en María, el panel del equipo de Guadalquivir Catering.`
-        : `${quien} te ha invitado a María, el panel del equipo de Guadalquivir Catering.`,
-      "",
-      "Crea tu contraseña aquí (el enlace es de un solo uso):",
-      enlace,
-      "",
-      "Si el enlace ha caducado, pide que te envíen otro. Si no esperabas este correo, ignóralo.",
-    ].join("\n"),
+    contenido: {
+      resumen: "Crea tu contraseña y entra. El enlace es de un solo uso.",
+      titulo: `Hola, ${nombre}`,
+      parrafos: [
+        reenvio
+          ? `${quien} te envía un nuevo enlace para entrar en María, el panel del equipo de Guadalquivir Catering.`
+          : `${quien} te ha invitado a María, el panel del equipo de Guadalquivir Catering. Desde ahí llevarás las conversaciones con las parejas.`,
+        "Para entrar, crea tu contraseña.",
+      ],
+      boton: { texto: "Crear mi contraseña", url: enlace },
+      notas: ["El enlace es de un solo uso. Si ha caducado, pide que te envíen otro."],
+      motivo: "Recibes este correo porque un administrador te ha dado de alta en el panel del equipo. Si no lo esperabas, ignóralo.",
+    },
   };
 }
 
