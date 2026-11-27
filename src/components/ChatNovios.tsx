@@ -48,7 +48,7 @@ export default function ChatNovios({ token, yo, titulares, comercial }: { token:
     return () => { clearInterval(id); document.removeEventListener("visibilitychange", alVolver); };
   }, [cargar]);
 
-  useEffect(() => { fin.current?.scrollIntoView({ behavior: "smooth", block: "end" }); }, [mensajes.length, enviando]);
+  useEffect(() => { { const h = fin.current?.parentElement; if (h) h.scrollTo({ top: h.scrollHeight, behavior: "smooth" }); } }, [mensajes.length, enviando]);
 
   async function enviar(t: string) {
     const limpio = t.trim();

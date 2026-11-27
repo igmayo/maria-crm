@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 const base = (process.env.APP_URL || "http://localhost:3000").replace(/\/+$/, "");
@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
   openGraph: { title: "Habla con María · Guadalquivir Catering", description: descripcion, siteName: "Guadalquivir Catering", locale: "es_ES", type: "website" },
 };
+
+export const viewport: Viewport = { width: "device-width", initialScale: 1, interactiveWidget: "resizes-content" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

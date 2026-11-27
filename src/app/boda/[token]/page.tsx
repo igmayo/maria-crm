@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { cargarPortal } from "@/lib/acceso-servidor";
 import { fechaLarga } from "@/lib/formato";
 import { ETIQUETA_CAMPO, ESTADO_NOVIOS, esCampo, mostrarValor } from "@/lib/cambios";
+import AltoVisible from "@/components/AltoVisible";
 import PestanasBoda from "@/components/PestanasBoda";
 import { ETIQUETA_CEREMONIA, textoInvitados } from "@/lib/ficha";
 
@@ -80,7 +81,9 @@ export default async function PortalBoda({ params }: { params: Promise<{ token: 
     </div>
   );
   return (
-    <main style={{ maxWidth: 520, margin: "0 auto", height: "100dvh", display: "flex", flexDirection: "column", background: "#FFF9EE" }}>
+    <>
+    <AltoVisible />
+    <main style={{ maxWidth: 520, margin: "0 auto", height: "var(--alto-vis, 100dvh)", display: "flex", flexDirection: "column", background: "#FFF9EE" }}>
       <header style={{ display: "flex", alignItems: "center", gap: 12, padding: "18px 20px 12px", background: "#fff" }}>
         <Image src="/logo-icono.png" alt="Guadalquivir Catering" width={40} height={40} priority style={{ objectFit: "contain", flex: "none" }} />
         <div>
@@ -90,5 +93,6 @@ export default async function PortalBoda({ params }: { params: Promise<{ token: 
       </header>
       <PestanasBoda token={token} yo={{ nombre: p.titular.nombre, posicion: p.titular.posicion }} titulares={nombres} comercial={p.comercial ? { nombre: p.comercial.nombre, foto: p.comercial.foto } : null} miBoda={miBoda} />
     </main>
+    </>
   );
 }

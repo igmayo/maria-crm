@@ -106,13 +106,13 @@ textarea.fi{height:96px;padding:10px 14px;resize:vertical}
 @media (max-width:900px){.lista,.ficha{max-width:none}.nav{flex-direction:row;flex-basis:100%;border-right:0;border-bottom:1px solid #E8E2D6;padding:8px 12px}.nav img{margin:0 12px 0 0}}
 
 /* ---- Chat público ---- */
-.cp-fondo{min-height:100dvh;background:#FFF9EE;display:flex;justify-content:center}
-.cp{width:100%;max-width:480px;height:100dvh;display:flex;flex-direction:column;background:#FFF9EE}
+.cp-fondo{min-height:var(--alto-vis,100dvh);overflow:hidden;background:#FFF9EE;display:flex;justify-content:center}
+.cp{width:100%;max-width:480px;height:var(--alto-vis,100dvh);display:flex;flex-direction:column;background:#FFF9EE}
 .cp-aviso{background:#282828;color:#FFF9EE;font-size:12px;font-weight:600;text-align:center;padding:6px 12px}
 .cp-cab{display:flex;align-items:center;gap:12px;padding:14px 20px 12px;background:#fff;border-bottom:1px solid #EFE3C6}
 .cp-cab strong{font-size:16px;font-weight:600;display:block}
 .cp-cab span{font-size:12px;color:var(--suave)}
-.cp-hilo{flex:1;overflow-y:auto;padding:16px 16px 8px;display:flex;flex-direction:column;gap:12px}
+.cp-hilo{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:16px 16px 8px;display:flex;flex-direction:column;gap:12px}
 .cp-mr{align-self:flex-start;max-width:84%;background:#fff;border:1px solid #EFE3C6;border-radius:18px 18px 18px 4px;padding:12px 14px;white-space:pre-wrap;overflow-wrap:anywhere}
 .cp-mr b{display:block;font-size:11px;font-weight:600;color:var(--enlace);margin-bottom:2px}
 .cp-us{align-self:flex-end;max-width:84%;background:var(--ambar);border-radius:18px 18px 4px 18px;padding:12px 14px;white-space:pre-wrap;overflow-wrap:anywhere}
@@ -125,7 +125,7 @@ textarea.fi{height:96px;padding:10px 14px;resize:vertical}
 .cp-chip{height:44px;padding:0 16px;border:1px solid #E3D3AE;border-radius:22px;background:#fff;color:var(--texto);font-size:13px;font-weight:500;white-space:nowrap}
 .cp-legal{padding:0 16px 6px;font-size:11px;color:var(--suave);text-align:center}
 .cp-pie{display:flex;align-items:center;gap:8px;padding:8px 16px 16px;background:#fff;border-top:1px solid #EFE3C6}
-.cp-pie input{flex:1;min-width:0;height:46px;border:1px solid #E3D3AE;border-radius:23px;padding:0 16px;font-size:14px;outline:0;background:#fff}
+.cp-pie input{flex:1;min-width:0;height:46px;border:1px solid #E3D3AE;border-radius:23px;padding:0 16px;font-size:16px;outline:0;background:#fff}
 .cp-pie input:focus{border-color:var(--ambar)}
 .cp-pie button{width:46px;height:46px;border-radius:50%;border:0;background:var(--ambar);color:var(--texto);display:flex;align-items:center;justify-content:center;flex:none}
 .cp-pie button:disabled{opacity:.5}

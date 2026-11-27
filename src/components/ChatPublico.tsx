@@ -33,7 +33,7 @@ export default function ChatPublico() {
       .catch(() => {});
   }, []);
 
-  useEffect(() => { fin.current?.scrollIntoView({ behavior: "smooth" }); }, [mensajes, enviando]);
+  useEffect(() => { { const h = fin.current?.parentElement; if (h) h.scrollTo({ top: h.scrollHeight, behavior: "smooth" }); } }, [mensajes, enviando]);
 
   async function enviar(t: string) {
     const limpio = t.trim();

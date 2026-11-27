@@ -1,11 +1,13 @@
 import Image from "next/image";
 import ChatPublico from "@/components/ChatPublico";
+import AltoVisible from "@/components/AltoVisible";
 
 export const metadata = { title: "María · Guadalquivir Catering", robots: { index: false, follow: false } };
 
 export default function Chat() {
   return (
     <div className="cp-fondo">
+      <AltoVisible />
       <main className="cp">
         <div className="cp-aviso">Versión de prueba · no es la web definitiva</div>
         <header className="cp-cab">

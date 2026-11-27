@@ -9,6 +9,7 @@ import { ETIQUETA_ESTADO, COLOR_ESTADO, ETIQUETA_CEREMONIA, textoInvitados, text
 import { encabezadoDia, etiquetaFecha, fechaLarga, horaMensaje, iniciales } from "@/lib/formato";
 import { enviarMensaje, cerrarConversacion, reabrirConversacion, asignarConversacion, decidirCambio } from "@/app/equipo/(panel)/acciones";
 import Redactor from "@/components/Redactor";
+import FinHilo from "@/components/FinHilo";
 import TextoMaria from "@/components/TextoMaria";
 
 const estados: Record<string, [string, string]> = {
@@ -157,6 +158,7 @@ function Detalle({ conv, error, comerciales, enlaces, volver }: { conv: Conversa
             } else cuerpo = <div className="chip">{m.texto}</div>;
             return <div key={m.id} style={{ display: "contents" }}>{cab}{cuerpo}</div>;
           })}
+          <FinHilo total={conv.mensajes.length} />
         </div>
         {conv.puedeEscribir ? <Redactor conversacion={conv.id} destinatarios={nombre} accion={enviarMensaje} /> : <div className="solo-lectura">Solo lectura: esta conversación la lleva {conv.responsable ?? "otra persona"}.</div>}
       </section>
