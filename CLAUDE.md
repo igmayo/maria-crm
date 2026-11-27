@@ -33,5 +33,6 @@ Hecho: esquema, permisos, núcleo del agente, login del equipo, bandeja, convers
 Pendiente de probar con claves reales: el chat público contra Supabase y la API de Claude (las pruebas usan un almacén en memoria).
 Hecho también: botón Reabrir y asignar/reasignar (solo administrador, migración 0005, D35).
 Hecho también: panel de usuarios (`/equipo/usuarios`, invitación por Resend, D36, migración 0006) y página `/equipo/invitacion`.
-Siguiente: actualización en vivo, pantalla "Enseñar" para la base de conocimiento.
+Hecho también: ficha editable (`/equipo/c/[id]/ficha`, migración 0007, D38), dar acceso a novios (`/equipo/c/[id]/acceso`, migración 0008, D39) y portal de solo lectura `/boda/[token]`.
+Siguiente: chat de novios con María, solicitudes de cambio, Pedir-enlace/Verificar-código, actualización en vivo, pantalla "Enseñar" para la base de conocimiento.
 Vulnerabilidades conocidas y aceptadas por ahora (riesgo bajo): postcss dentro de Next, y zod; revisar antes de producción (Next 16, zod 4).

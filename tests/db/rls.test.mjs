@@ -122,6 +122,18 @@ ok((await flujo("admin", null)) === 1, "El administrador crea un contacto sin as
 ok((await flujo("admin", U.raul)) === 1, "El administrador crea un contacto asignado a otro comercial");
 ok(await flujo("marta", null).then(() => false, () => true), "Un comercial no puede crear contactos sin asignar");
 
+console.log("Ficha de boda editable");
+const SET = "update eventos set tipo_ceremonia='civil', hora_ceremonia='18:00', hora_banquete='21:00', adultos=120, ninos=8, menu='Cóctel', dato_interes='Mesa dulce' where id=$1";
+ok((await afecta("marta", SET, [E1])) === 1, "La responsable edita la ficha de su boda");
+ok((await afecta("admin", SET, [E2])) === 1, "El administrador edita cualquier ficha");
+ok((await afecta("marta", SET, [E2])) === 0, "Un comercial no edita la ficha de otro");
+ok((await afecta("carla", SET, [E1])) === 0, "Diseño, con la conversación compartida, no edita la ficha");
+ok(await falla("marta", "update eventos set tipo_ceremonia='mixta' where id=$1", [E1]), "Solo religiosa o civil");
+ok(await falla("marta", "update eventos set adultos=-1 where id=$1", [E1]), "Los adultos no pueden ser negativos");
+ok(await falla("marta", "update eventos set ninos=-3 where id=$1", [E1]), "Los niños no pueden ser negativos");
+ok(!(await falla("marta", "update contactos set telefono='600', email='nuevo@ejemplo.test' where evento_id=$1 and posicion=1", [E1])), "La responsable edita los datos de los titulares");
+ok((await afecta("raul", "update contactos set telefono='1' where evento_id=$1", [E1])) === 0, "Otro comercial no edita titulares ajenos");
+
 console.log("Asignar conversaciones (solo el administrador)");
 async function asignacion(usuario, destino, preparar) {
   return como(usuario, async (q) => {

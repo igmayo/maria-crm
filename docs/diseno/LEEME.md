@@ -12,7 +12,7 @@ Los archivos `*.dc.html` son los diseños aprobados (uno por pantalla). Se leen 
 ## Pantallas y estado
 | Diseño | Estado |
 |---|---|
-| Login-equipo, Main (bandeja), Nuevo-contacto | Construidas |
+| Login-equipo, Main (bandeja), Nuevo-contacto, Ficha-editar, Dar-acceso, Mi-boda (solo lectura) | Construidas |
 | Chat-publico | Siguiente |
-| Chat-novios, Mi-boda, Pedir-enlace, Acceso-dar, Verificar-codigo | Fase 2 |
+| Chat-novios, Pedir-enlace, Acceso-dar (versión antigua; vale Dar-acceso), Verificar-codigo | Fase 2 |
 | Pendientes, Hoy-movil, Conversacion-movil, Compartir, Admin-usuarios, Perfil, Ensenar-maria | Fase 3 |

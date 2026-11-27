@@ -2,6 +2,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { listarBandeja, cargarConversacion, listarComerciales, type Filtro, type Conversacion } from "@/lib/datos";
 import { perfilActivo } from "@/lib/sesion";
+import { hayClaveDeServicio } from "@/lib/supabase/admin";
+import { estadoEnlaces, type EstadoEnlace } from "@/lib/acceso-servidor";
+import { ETIQUETA_ESTADO, COLOR_ESTADO, ETIQUETA_CEREMONIA, textoInvitados, textoHorarios } from "@/lib/ficha";
 import { encabezadoDia, etiquetaFecha, fechaLarga, horaMensaje, iniciales } from "@/lib/formato";
 import { enviarMensaje, cerrarConversacion, reabrirConversacion, asignarConversacion } from "@/app/equipo/(panel)/acciones";
 import Redactor from "@/components/Redactor";
@@ -33,6 +36,8 @@ export default async function VistaBandeja({ filtro, q, seleccionada, error, r }
     seleccionada ? cargarConversacion(seleccionada) : Promise.resolve(null),
     esAdmin && seleccionada ? listarComerciales() : Promise.resolve([]),
   ]);
+  const enlaces: Record<string, EstadoEnlace> = conv?.puedeEditarFicha && hayClaveDeServicio()
+    ? await estadoEnlaces(conv.evento.contactos.map((c) => c.id).filter((x): x is string => Boolean(x))) : {};
   const filtros: [Filtro, string][] = [["todas", "Todas"], ["te_toca", "Te toca"], ["mias", "Mis parejas"], ...(esAdmin ? ([["sin_asignar", "Sin asignar"]] as [Filtro, string][]) : [])];
   const puedeCrear = esAdmin || perfil.rol === "comercial";
   return (
@@ -74,14 +79,14 @@ export default async function VistaBandeja({ filtro, q, seleccionada, error, r }
           );
         })}
       </section>
-      {conv ? <Detalle conv={conv} error={error} comerciales={esAdmin ? comerciales : null} /> : (
+      {conv ? <Detalle conv={conv} error={error} comerciales={esAdmin ? comerciales : null} enlaces={enlaces} /> : (
         <div className="centro-vacio">{seleccionada ? "No encuentro esa conversación o no tienes acceso." : "Elige una conversación de la lista."}</div>
       )}
     </>
   );
 }
 
-function Detalle({ conv, error, comerciales }: { conv: Conversacion; error?: string; comerciales: { id: string; nombre: string }[] | null }) {
+function Detalle({ conv, error, comerciales, enlaces }: { conv: Conversacion; error?: string; comerciales: { id: string; nombre: string }[] | null; enlaces: Record<string, EstadoEnlace> }) {
   const ev = conv.evento;
   const titulares = [...ev.contactos].sort((a, b) => a.posicion - b.posicion);
   const nombre = titulares.map((t) => t.nombre).join(" y ") || "Sin nombre";
@@ -148,16 +153,23 @@ function Detalle({ conv, error, comerciales }: { conv: Conversacion; error?: str
       </section>
       <aside aria-label="Ficha" className="ficha">
         <div>
-          <h2>Ficha</h2>
+          <h2>Ficha de la boda</h2>
           <dl>
-            <dt>Tipo</dt><dd>{tipos[ev.tipo] ?? ev.tipo}</dd>
             <dt>Fecha</dt><dd>{fechaLarga(ev.fecha)}</dd>
-            <dt>Lugar</dt><dd>{ev.lugar ?? "Sin indicar"}</dd>
-            <dt>Invitados</dt><dd>{ev.invitados ?? "Sin indicar"}</dd>
-            <dt>Origen</dt><dd>{ev.origen ?? "Sin indicar"}</dd>
+            <dt>Espacio</dt><dd>{ev.lugar ?? "Sin indicar"}</dd>
+            <dt>Invitados</dt><dd>{textoInvitados(ev)}</dd>
+            <dt>Menú</dt><dd>{ev.menu ?? "Sin indicar"}</dd>
+            <dt>Ceremonia</dt><dd>{ev.tipo_ceremonia ? ETIQUETA_CEREMONIA[ev.tipo_ceremonia] : "Sin indicar"}</dd>
+            <dt>Horarios</dt><dd>{textoHorarios(ev)}</dd>
             <dt>Comercial</dt><dd>{conv.responsable ?? "Sin asignar"}</dd>
-            <dt>Estado</dt><dd style={{ textTransform: "capitalize" }}>{ev.estado}</dd>
+            <dt>Estado</dt><dd><span className={`bd ${COLOR_ESTADO[ev.estado] ?? "gr"}`}>{ETIQUETA_ESTADO[ev.estado] ?? ev.estado}</span></dd>
+            <dt>Tipo</dt><dd>{tipos[ev.tipo] ?? ev.tipo}</dd>
+            <dt>Origen</dt><dd>{ev.origen ?? "Sin indicar"}</dd>
+            {ev.dato_interes && <><dt>De interés</dt><dd>{ev.dato_interes}</dd></>}
           </dl>
+          {conv.puedeEditarFicha
+            ? <><Link href={`/equipo/c/${conv.id}/ficha`} className="btn-sec" style={{ marginTop: 14 }}>Editar ficha</Link><p style={{ margin: "10px 0 0", fontSize: 12, color: "var(--suave)" }}>Solo la responsable y los administradores pueden editarla. Lo que cambies lo ven los novios en “Mi boda”.</p></>
+            : <p style={{ margin: "12px 0 0", fontSize: 12, color: "var(--suave)" }}>Solo la responsable y los administradores pueden editar la ficha.</p>}
         </div>
         {conv.miembros.length > 0 && (
           <div>
@@ -176,11 +188,12 @@ function Detalle({ conv, error, comerciales }: { conv: Conversacion; error?: str
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {titulares.map((t) => (
               <div key={t.posicion} className="titular">
-                <div style={{ display: "flex", justifyContent: "space-between", margin: 0 }}><strong style={{ fontWeight: 600, color: colorTitular[t.posicion - 1] }}>{t.nombre}</strong><span style={{ fontSize: 11, color: "var(--suave)" }}>Titular {t.posicion}</span></div>
+                <div style={{ display: "flex", justifyContent: "space-between", margin: 0 }}><strong style={{ fontWeight: 600, color: colorTitular[t.posicion - 1] }}>{t.nombre}</strong>{t.id && enlaces[t.id] ? <span className={enlaces[t.id].activo ? "bd g" : "bd gr"}>{enlaces[t.id].activo ? "Enlace activo" : "Sin enlace"}</span> : <span style={{ fontSize: 11, color: "var(--suave)" }}>Titular {t.posicion}</span>}</div>
                 <div>{[t.telefono, t.email].filter(Boolean).join(" · ") || "Sin datos de contacto"}</div>
               </div>
             ))}
           </div>
+          {conv.puedeEditarFicha && <Link href={`/equipo/c/${conv.id}/acceso`} className="btn-pri" style={{ marginTop: 14 }}>Dar acceso a los novios</Link>}
         </div>
       </aside>
     </>

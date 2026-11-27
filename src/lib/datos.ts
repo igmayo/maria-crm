@@ -56,18 +56,22 @@ export interface Conversacion {
   id: string; estado: string; responsable_id: string | null; responsable: string | null;
   evento: {
     id: string; tipo: string; estado: string; fecha: string | null; lugar: string | null; invitados: number | null; origen: string | null;
+    tipo_ceremonia: string | null; hora_ceremonia: string | null; hora_banquete: string | null;
+    adultos: number | null; ninos: number | null; menu: string | null; dato_interes: string | null;
     contactos: Contacto[];
   };
   miembros: { nombre: string; rol: string; permiso: string }[];
   mensajes: Mensaje[];
   puedeEscribir: boolean;
+  /** Solo la responsable de la boda y los administradores editan la ficha y dan acceso a los novios. */
+  puedeEditarFicha: boolean;
 }
 
 export async function cargarConversacion(id: string): Promise<Conversacion | null> {
   const sb = await clienteServidor();
   const { data: c, error } = await sb
     .from("conversaciones")
-    .select("id,estado,responsable_id,responsable:perfiles!conversaciones_responsable_id_fkey(nombre),evento:eventos(id,tipo,estado,fecha,lugar,invitados,origen,contactos(id,nombre,posicion,email,telefono)),miembros:conversacion_miembros(permiso,usuario:perfiles!conversacion_miembros_usuario_id_fkey(nombre,rol))")
+    .select("id,estado,responsable_id,responsable:perfiles!conversaciones_responsable_id_fkey(nombre),evento:eventos(id,tipo,estado,fecha,lugar,invitados,origen,tipo_ceremonia,hora_ceremonia,hora_banquete,adultos,ninos,menu,dato_interes,contactos(id,nombre,posicion,email,telefono)),miembros:conversacion_miembros(permiso,usuario:perfiles!conversacion_miembros_usuario_id_fkey(nombre,rol))")
     .eq("id", id).maybeSingle();
   if (error) console.error("conversación:", error.message);
   if (!c) return null;
@@ -84,11 +88,12 @@ export async function cargarConversacion(id: string): Promise<Conversacion | nul
     nombreEquipo: x.usuario?.nombre ?? null, posicion: x.contacto_id ? pos.get(x.contacto_id) ?? null : null,
   }));
   const { data: puede } = await sb.rpc("puede_escribir_conversacion", { conv: id });
+  const { data: puedeFicha } = await sb.rpc("es_responsable_evento", { ev: r.evento.id });
   return {
     id: r.id, estado: r.estado, responsable_id: r.responsable_id, responsable: r.responsable?.nombre ?? null,
     evento: r.evento,
     miembros: r.miembros.map((x) => ({ nombre: x.usuario.nombre, rol: x.usuario.rol, permiso: x.permiso })),
-    mensajes, puedeEscribir: puede === true,
+    mensajes, puedeEscribir: puede === true, puedeEditarFicha: puedeFicha === true,
   };
 }
 

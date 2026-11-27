@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { clienteServidor } from "@/lib/supabase/servidor";
 import { perfilActivo } from "@/lib/sesion";
+import { validarFicha } from "@/lib/ficha";
 
 export async function enviarMensaje(formData: FormData) {
   const perfil = await perfilActivo();
@@ -94,4 +95,34 @@ export async function crearContacto(formData: FormData) {
   }
   revalidatePath("/equipo");
   redirect(`/equipo/c/${conv.id}`);
+}
+
+/** Guarda la ficha de la boda. La base de datos solo deja a la responsable y a los administradores (política eventos_editar). */
+export async function editarFicha(formData: FormData) {
+  const perfil = await perfilActivo();
+  if (!perfil) redirect("/equipo/login");
+  const conv = String(formData.get("conversacion") ?? "");
+  if (!conv) redirect("/equipo");
+  const v = validarFicha(formData);
+  if (!v.ok) redirect(`/equipo/c/${conv}/ficha?error=${v.error}`);
+  const sb = await clienteServidor();
+  const { data: c } = await sb.from("conversaciones").select("evento_id").eq("id", conv).maybeSingle();
+  if (!c) redirect("/equipo");
+  const { valores: x } = v;
+  const { data: filas, error } = await sb.from("eventos").update({
+    tipo: x.tipo, estado: x.estado, origen: x.origen, fecha: x.fecha, lugar: x.lugar, tipo_ceremonia: x.tipo_ceremonia,
+    hora_ceremonia: x.hora_ceremonia, hora_banquete: x.hora_banquete, adultos: x.adultos, ninos: x.ninos, invitados: x.invitados,
+    menu: x.menu, dato_interes: x.dato_interes, actualizado_en: new Date().toISOString(),
+  }).eq("id", c.evento_id).select("id");
+  if (error || !filas || filas.length === 0) {
+    if (error) console.error("ficha:", error.message);
+    redirect(`/equipo/c/${conv}/ficha?error=${error ? "guardar" : "permiso"}`);
+  }
+  const titulares = [{ evento_id: c.evento_id, posicion: 1, nombre: x.titular1.nombre, telefono: x.titular1.telefono, email: x.titular1.email }];
+  // El titular 2 solo se guarda si tiene nombre. Nada se borra: dejarlo en blanco no lo elimina.
+  if (x.titular2) titulares.push({ evento_id: c.evento_id, posicion: 2, nombre: x.titular2.nombre, telefono: x.titular2.telefono, email: x.titular2.email });
+  const { error: e2 } = await sb.from("contactos").upsert(titulares, { onConflict: "evento_id,posicion" });
+  if (e2) { console.error("titulares:", e2.message); redirect(`/equipo/c/${conv}/ficha?error=guardar`); }
+  revalidatePath("/equipo");
+  redirect(`/equipo/c/${conv}`);
 }

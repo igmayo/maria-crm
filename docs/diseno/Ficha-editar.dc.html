@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Editar ficha</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Montserrat',sans-serif;color:#282828}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer}
+a{text-decoration:none}
+.bd{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+.g{background:#E4F3E6;color:#1E5B2B}.gr{background:#ECECEC;color:#444}
+.fi{height:44px;border:1px solid #D9D2C3;border-radius:12px;padding:0 14px;font-size:14px;background:#fff;color:#282828;width:100%;box-sizing:border-box}
+textarea.fi{height:84px;padding:10px 14px;resize:vertical}
+.cp span{display:block;font-size:12px;font-weight:600;color:#5E5A52;margin-bottom:4px}
+.cp{flex:1;min-width:150px}
+.fila{display:flex;gap:12px;flex-wrap:wrap}
+.sc{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:6px;border-top:1px solid #E8E2D6}
+.sc h2{margin:0;font-size:14px;font-weight:600}
+</style>
+</helmet>
+<form aria-label="Editar ficha de la boda" style="width:760px;box-sizing:border-box;background:#FAF8F4;padding:32px;display:flex;flex-direction:column;gap:20px">
+<div><h1 style="margin:0;font-size:22px;font-weight:600">Editar ficha</h1><p style="margin:4px 0 0;font-size:13px;color:#5E5A52">Lucía y Andrés · sábado 12 de junio</p></div>
+<p style="margin:0;padding:12px 14px;border-radius:12px;background:#FFF9EE;border:1px solid #F3E2BC;font-size:13px;color:#6B4200">Aquí cambias los datos directamente. Los cambios que piden los novios llegan aparte, como solicitud, y los validas tú.</p>
+
+<div class="sc"><h2>Boda</h2><span class="bd g">Lo ven los novios</span></div>
+<div class="fila">
+<label class="cp"><span>Fecha</span><input class="fi" type="date" value="2026-06-12"></label>
+<label class="cp" style="flex:2"><span>Espacio</span><input class="fi" value="Finca Los Olivos"></label>
+</div>
+<div class="fila">
+<label class="cp"><span>Tipo de ceremonia</span><select class="fi"><option selected>Religiosa</option><option>Civil</option></select></label>
+<label class="cp"><span>Hora de la ceremonia</span><input class="fi" type="time" value="18:00"></label>
+<label class="cp"><span>Hora del banquete</span><input class="fi" type="time" value="21:00"></label>
+</div>
+
+<div class="sc"><h2>Invitados</h2><span class="bd g">Lo ven los novios</span></div>
+<div class="fila">
+<label class="cp"><span>Adultos</span><input class="fi" type="number" min="0" value="120"></label>
+<label class="cp"><span>Niños</span><input class="fi" type="number" min="0" value="8"></label>
+</div>
+
+<div class="sc"><h2>Menú</h2><span class="bd g">Lo ven los novios</span></div>
+<label class="cp" style="flex:none"><span>Qué se sirve</span><textarea class="fi">Cóctel · entrantes · arroz · tarta</textarea></label>
+
+<div class="sc"><h2>Titulares</h2><span class="bd g">Su correo recibe el enlace personal</span></div>
+<div style="display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;flex-direction:column;gap:8px"><strong style="font-size:13px;color:#0F6B62">Titular 1</strong>
+<div class="fila"><label class="cp"><span>Nombre</span><input class="fi" value="Lucía"></label><label class="cp"><span>Teléfono</span><input class="fi" type="tel" value="600 000 001"></label><label class="cp"><span>Correo</span><input class="fi" type="email" value="lucia@ejemplo.com"></label></div></div>
+<div style="display:flex;flex-direction:column;gap:8px"><strong style="font-size:13px;color:#A14A1F">Titular 2</strong>
+<div class="fila"><label class="cp"><span>Nombre</span><input class="fi" value="Andrés"></label><label class="cp"><span>Teléfono</span><input class="fi" type="tel" value="600 000 002"></label><label class="cp"><span>Correo</span><input class="fi" type="email" value="andres@ejemplo.com"></label></div></div>
+</div>
+
+<div class="sc"><h2>Solo para el equipo</h2><span class="bd gr">Los novios no lo ven</span></div>
+<div class="fila">
+<label class="cp"><span>Tipo de evento</span><select class="fi"><option>Boda</option><option>Evento de empresa</option><option>Otro</option></select></label>
+<label class="cp"><span>Estado</span><select class="fi"><option>Lead</option><option>Reunión</option><option selected>Cliente</option><option>Cerrado</option><option>Perdido</option></select></label>
+<label class="cp"><span>Origen</span><select class="fi"><option selected>Chat web</option><option>Correo</option><option>Teléfono</option><option>Feria</option><option>Otro</option></select></label>
+</div>
+<label class="cp" style="flex:none"><span>Algún dato de interés</span><textarea class="fi" placeholder="Algo que convenga saber de esta boda">Les gustaría una mesa dulce. El padre de Andrés viaja desde Valencia.</textarea></label>
+<p style="margin:-8px 0 0;font-size:12px;color:#5E5A52">Las alergias y dietas no van aquí: tienen su propio apartado protegido.</p>
+
+<div style="display:flex;gap:12px;justify-content:flex-end;padding-top:8px;border-top:1px solid #E8E2D6;margin-top:6px">
+<a href="Main.dc.html" style="height:44px;padding:0 20px;border:1px solid #D9D2C3;border-radius:22px;background:#fff;font-size:14px;font-weight:500;color:#282828;display:inline-flex;align-items:center">Cancelar</a>
+<a href="Main.dc.html" style="height:44px;padding:0 22px;border-radius:22px;background:#F3AF42;font-size:14px;font-weight:600;color:#282828;display:inline-flex;align-items:center">Guardar cambios</a>
+</div>
+</form>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":760,"height":1500}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

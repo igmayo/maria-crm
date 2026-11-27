@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Dar acceso a los novios</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Montserrat',sans-serif;color:#282828}
+button{font-family:inherit;cursor:pointer}
+a{text-decoration:none}
+.bd{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+.g{background:#E4F3E6;color:#1E5B2B}.gr{background:#ECECEC;color:#444}
+.pri{height:44px;padding:0 20px;border:0;border-radius:22px;background:#F3AF42;color:#282828;font-size:14px;font-weight:600}
+.sec{height:44px;padding:0 20px;border:1px solid #D9D2C3;border-radius:22px;background:#fff;color:#282828;font-size:14px;font-weight:500}
+.tarj{border:1px solid #E8E2D6;border-radius:16px;background:#fff;padding:18px;display:flex;flex-direction:column;gap:12px}
+.enl{background:none;border:0;padding:0;font-size:13px;color:#6B4200;text-decoration:underline;text-align:left;align-self:flex-start}
+</style>
+</helmet>
+<section aria-label="Dar acceso a los novios" style="width:560px;box-sizing:border-box;background:#FAF8F4;padding:32px;display:flex;flex-direction:column;gap:20px">
+<div><h1 style="margin:0;font-size:22px;font-weight:600">Dar acceso a Lucía y Andrés</h1>
+<p style="margin:6px 0 0;font-size:13px;color:#5E5A52">Cada uno recibe su enlace personal para entrar a su boda. No necesitan usuario ni contraseña.</p></div>
+
+<div class="tarj">
+<div style="display:flex;justify-content:space-between;align-items:center"><strong style="font-size:15px;color:#0F6B62">Lucía <span style="font-weight:400;font-size:12px;color:#5E5A52">· Titular 1</span></strong><span class="bd g">Acceso activo</span></div>
+<div style="font-size:13px;color:#5E5A52">Se envía a <strong style="color:#282828;font-weight:600">lucia@ejemplo.com</strong>, el correo de la ficha. <a href="Ficha-editar.dc.html" style="color:#6B4200;font-weight:600">Cambiar en la ficha</a></div>
+<div style="font-size:13px">Enviado por correo hoy · último acceso hace 2 h</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="sec" type="button">Reenviar por correo</button><button class="sec" type="button">Copiar enlace</button></div>
+<button class="enl" type="button">Anular enlace y crear uno nuevo</button>
+</div>
+
+<div class="tarj">
+<div style="display:flex;justify-content:space-between;align-items:center"><strong style="font-size:15px;color:#A14A1F">Andrés <span style="font-weight:400;font-size:12px;color:#5E5A52">· Titular 2</span></strong><span class="bd gr">Sin enlace todavía</span></div>
+<div style="font-size:13px;color:#5E5A52">Se envía a <strong style="color:#282828;font-weight:600">andres@ejemplo.com</strong>, el correo de la ficha. <a href="Ficha-editar.dc.html" style="color:#6B4200;font-weight:600">Cambiar en la ficha</a></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="pri" type="button">Enviar por correo</button><button class="sec" type="button">Copiar enlace</button></div>
+<p style="margin:0;font-size:12px;color:#5E5A52">Con “Copiar enlace” puedes mandárselo tú por WhatsApp. Si no hay correo en la ficha, solo verás “Copiar enlace”.</p>
+</div>
+
+<div style="display:flex;justify-content:space-between;gap:12px;align-items:center"><a href="Main.dc.html" style="height:44px;padding:0 20px;border:1px solid #D9D2C3;border-radius:22px;background:#fff;font-size:14px;font-weight:500;color:#282828;display:inline-flex;align-items:center">Cerrar</a></div>
+<p style="margin:0;font-size:12px;color:#5E5A52">El acceso se cierra solo 30 días después de la boda (el 12 de julio). Si un enlace se ha compartido por error, anúlalo y crea uno nuevo: el anterior deja de funcionar al momento.</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":560,"height":860}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
