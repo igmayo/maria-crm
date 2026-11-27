@@ -240,6 +240,12 @@ const segundo = await comoSuper(async (q) => {
 });
 ok(segundo && segundo.rol === "comercial" && segundo.activo === false, "Si ya hay administrador, ese correo no se activa solo");
 
+console.log("Cron de avisos (0012)");
+ok(await falla("marta", "select public.llamar_avisos()"), "Un comercial no puede lanzar la llamada de avisos");
+ok(await falla("admin", "select public.llamar_avisos()"), "Ni siquiera un administrador desde la app");
+const existe = await comoSuper(async (q) => Number((await q("select count(*)::int n from pg_proc where proname='llamar_avisos'")).rows[0].n));
+ok(existe === 1, "La función llamar_avisos existe");
+
 await pool.end();
 console.log(`\n${total - fallos}/${total} correctas`);
 process.exit(fallos ? 1 : 0);
