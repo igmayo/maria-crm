@@ -43,7 +43,7 @@ export default async function VistaBandeja({ filtro, q, seleccionada, error, r }
   const puedeCrear = esAdmin || perfil.rol === "comercial";
   return (
     <>
-      <section aria-label="Conversaciones" className="lista">
+      <section aria-label="Conversaciones" className={seleccionada ? "lista lista-oculta" : "lista"}>
         <div className="lista-cab">
           <h1>Bandeja {puedeCrear && <Link href="/equipo/nuevo" className="btn-pri" style={{ height: 34, fontSize: 12 }}>+ Nuevo contacto</Link>}</h1>
           <form method="get" action="/equipo">
@@ -80,14 +80,14 @@ export default async function VistaBandeja({ filtro, q, seleccionada, error, r }
           );
         })}
       </section>
-      {conv ? <Detalle conv={conv} error={error} comerciales={esAdmin ? comerciales : null} enlaces={enlaces} /> : (
+      {conv ? <Detalle conv={conv} error={error} comerciales={esAdmin ? comerciales : null} enlaces={enlaces} volver={href(filtro, q, undefined, resp)} /> : (
         <div className="centro-vacio">{seleccionada ? "No encuentro esa conversación o no tienes acceso." : "Elige una conversación de la lista."}</div>
       )}
     </>
   );
 }
 
-function Detalle({ conv, error, comerciales, enlaces }: { conv: Conversacion; error?: string; comerciales: { id: string; nombre: string }[] | null; enlaces: Record<string, EstadoEnlace> }) {
+function Detalle({ conv, error, comerciales, enlaces, volver }: { conv: Conversacion; error?: string; volver: string; comerciales: { id: string; nombre: string }[] | null; enlaces: Record<string, EstadoEnlace> }) {
   const ev = conv.evento;
   const titulares = [...ev.contactos].sort((a, b) => a.posicion - b.posicion);
   const nombre = titulares.map((t) => t.nombre).join(" y ") || "Sin nombre";
@@ -100,6 +100,10 @@ function Detalle({ conv, error, comerciales, enlaces }: { conv: Conversacion; er
     <>
       <section aria-label={`Conversación con ${nombre}`} className="conv">
         <header className="conv-cab">
+          <div className="solo-movil" style={{ flexBasis: "100%", justifyContent: "space-between" }}>
+            <Link href={volver} className="btn-sec" style={{ height: 36 }}>← Bandeja</Link>
+            <a href="#ficha" className="btn-sec" style={{ height: 36 }}>Ver ficha</a>
+          </div>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}><h2>{nombre}</h2><span className={`bd ${ec}`}>{et}</span></div>
             <div className="sub">{sub}</div>
@@ -156,7 +160,7 @@ function Detalle({ conv, error, comerciales, enlaces }: { conv: Conversacion; er
         </div>
         {conv.puedeEscribir ? <Redactor conversacion={conv.id} destinatarios={nombre} accion={enviarMensaje} /> : <div className="solo-lectura">Solo lectura: esta conversación la lleva {conv.responsable ?? "otra persona"}.</div>}
       </section>
-      <aside aria-label="Ficha" className="ficha">
+      <aside aria-label="Ficha" className="ficha" id="ficha">
         <div>
           <h2>Ficha de la boda</h2>
           <dl>

@@ -157,3 +157,39 @@ textarea.fi{height:96px;padding:10px 14px;resize:vertical}
 .filtro-activo a{color:#6B4200;font-weight:600}
 @media (max-width:900px){.tabla-cab{display:none}.tabla-fila{grid-template-columns:1fr;gap:6px}.acciones-fila{justify-content:flex-start}}
 .sec .bd{margin-left:10px;vertical-align:middle}
+
+/* ---- Móvil del panel (≤900px) ---- */
+.solo-movil{display:none!important}
+@media (max-width:900px){
+  .solo-movil{display:flex!important}
+  .app{display:block}
+  .nav{position:sticky;top:0;z-index:5;display:flex;flex-direction:row;align-items:center;gap:2px;padding:6px 10px;overflow-x:auto}
+  .nav img{width:32px;height:32px;margin:0 8px 0 0;flex:none}
+  .nv{width:auto;min-width:56px;padding:6px 8px;font-size:10px;flex:none}
+  .nav>div{margin:0 0 0 auto!important;flex-direction:row!important;align-items:center;gap:6px!important;flex:none}
+  .lista{max-width:none;border-right:0}
+  .lista-oculta,.centro-vacio{display:none}
+  .lista-cab{padding:16px 16px 10px}
+  .item{padding:14px 16px}
+  .filtros{flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px}
+  .filtro{flex:none;padding:8px 14px}
+  .conv{min-height:0}
+  .conv-cab{padding:12px 16px}
+  .hilo{padding:16px}
+  .burbuja{max-width:88%}
+  .pestanas{padding:10px 16px 0}
+  .linea-redactor{padding:10px 16px 14px}
+  .redactor{position:sticky;bottom:0;z-index:4}
+  .ficha{max-width:none;border-left:0;border-top:1px solid #E8E2D6;padding:20px 16px}
+  .ficha dl{grid-template-columns:92px 1fr}
+  .conv-cab form{flex-wrap:wrap}
+  .conv-cab select.fi{width:100%!important;flex:1 1 160px}
+  .ct{height:44px}
+  .panel-barra{padding:10px 16px}
+  .panel-contenido{padding:24px 16px}
+  .modal{padding:20px 16px}
+  .modal-caja{padding:18px}
+  .acciones-form{flex-direction:column-reverse}
+  .acciones-form>*{width:100%;justify-content:center}
+  .fi,.campo-msg,.buscar input,.in{font-size:16px}
+}
