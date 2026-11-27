@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+const base = (process.env.APP_URL || "http://localhost:3000").replace(/\/+$/, "");
+const descripcion = "María, la asistente de IA de Guadalquivir Catering. Resuelve tus dudas y te ayuda a pedir una reunión con el equipo.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(base),
   title: "María · Guadalquivir Catering",
-  description: "Versión de prueba",
+  description: descripcion,
   robots: { index: false, follow: false },
+  openGraph: { title: "Habla con María · Guadalquivir Catering", description: descripcion, siteName: "Guadalquivir Catering", locale: "es_ES", type: "website" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
