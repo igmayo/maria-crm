@@ -47,6 +47,6 @@ insert into pendientes (conversacion_id, tipo, descripcion, asignado_a) values
  ('c0000000-0000-0000-0000-000000000001','cambio','Cambio de postre','a0000000-0000-0000-0000-000000000002');
 insert into conocimiento (categoria, pregunta, respuesta, estado, autor_id) values
  ('Menús','¿Hacéis menú infantil?','Sí, consultad con el equipo.','publicada','a0000000-0000-0000-0000-000000000001'),
- ('Menús','Borrador de Raúl','…','borrador','a0000000-0000-0000-0000-000000000003');
+ ('Menús','Borrador de Raúl','Texto en borrador.','borrador','a0000000-0000-0000-0000-000000000003');
 insert into agente_ejecuciones (conversacion_id, modelo, version_prompt) values
  ('c0000000-0000-0000-0000-000000000001','prueba','v0');

@@ -194,3 +194,28 @@ textarea.fi{height:96px;padding:10px 14px;resize:vertical}
   .acciones-form>*{width:100%;justify-content:center}
   .fi,.campo-msg,.buscar input,.in{font-size:16px}
 }
+
+/* Enseñar a María (D47) */
+.pestanas{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid #E8E2D6}
+.pest{padding:10px 14px;font-size:14px;color:var(--suave);text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-1px}
+.pest.on{color:var(--texto);font-weight:600;border-bottom-color:var(--ambar)}
+.pest-n{display:inline-block;min-width:20px;padding:0 6px;border-radius:999px;background:#F1EEE6;font-size:12px;text-align:center;margin-left:4px}
+.filtros-cat{display:flex;gap:8px;flex-wrap:wrap}
+.chip-f{padding:6px 14px;border:1px solid var(--borde);border-radius:999px;background:#fff;font-size:13px;color:var(--texto);text-decoration:none}
+.chip-f.on{background:var(--ambar);border-color:var(--ambar);font-weight:600}
+.lista-cono{display:flex;flex-direction:column;gap:12px}
+.tarjeta-cono{background:#fff;border:1px solid #E8E2D6;border-radius:16px;padding:16px 20px;display:flex;flex-direction:column;gap:8px}
+.tarjeta-cono h2{margin:0;font-size:16px;font-weight:600}
+.tarjeta-cono p{margin:0;font-size:14px;line-height:1.5;white-space:pre-wrap}
+.cono-cab{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.cono-cab small{color:var(--suave);font-size:12px}
+.cono-pie{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.cono-pie form{margin:0}
+.cono-pie button.btn-sec,.cono-pie button.btn-pri{cursor:pointer;font-family:inherit}
+.devolver{display:flex;gap:6px;flex:1;min-width:220px}
+.devolver input{flex:1;min-width:0;height:40px;border:1px solid var(--borde);border-radius:20px;padding:0 14px;font-size:16px;font-family:inherit}
+.nota-dev{margin:0;padding:12px 14px;border-radius:12px;background:#FFF4DC;font-size:13px}
+.vacio-cono{margin:0;padding:24px;text-align:center;color:var(--suave);font-size:14px;background:#fff;border:1px dashed #E0D8C8;border-radius:16px}
+.form-cono{display:flex;flex-direction:column;gap:16px;max-width:680px}
+.form-cono label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600}
+.form-cono input,.form-cono select,.form-cono textarea{border:1px solid var(--borde);border-radius:12px;padding:10px 12px;font-size:16px;font-family:inherit;font-weight:400;background:#fff}

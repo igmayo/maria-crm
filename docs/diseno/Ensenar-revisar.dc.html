@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Revisar y sin respuesta</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Montserrat',sans-serif;color:#282828}
+button,input,select,textarea{font-family:inherit}
+a{text-decoration:none;color:inherit}
+.bd{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+.g{background:#E4F3E6;color:#1E5B2B}.a{background:#FDEBC8;color:#6B4200}.gr{background:#ECECEC;color:#444}.bl{background:#E3EEFB;color:#174A85}.p{background:#EEE8FA;color:#4B2D8A}
+.pri{height:44px;padding:0 20px;border:0;border-radius:22px;background:#F3AF42;color:#282828;font-size:14px;font-weight:600}
+.sec{height:44px;padding:0 20px;border:1px solid #D9D2C3;border-radius:22px;background:#fff;color:#282828;font-size:14px;font-weight:500}
+.peq{height:34px;padding:0 14px;font-size:12px;border-radius:17px}
+.fi{width:100%;box-sizing:border-box;border:1px solid #D9D2C3;border-radius:12px;padding:10px 14px;font-size:14px;background:#fff;color:#282828}
+.lb{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#5E5A52}
+.asu{font-size:12px;color:#5E5A52;border:1px dashed #D9D2C3;border-radius:10px;padding:10px 14px;background:#fff}
+.asu b{color:#282828;font-weight:600}
+.lienzo{background:#FAF8F4;padding:24px;display:flex;flex-direction:column;gap:16px;box-sizing:border-box}
+.tarj{background:#fff;border:1px solid #E8E2D6;border-radius:14px}
+.pest{display:flex;gap:6px}.pest span{height:36px;padding:0 16px;border:1px solid #D9D2C3;border-radius:18px;background:#fff;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:8px}
+.pest span.on{background:#282828;color:#fff;border-color:#282828;font-weight:600}
+.fila{display:flex;gap:16px;padding:16px 20px;border-top:1px solid #F0EBDF;align-items:flex-start}
+.fila:first-child{border-top:0}
+</style>
+</helmet>
+<section class="lienzo" style="width:960px">
+<div><h1 style="margin:0;font-size:20px;font-weight:600">Por revisar y Sin respuesta</h1><p style="margin:4px 0 0;font-size:13px;color:#5E5A52">Las otras dos pestañas de la biblioteca.</p></div>
+
+<div class="pest"><span>Publicadas <b class="bd gr" style="background:#fff2">24</b></span><span class="on">Por revisar <b class="bd a">3</b></span><span>Sin respuesta <b class="bd p">5</b></span></div>
+<div class="tarj" style="overflow:hidden">
+<div class="fila"><div style="flex:1;min-width:0"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="bd bl">Espacios</span><span style="font-size:12px;color:#5E5A52">Propuesta por <b style="font-weight:600;color:#282828">Marta</b> · hace 2 h</span></div><div style="font-size:14px;font-weight:600;margin-top:8px">¿Podemos llevar a nuestro perro a la finca?</div><div style="font-size:13px;color:#5E5A52;margin-top:4px">Sí, se admiten mascotas en la finca siempre que vayan con correa. Avisadnos con antelación para organizarlo.</div></div>
+<div style="display:flex;flex-direction:column;gap:8px;flex:none"><button class="pri peq" type="button">Publicar</button><button class="sec peq" type="button">Editar y publicar</button><button class="sec peq" type="button">Devolver con nota</button></div></div>
+<div class="fila"><div style="flex:1;min-width:0"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="bd bl">Menús</span><span style="font-size:12px;color:#5E5A52">Propuesta por <b style="font-weight:600;color:#282828">Raúl</b> · ayer</span></div><div style="font-size:14px;font-weight:600;margin-top:8px">¿Ofrecéis opciones veganas?</div><div style="font-size:13px;color:#5E5A52;margin-top:4px">Sí, tenemos entrantes y principales veganos que se pueden combinar con el menú general.</div></div>
+<div style="display:flex;flex-direction:column;gap:8px;flex:none"><button class="pri peq" type="button">Publicar</button><button class="sec peq" type="button">Editar y publicar</button><button class="sec peq" type="button">Devolver con nota</button></div></div>
+</div>
+<div class="asu"><b>Quién ve esto:</b> los administradores publican. Cada comercial ve sus propuestas y su estado (por revisar, publicada o devuelta con nota).</div>
+
+<div class="pest" style="margin-top:8px"><span>Publicadas <b class="bd gr" style="background:#fff2">24</b></span><span>Por revisar <b class="bd a">3</b></span><span class="on">Sin respuesta <b class="bd p">5</b></span></div>
+<div class="tarj" style="overflow:hidden">
+<div class="fila"><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">¿Podemos llevar a nuestro perro a la finca?</div><div style="font-size:12px;color:#5E5A52;margin-top:4px">Preguntada <b style="font-weight:600;color:#282828">3 veces</b> · la última hace 20 min · Lucía y Andrés</div></div><button class="pri peq" type="button" style="flex:none">Enseñar</button></div>
+<div class="fila"><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">¿Hay parking para los invitados?</div><div style="font-size:12px;color:#5E5A52;margin-top:4px">Preguntada <b style="font-weight:600;color:#282828">2 veces</b> · la última ayer</div></div><button class="pri peq" type="button" style="flex:none">Enseñar</button></div>
+<div class="fila"><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">¿Os encargáis de la decoración floral?</div><div style="font-size:12px;color:#5E5A52;margin-top:4px">Preguntada <b style="font-weight:600;color:#282828">1 vez</b> · hace 2 días</div></div><div style="display:flex;gap:8px;flex:none"><button class="sec peq" type="button">No es para María</button><button class="pri peq" type="button">Enseñar</button></div></div>
+</div>
+<div class="asu"><b>Cómo se llena:</b> cada vez que María avisa al equipo por no saber una pregunta, entra aquí, ordenada por las más repetidas. “No es para María” la saca de la lista (por ejemplo, algo que solo puede decidir una persona).</div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

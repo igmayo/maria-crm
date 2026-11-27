@@ -183,6 +183,19 @@ function Detalle({ conv, error, comerciales, enlaces, volver }: { conv: Conversa
             : <p style={{ margin: "12px 0 0", fontSize: 12, color: "var(--suave)" }}>Solo la responsable y los administradores pueden editar la ficha.</p>}
         </div>
         <TarjetaCambios conv={conv} />
+        {conv.sinRespuesta.length > 0 && (
+          <div>
+            <h2>María no supo responder</h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {conv.sinRespuesta.map((q) => (
+                <div key={q.id} style={{ background: "#FFF4DC", borderRadius: 12, padding: "10px 12px", fontSize: 13 }}>
+                  <p style={{ margin: "0 0 8px" }}>“{q.texto}”</p>
+                  <Link href={`/equipo/ensenar/nueva?pendiente=${q.id}`} className="btn-pri">Enseñar a María</Link>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         {conv.miembros.length > 0 && (
           <div>
             <h2>Compartida con</h2>

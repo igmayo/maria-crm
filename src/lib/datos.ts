@@ -1,3 +1,4 @@
+import { preguntasDeConversacion } from "@/lib/datos-conocimiento";
 import { clienteServidor } from "@/lib/supabase/servidor";
 import { sinAcentos } from "@/lib/formato";
 
@@ -73,6 +74,8 @@ export interface Conversacion {
   mensajes: Mensaje[];
   puedeEscribir: boolean;
   cambios: CambioPedido[];
+  /** Preguntas que María no supo responder en esta conversación y nadie ha enseñado aún. */
+  sinRespuesta: { id: string; texto: string }[];
   /** Solo la responsable de la boda y los administradores editan la ficha y dan acceso a los novios. */
   puedeEditarFicha: boolean;
 }
@@ -115,7 +118,7 @@ export async function cargarConversacion(id: string): Promise<Conversacion | nul
   }));
   return {
     id: r.id, estado: r.estado, responsable_id: r.responsable_id, responsable: r.responsable?.nombre ?? null,
-    evento: r.evento, cambios,
+    evento: r.evento, cambios, sinRespuesta: await preguntasDeConversacion(id),
     miembros: r.miembros.map((x) => ({ nombre: x.usuario.nombre, rol: x.usuario.rol, permiso: x.permiso })),
     mensajes, puedeEscribir: puede === true, puedeEditarFicha: puedeFicha === true,
   };

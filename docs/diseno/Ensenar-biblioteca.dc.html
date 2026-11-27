@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Biblioteca de conocimiento</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Montserrat',sans-serif;color:#282828}
+button,input,select,textarea{font-family:inherit}
+a{text-decoration:none;color:inherit}
+.bd{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+.g{background:#E4F3E6;color:#1E5B2B}.a{background:#FDEBC8;color:#6B4200}.gr{background:#ECECEC;color:#444}.bl{background:#E3EEFB;color:#174A85}.p{background:#EEE8FA;color:#4B2D8A}
+.pri{height:44px;padding:0 20px;border:0;border-radius:22px;background:#F3AF42;color:#282828;font-size:14px;font-weight:600}
+.sec{height:44px;padding:0 20px;border:1px solid #D9D2C3;border-radius:22px;background:#fff;color:#282828;font-size:14px;font-weight:500}
+.peq{height:34px;padding:0 14px;font-size:12px;border-radius:17px}
+.fi{width:100%;box-sizing:border-box;border:1px solid #D9D2C3;border-radius:12px;padding:10px 14px;font-size:14px;background:#fff;color:#282828}
+.lb{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#5E5A52}
+.asu{font-size:12px;color:#5E5A52;border:1px dashed #D9D2C3;border-radius:10px;padding:10px 14px;background:#fff}
+.asu b{color:#282828;font-weight:600}
+.lienzo{background:#FAF8F4;padding:24px;display:flex;flex-direction:column;gap:16px;box-sizing:border-box}
+.tarj{background:#fff;border:1px solid #E8E2D6;border-radius:14px}
+.pest{display:flex;gap:6px}.pest span{height:36px;padding:0 16px;border:1px solid #D9D2C3;border-radius:18px;background:#fff;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:8px}
+.pest span.on{background:#282828;color:#fff;border-color:#282828;font-weight:600}
+.fila{display:flex;gap:16px;padding:16px 20px;border-top:1px solid #F0EBDF;align-items:flex-start}
+.fila:first-child{border-top:0}
+</style>
+</helmet>
+<section class="lienzo" style="width:960px">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap"><div><h1 style="margin:0;font-size:22px;font-weight:600">Enseñar a María</h1><p style="margin:4px 0 0;font-size:13px;color:#5E5A52">Lo que María sabe y puede responder. Solo usa lo que está publicado.</p></div><button class="pri" type="button">+ Añadir respuesta</button></div>
+<div class="pest"><span class="on">Publicadas <b class="bd gr" style="background:#fff2">24</b></span><span>Por revisar <b class="bd a">3</b></span><span>Sin respuesta <b class="bd p">5</b></span></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><input class="fi" style="max-width:320px" placeholder="Buscar pregunta o respuesta" aria-label="Buscar"><div class="pest"><span class="on">Todas</span><span>Espacios</span><span>Menús</span><span>Proceso y reuniones</span><span>Dietas</span></div></div>
+<div class="tarj" style="overflow:hidden">
+<div class="fila"><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">¿Hacéis menús para celíacos?</div><div style="font-size:13px;color:#5E5A52;margin-top:4px">Sí. Podemos preparar el menú completo sin gluten. Indícanos las dietas de tus invitados al hablar con tu comercial.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex:none"><div style="display:flex;gap:6px"><span class="bd bl">Dietas</span><span class="bd g">Publicada</span></div><div style="display:flex;gap:8px"><button class="sec peq" type="button">Editar</button><button class="sec peq" type="button">Retirar</button></div></div></div>
+<div class="fila"><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">¿Cuánto tiempo antes hay que reservar la fecha?</div><div style="font-size:13px;color:#5E5A52;margin-top:4px">Cuanto antes mejor, sobre todo para sábados de primavera y verano. Un comercial confirmará la disponibilidad.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex:none"><div style="display:flex;gap:6px"><span class="bd bl">Proceso y reuniones</span><span class="bd g">Publicada</span></div><div style="display:flex;gap:8px"><button class="sec peq" type="button">Editar</button><button class="sec peq" type="button">Retirar</button></div></div></div>
+<div class="fila"><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">¿Se puede probar el menú antes de la boda?</div><div style="font-size:13px;color:#5E5A52;margin-top:4px">Sí, se organiza una prueba de menú con tu comercial una vez cerrados los detalles.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex:none"><div style="display:flex;gap:6px"><span class="bd bl">Menús</span><span class="bd g">Publicada</span></div><div style="display:flex;gap:8px"><button class="sec peq" type="button">Editar</button><button class="sec peq" type="button">Retirar</button></div></div></div>
+<div class="fila"><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">¿Trabajáis en fincas que no sean vuestras?</div><div style="font-size:13px;color:#5E5A52;margin-top:4px">Sí, nos desplazamos a distintos espacios de la provincia. Cuéntanos dónde y lo valoramos.</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex:none"><div style="display:flex;gap:6px"><span class="bd bl">Espacios</span><span class="bd g">Publicada</span></div><div style="display:flex;gap:8px"><button class="sec peq" type="button">Editar</button><button class="sec peq" type="button">Retirar</button></div></div></div>
+</div>
+<div class="asu"><b>Retirar</b> no borra nada: la respuesta pasa a borrador y María deja de usarla. Cada cambio queda con su versión.</div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

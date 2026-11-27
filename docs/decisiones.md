@@ -55,3 +55,12 @@ Estado a 27/11/2026. Diseño con visto bueno de la empresa. Hecho: esquema y per
 - Banco de 30–50 preguntas reales con respuesta de los comerciales.
 - Plan detallado del piloto (2 comerciales, unas 10 bodas).
 - **D46 · Cuándo llega un correo al equipo:** solo cuando hace falta una persona; nunca por un mensaje que María resuelve. Novios: cuando María avisa al equipo, hay un cambio por validar, llega una foto o un audio o se pide una reunión. Chat público: cuando alguien pide una reunión o deja sus datos de contacto, y cuando vuelve a escribir en una conversación que ya lleva una persona. En todos los casos, un solo correo por conversación hasta que el equipo conteste (`avisarEquipoUnaVez`, `src/lib/avisos.ts`); los recordatorios de 4 h y 24 h siguen igual. Sin comercial responsable, el correo va a los administradores. A quién le llega un lead sin asignar, y cómo se reasigna, queda por decidir.
+
+
+## D47 · Enseñar a María (base de conocimiento)
+- El comercial propone, el administrador publica. Estados: borrador → propuesta ("Por revisar") → publicada. El administrador puede publicar directamente, devolver con una nota (vuelve a borrador) o retirar (vuelve a borrador).
+- María solo usa respuestas `publicada`. Una publicada solo la edita un administrador; cada cambio de pregunta o respuesta sube la versión (trigger).
+- Tres vías: botón "Enseñar a María" en la conversación (preguntas que María no supo responder), biblioteca `/equipo/ensenar` (Publicadas / Por revisar / Sin respuesta) y formulario `/equipo/ensenar/nueva`.
+- "Sin respuesta" agrupa preguntas iguales y las ordena por frecuencia. "No es para María" las descarta sin borrarlas (`pendientes.ensenado_como`).
+- Límites: pregunta 300, respuesta 1500, categoría 60, nota 500. Migración 0013 y pruebas en `tests/db/`.
+- Categorías sugeridas (a confirmar por el equipo): Espacios, Menús, Proceso y reuniones, Dietas, Otros.

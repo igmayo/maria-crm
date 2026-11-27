@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Enseñar a María</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Montserrat',sans-serif;color:#282828}
+button,input,select,textarea{font-family:inherit}
+a{text-decoration:none;color:inherit}
+.bd{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+.g{background:#E4F3E6;color:#1E5B2B}.a{background:#FDEBC8;color:#6B4200}.gr{background:#ECECEC;color:#444}.bl{background:#E3EEFB;color:#174A85}.p{background:#EEE8FA;color:#4B2D8A}
+.pri{height:44px;padding:0 20px;border:0;border-radius:22px;background:#F3AF42;color:#282828;font-size:14px;font-weight:600}
+.sec{height:44px;padding:0 20px;border:1px solid #D9D2C3;border-radius:22px;background:#fff;color:#282828;font-size:14px;font-weight:500}
+.peq{height:34px;padding:0 14px;font-size:12px;border-radius:17px}
+.fi{width:100%;box-sizing:border-box;border:1px solid #D9D2C3;border-radius:12px;padding:10px 14px;font-size:14px;background:#fff;color:#282828}
+.lb{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#5E5A52}
+.asu{font-size:12px;color:#5E5A52;border:1px dashed #D9D2C3;border-radius:10px;padding:10px 14px;background:#fff}
+.asu b{color:#282828;font-weight:600}
+.lienzo{background:#FAF8F4;padding:24px;display:flex;flex-direction:column;gap:16px;box-sizing:border-box}
+.tarj{background:#fff;border:1px solid #E8E2D6;border-radius:14px}
+.pest{display:flex;gap:6px}.pest span{height:36px;padding:0 16px;border:1px solid #D9D2C3;border-radius:18px;background:#fff;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:8px}
+.pest span.on{background:#282828;color:#fff;border-color:#282828;font-weight:600}
+.fila{display:flex;gap:16px;padding:16px 20px;border-top:1px solid #F0EBDF;align-items:flex-start}
+.fila:first-child{border-top:0}
+</style>
+</helmet>
+<section class="lienzo" style="width:680px">
+<div><h1 style="margin:0;font-size:20px;font-weight:600">Enseñar a María</h1><p style="margin:4px 0 0;font-size:13px;color:#5E5A52">Desde una conversación en la que María no supo responder. La respuesta queda como borrador hasta que un administrador la publique.</p></div>
+
+<div style="font-size:12px;font-weight:600;color:#5E5A52">En la conversación</div>
+<div class="tarj" style="padding:16px;display:flex;flex-direction:column;gap:12px">
+<div style="align-self:flex-start;background:#fff;border:1px solid #E8E2D6;border-radius:16px 16px 16px 4px;padding:10px 14px;font-size:14px;max-width:70%"><div style="font-size:11px;font-weight:600;color:#A14A1F;margin-bottom:2px">Lucía</div>¿Podemos llevar a nuestro perro a la finca?</div>
+<div style="align-self:center;background:#F1EEE6;border-radius:999px;padding:4px 14px;font-size:12px;color:#5E5A52">María ha avisado al equipo</div>
+<div style="background:#FFF9EE;border:1px solid #F3AF42;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px">
+<div style="font-size:13px"><strong style="font-weight:600">María no tenía esta respuesta.</strong><div style="color:#5E5A52;margin-top:2px">Si ya la sabes, enséñasela y la próxima vez no hará falta avisarte.</div></div>
+<button class="pri peq" type="button" style="flex:none">Enseñar a María</button></div>
+</div>
+
+<div style="font-size:12px;font-weight:600;color:#5E5A52">Al pulsar: ventana para enseñar</div>
+<div class="tarj" style="padding:24px;display:flex;flex-direction:column;gap:16px;box-shadow:0 8px 24px #28282814">
+<h2 style="margin:0;font-size:18px;font-weight:600">Enseñar a María</h2>
+<label class="lb">Pregunta<textarea class="fi" style="height:64px;resize:none" aria-label="Pregunta">¿Podemos llevar a nuestro perro a la finca?</textarea><span style="font-weight:400">Rellenada con lo que preguntó el cliente. Puedes reescribirla de forma más general.</span></label>
+<label class="lb">Respuesta que debe dar María<textarea class="fi" style="height:110px" aria-label="Respuesta">Sí, se admiten mascotas en la finca siempre que vayan con correa. Avisadnos con antelación para organizarlo.</textarea></label>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
+<label class="lb" style="flex:1;min-width:200px">Categoría<select class="fi" aria-label="Categoría"><option>Espacios</option></select></label>
+</div>
+<div class="asu"><b>Qué no poner:</b> precios ni pagos. María nunca habla de ellos, aunque el texto los incluya.</div>
+<div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap"><button class="sec" type="button">Cancelar</button><button class="pri" type="button">Enviar a revisión</button></div>
+<div style="font-size:12px;color:#5E5A52;text-align:right">Si eres administrador, el botón es <b style="color:#282828;font-weight:600">Publicar</b> y María la usa al momento.</div>
+</div>
+
+<div class="asu"><b>Después:</b> el aviso de la conversación pasa a “Enviado a revisión” y la pregunta sale de “Sin respuesta”. Cuando se publica, María ya puede contestarla en el chat público y en el de novios.</div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -94,9 +94,53 @@ ok((await afecta("carla", "update peticiones_cambio set estado='aprobada' where 
 ok(!(await falla("marta", "insert into pendientes (conversacion_id, tipo, descripcion) values ($1,'nota','x')", [C1])), "Marta crea pendientes en su conversación");
 ok(await falla("raul", "insert into pendientes (conversacion_id, tipo, descripcion) values ($1,'nota','x')", [C1]), "Raúl no crea pendientes en la de Marta");
 ok((await cuenta("marta", "select 1 from conocimiento")) === 1, "Marta ve solo lo publicado (no el borrador de Raúl)");
-ok(!(await falla("marta", "insert into conocimiento (categoria,pregunta,respuesta,estado,autor_id) values ('Menús','p','r','propuesta',$1)", [U.marta])), "Un comercial puede proponer respuestas");
-ok(await falla("marta", "insert into conocimiento (categoria,pregunta,respuesta,estado,autor_id) values ('Menús','p','r','publicada',$1)", [U.marta]), "Un comercial no puede publicar");
-ok(!(await falla("admin", "insert into conocimiento (categoria,pregunta,respuesta,estado,autor_id) values ('Menús','p','r','publicada',$1)", [U.admin])), "El administrador sí publica");
+ok(!(await falla("marta", "insert into conocimiento (categoria,pregunta,respuesta,estado,autor_id) values ('Menús','pregunta','respuesta','propuesta',$1)", [U.marta])), "Un comercial puede proponer respuestas");
+ok(await falla("marta", "insert into conocimiento (categoria,pregunta,respuesta,estado,autor_id) values ('Menús','pregunta','respuesta','publicada',$1)", [U.marta]), "Un comercial no puede publicar");
+ok(!(await falla("admin", "insert into conocimiento (categoria,pregunta,respuesta,estado,autor_id) values ('Menús','pregunta','respuesta','publicada',$1)", [U.admin])), "El administrador sí publica");
+
+console.log("Enseñar a María (0013)");
+// Todo el recorrido en una sola transacción (se deshace al final), cambiando de usuario entre pasos.
+{
+  const c = await pool.connect();
+  const q = (sql, p) => c.query(sql, p);
+  const como2 = async (usuario) => { await q("reset role"); await q("set local role authenticated"); await q("select set_config('request.jwt.claim.sub', $1, true)", [U[usuario]]); };
+  const intenta = async (sql, p) => { await q("savepoint s"); try { const r = await q(sql, p); await q("release savepoint s"); return r; } catch { await q("rollback to savepoint s"); return null; } };
+  try {
+    await q("begin");
+    const nueva = async () => (await q("insert into conocimiento (categoria,pregunta,respuesta,estado,autor_id) values ('Espacios','¿Admiten mascotas?','Sí, con correa.','propuesta',$1) returning id", [U.marta])).rows[0].id;
+    const idProp = await nueva();
+    await como2("marta");
+    ok((await intenta("update conocimiento set estado='publicada' where id=$1", [idProp])) === null, "Un comercial no publica su propia propuesta");
+    await como2("raul");
+    ok((await q("update conocimiento set respuesta='x' where id=$1", [idProp])).rowCount === 0, "Un comercial no edita la propuesta de otro");
+    await como2("admin");
+    ok((await q("update conocimiento set estado='publicada', publicado_por=$2 where id=$1", [idProp, U.admin])).rowCount === 1, "El administrador publica la propuesta");
+    await como2("marta");
+    ok((await q("update conocimiento set respuesta='cambio' where id=$1", [idProp])).rowCount === 0, "Una vez publicada, el comercial ya no la edita");
+    await como2("admin");
+    ok((await q("update conocimiento set respuesta='Sí, con correa y avisando.' where id=$1 returning version", [idProp])).rows[0].version === 2, "La versión sube sola al cambiar el contenido");
+    ok((await q("update conocimiento set categoria='Otros' where id=$1 returning version", [idProp])).rows[0].version === 2, "Cambiar solo la categoría no sube la versión");
+    await q("reset role");
+    const idDev = await nueva();
+    await como2("admin");
+    ok((await q("update conocimiento set estado='borrador', nota_revision='Añade que avisen antes' where id=$1", [idDev])).rowCount === 1, "El administrador devuelve con nota");
+    await como2("marta");
+    const dev = (await q("select estado, nota_revision from conocimiento where id=$1", [idDev])).rows[0];
+    ok(dev && dev.estado === "borrador" && dev.nota_revision === "Añade que avisen antes", "El autor ve su propuesta devuelta con la nota");
+    await como2("admin");
+    ok((await intenta("update conocimiento set nota_revision=$2 where id=$1", [idDev, "x".repeat(501)])) === null, "La nota de revisión tiene tope de 500");
+    ok((await intenta("update conocimiento set respuesta='' where id=$1", [idDev])) === null, "No se aceptan respuestas vacías");
+    await como2("marta");
+    ok((await q("update conocimiento set estado='propuesta', nota_revision=null where id=$1", [idDev])).rowCount === 1, "El autor vuelve a proponerla");
+    await q("reset role");
+    const idPend = (await q("insert into pendientes (conversacion_id,tipo,descripcion) values ($1,'pregunta_maria','¿Admiten perros?') returning id", [C1])).rows[0].id;
+    await como2("raul");
+    ok((await q("update pendientes set ensenado_en=now(), ensenado_como='descartada' where id=$1", [idPend])).rowCount === 0, "Un comercial ajeno no marca la pregunta de otra conversación");
+    await como2("marta");
+    ok((await q("update pendientes set ensenado_en=now(), ensenado_como='ensenada' where id=$1", [idPend])).rowCount === 1, "La responsable marca la pregunta como enseñada");
+    ok((await intenta("update pendientes set ensenado_como='otra' where id=$1", [idPend])) === null, "Solo vale enseñada o descartada");
+  } finally { await c.query("rollback").catch(() => {}); c.release(); }
+}
 
 console.log("Registros internos");
 ok((await cuenta("marta", "select 1 from agente_ejecuciones")) === 0, "Un comercial no ve los registros del agente");

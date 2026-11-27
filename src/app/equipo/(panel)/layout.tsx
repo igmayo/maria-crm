@@ -18,6 +18,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
         <span className="nv off" aria-disabled="true">{icono(<><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M2 12h2M20 12h2" /></>)}Hoy</span>
         <NavEnlace seccion="bandeja">{icono(<><path d="M3 13l2-8h14l2 8v6H3z" /><path d="M3 13h5l1 2h6l1-2h5" /></>)}Bandeja</NavEnlace>
         <span className="nv off" aria-disabled="true">{icono(<><circle cx="12" cy="12" r="9" /><path d="M8 12l3 3 5-6" /></>)}Pendientes</span>
+        <NavEnlace seccion="ensenar">{icono(<><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z" /><path d="M8 8h8M8 12h6" /></>)}Enseñar</NavEnlace>
         {perfil.rol === "administrador" && <NavEnlace seccion="usuarios">{icono(<><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20c0-3.5 3-6 6.5-6s6.5 2.5 6.5 6" /><path d="M17 5v6M14 8h6" /></>)}Usuarios</NavEnlace>}
         <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
           <Link href="/equipo/perfil" title="Mi perfil" aria-label="Mi perfil">
