@@ -21,6 +21,17 @@ export async function crearAviso(sb: SupabaseClient, a: { tipo: "equipo_te_toca"
   if (error) console.error("crear aviso:", error.message);
 }
 
+/** Un solo aviso por correo al equipo mientras nadie del equipo conteste en la conversación (D46). Devuelve true si ha creado el aviso. */
+export async function avisarEquipoUnaVez(sb: SupabaseClient, conversacionId: string, motivo: string): Promise<boolean> {
+  const { data: ult } = await sb.from("mensajes").select("creado_en").eq("conversacion_id", conversacionId).eq("autor", "equipo").order("creado_en", { ascending: false }).limit(1).maybeSingle();
+  let q = sb.from("avisos").select("id").eq("conversacion_id", conversacionId).eq("tipo", "equipo_te_toca").is("descartado_en", null);
+  if (ult) q = q.gt("creado_en", ult.creado_en);
+  const { data: previo } = await q.limit(1).maybeSingle();
+  if (previo) return false;
+  await crearAviso(sb, { tipo: "equipo_te_toca", conversacionId, motivo });
+  return true;
+}
+
 interface Conv { id: string; estado: string; responsable_id: string | null; evento_id: string }
 interface Ficha { fecha: string | null; responsable_id: string | null; contactos: { id: string; nombre: string; email: string | null; posicion: number }[] }
 

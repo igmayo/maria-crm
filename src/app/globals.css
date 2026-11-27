@@ -1,5 +1,6 @@
 :root{--ambar:#F3AF42;--texto:#282828;--suave:#5E5A52;--borde:#D9D2C3;--fondo:#FAF8F4;--calido:#FFF9EE;--enlace:#6B4200}
 *{box-sizing:border-box}
+html,body{overflow-x:hidden}
 body{margin:0;font-family:'Montserrat',system-ui,sans-serif;background:var(--fondo);color:var(--texto);font-size:14px;line-height:1.45}
 button,input{font-family:inherit}
 button{cursor:pointer}

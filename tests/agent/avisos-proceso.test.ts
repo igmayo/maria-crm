@@ -98,3 +98,20 @@ describe("proceso de avisos", () => {
     expect(b.enviados.length).toBe(0);
   });
 });
+
+describe("aviso único al equipo (D46)", () => {
+  it("solo un correo mientras el equipo no conteste, y otro cuando vuelve a hacer falta", async () => {
+    const { avisarEquipoUnaVez } = await import("@/lib/avisos");
+    const { falsoSupabase } = await import("./falso-supabase");
+    const sb = falsoSupabase({ mensajes: [], avisos: [] });
+    expect(await avisarEquipoUnaVez(sb, "c1", "Reunión pedida")).toBe(true);
+    expect(await avisarEquipoUnaVez(sb, "c1", "Ha dejado sus datos")).toBe(false);
+    expect(await avisarEquipoUnaVez(sb, "c2", "Otra conversación")).toBe(true);
+    expect(sb.tablas.avisos).toHaveLength(2);
+    await new Promise((r) => setTimeout(r, 5));
+    sb.tablas.mensajes.push({ id: "m1", conversacion_id: "c1", autor: "equipo", creado_en: new Date().toISOString() });
+    await new Promise((r) => setTimeout(r, 5));
+    expect(await avisarEquipoUnaVez(sb, "c1", "Vuelven a escribir")).toBe(true);
+    expect(sb.tablas.avisos).toHaveLength(3);
+  });
+});

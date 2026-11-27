@@ -107,8 +107,8 @@ export default function ChatNovios({ token, yo, titulares, comercial }: { token:
         ))}
       </div>
       <form onSubmit={(e) => { e.preventDefault(); enviar(texto); }} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 16px 16px", background: "#fff", borderTop: "1px solid #EFE3C6" }}>
-        <input value={texto} onChange={(e) => setTexto(e.target.value)} maxLength={1000} aria-label="Escribe un mensaje" placeholder="Escribe un mensaje" autoComplete="off"
-          style={{ flex: 1, minWidth: 0, height: 46, border: "1px solid #E3D3AE", borderRadius: 23, padding: "0 16px", fontSize: 14, outline: 0, background: "#fff", fontFamily: "inherit" }} />
+        <input value={texto} onChange={(e) => setTexto(e.target.value)} maxLength={1000} aria-label="Escribe un mensaje" placeholder="Escribe un mensaje" autoComplete="off" enterKeyHint="send"
+          style={{ flex: 1, minWidth: 0, height: 46, border: "1px solid #E3D3AE", borderRadius: 23, padding: "0 16px", fontSize: 16, outline: 0, background: "#fff", fontFamily: "inherit" }} />
         <button type="submit" disabled={enviando || !texto.trim()} aria-label="Enviar" style={{ width: 46, height: 46, borderRadius: "50%", border: 0, background: "#F3AF42", color: "#282828", display: "flex", alignItems: "center", justifyContent: "center", flex: "none", cursor: "pointer" }}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" aria-hidden="true"><path d="M4 12l16-8-6 16-3-7z" /></svg>
         </button>

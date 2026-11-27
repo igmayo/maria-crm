@@ -78,7 +78,7 @@ export default function ChatPublico() {
       )}
       <div className="cp-legal">Al escribir aceptas que guardemos esta conversación para atenderte.</div>
       <form className="cp-pie" onSubmit={(e) => { e.preventDefault(); enviar(texto); }}>
-        <input value={texto} onChange={(e) => setTexto(e.target.value)} maxLength={1000} aria-label="Escribe un mensaje" placeholder="Escribe un mensaje" autoComplete="off" />
+        <input value={texto} onChange={(e) => setTexto(e.target.value)} maxLength={1000} aria-label="Escribe un mensaje" placeholder="Escribe un mensaje" autoComplete="off" enterKeyHint="send" />
         <button type="submit" disabled={enviando || !texto.trim()} aria-label="Enviar">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" aria-hidden="true"><path d="M4 12l16-8-6 16-3-7z" /></svg>
         </button>

@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Registro } from "@/lib/agent";
 import { almacenSupabase } from "@/lib/chat/almacen-supabase";
-import { crearAviso } from "@/lib/avisos";
+import { avisarEquipoUnaVez } from "@/lib/avisos";
 import type { AlmacenNovios, MensajeVisible } from "./servicio";
 import { ETIQUETA_CAMPO, esCampo, mostrarValor, valorActual } from "@/lib/cambios";
 
@@ -128,13 +128,9 @@ export function almacenNovios(sb: SupabaseClient): AlmacenNovios {
     async avisarEquipo(ctx, motivo) {
       const { data: igual } = await sb.from("pendientes").select("id").eq("conversacion_id", ctx.conversacionId).eq("tipo", "pregunta_maria").eq("descripcion", motivo).is("resuelto_en", null).limit(1).maybeSingle();
       if (!igual) { await pendiente(ctx, "pregunta_maria", motivo); await sistema(ctx.conversacionId, "María ha avisado al equipo"); }
-      // Un solo aviso por correo mientras el equipo no conteste en esta conversación.
-      const { data: ultimoEquipo } = await sb.from("mensajes").select("creado_en").eq("conversacion_id", ctx.conversacionId).eq("autor", "equipo").order("creado_en", { ascending: false }).limit(1).maybeSingle();
-      let consulta = sb.from("avisos").select("id").eq("conversacion_id", ctx.conversacionId).eq("tipo", "equipo_te_toca").is("descartado_en", null);
-      if (ultimoEquipo) consulta = consulta.gt("creado_en", ultimoEquipo.creado_en);
-      const { data: previo } = await consulta.limit(1).maybeSingle();
+      // Un solo aviso por correo mientras el equipo no conteste en esta conversación (D46).
       await teToca(ctx.conversacionId);
-      if (!previo) await crearAviso(sb, { tipo: "equipo_te_toca", conversacionId: ctx.conversacionId, motivo });
+      await avisarEquipoUnaVez(sb, ctx.conversacionId, motivo);
     },
 
     async registrarEjecucion(ctx, r: Registro) { await base.registrarEjecucion({ conversacionId: ctx.conversacionId, contactoId: ctx.contactoId, eventoId: ctx.eventoId, estado: ctx.estado }, r); },

@@ -2,7 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Registro } from "@/lib/agent";
 import type { Almacen, Contexto, Lead } from "./servicio";
 import { sinAcentos } from "@/lib/formato";
-import { crearAviso } from "@/lib/avisos";
+import { avisarEquipoUnaVez } from "@/lib/avisos";
 
 const DIAS_ENLACE = 30;
 const TEXTO_CONSENTIMIENTO = "chat-publico-v1";
@@ -110,6 +110,8 @@ export function almacenSupabase(sb: SupabaseClient): Almacen {
       falla(error, "guardar lead");
       await aSinAsignar(ctx);
       await sistema(ctx.conversacionId, primera ? "María ha guardado los datos de contacto" : "María ha actualizado los datos de contacto");
+      // D46: alguien que deja sus datos es un contacto que hay que atender; un solo correo por conversación, no por mensaje.
+      if (lead.email || lead.telefono) await avisarEquipoUnaVez(sb, ctx.conversacionId, `${lead.nombre} ha dejado sus datos de contacto`);
     },
 
     async proponerReunion(ctx, preferencia) {
@@ -127,6 +129,7 @@ export function almacenSupabase(sb: SupabaseClient): Almacen {
       falla(error, "guardar reunión");
       await pendiente(ctx, "reunion", `Reunión pedida: ${preferencia}`);
       await sistema(ctx.conversacionId, "María ha recogido una preferencia de reunión pendiente de confirmar");
+      await avisarEquipoUnaVez(sb, ctx.conversacionId, `Reunión pedida: ${preferencia}`);
     },
 
     async avisarEquipo(ctx, motivo) {
@@ -140,11 +143,7 @@ export function almacenSupabase(sb: SupabaseClient): Almacen {
     async esperaPersona(ctx) {
       const { data: cv } = await sb.from("conversaciones").select("responsable_id").eq("id", ctx.conversacionId).maybeSingle();
       await sb.from("conversaciones").update({ estado: cv?.responsable_id ? "te_toca" : "sin_asignar", ultima_actividad: new Date().toISOString() }).eq("id", ctx.conversacionId);
-      const { data: ult } = await sb.from("mensajes").select("creado_en").eq("conversacion_id", ctx.conversacionId).eq("autor", "equipo").order("creado_en", { ascending: false }).limit(1).maybeSingle();
-      let q = sb.from("avisos").select("id").eq("conversacion_id", ctx.conversacionId).eq("tipo", "equipo_te_toca").is("descartado_en", null);
-      if (ult) q = q.gt("creado_en", ult.creado_en);
-      const { data: previo } = await q.limit(1).maybeSingle();
-      if (!previo) await crearAviso(sb, { tipo: "equipo_te_toca", conversacionId: ctx.conversacionId, motivo: "Han vuelto a escribir en una conversación que lleva el equipo" });
+      await avisarEquipoUnaVez(sb, ctx.conversacionId, "Han vuelto a escribir en una conversación que lleva el equipo");
     },
 
     async registrarEjecucion(ctx, r: Registro) {
